@@ -1,59 +1,26 @@
 `timescale 1ns / 10ps
 /* verilator coverage_off */
 
-// key functions to verify
-
-// read
-// read without checking
-// read until wanted value is seen
-// verify if wanted value was read
-
-// write
-// write to different subordinate (hsel = 0)
-
-// hburst 
-// incr
-// wrap
-
-module tb_ahb_subordinate ();
+module tb_ahb_subordinate_cdl ();
 
     localparam CLK_PERIOD = 10ns;
+    localparam TIMEOUT = 1000;
+
+    localparam BURST_SINGLE = 3'd0;
+    localparam BURST_INCR   = 3'd1;
+    localparam BURST_WRAP4  = 3'd2;
+    localparam BURST_INCR4  = 3'd3;
+    localparam BURST_WRAP8  = 3'd4;
+    localparam BURST_INCR8  = 3'd5;
+    localparam BURST_WRAP16 = 3'd6;
+    localparam BURST_INCR16 = 3'd7;
+
+    initial begin
+        $dumpfile("waveform.fst");
+        $dumpvars;
+    end
 
     logic clk, n_rst;
-    string test_name;
-
-    // inputs
-    logic hsel;
-    logic [3:0] haddr;
-    logic [1:0] htrans, hsize;
-    logic hwrite;
-    logic [31:0] hwdata;
-    logic [2:0] hburst; // bonus
-
-    logic [2:0] rx_packet;
-    logic rx_data_ready, rx_transfer_active, rx_error;
-
-    logic buffer_occupancy;
-    logic [7:0] rx_data;
-
-    logic tx_transfer_active, tx_error;
-
-
-    // outputs
-    logic [31:0] hrdata;
-    logic hready, hresp;
-
-    logic get_rx_data, store_tx_data;
-    logic [7:0] tx_data;
-    logic clear;
-
-    logic [1:0] tx_packet;
-
-    // DUT
-    ahb_subordinate DUT(
-        (.*)
-
-    );
 
     // clockgen
     always begin
@@ -65,7 +32,6 @@ module tb_ahb_subordinate ();
 
     task reset_dut;
     begin
-        test_name = "POWER ON RESET";
         n_rst = 0;
         @(posedge clk);
         @(posedge clk);
@@ -76,14 +42,39 @@ module tb_ahb_subordinate ();
     end
     endtask
 
-    task INIT;
-    begin
-        test_name = "INIT";
+    logic hsel;
+    logic [3:0] haddr;
+    logic [2:0] hsize;
+    logic [2:0] hburst;
+    logic [1:0] htrans;
+    logic hwrite;
+    logic [31:0] hwdata;
+    logic [31:0] hrdata;
+    logic hresp;
+    logic hready;
 
-        @(posedge clk);
-    end
+    // bus model connections
+    ahb_model_updated #(
+        .ADDR_WIDTH(4),
+        .DATA_WIDTH(4)
+    ) BFM ( .clk(clk),
+        // AHB-Subordinate Side
+        .hsel(hsel),
+        .haddr(haddr),
+        .hsize(hsize),
+        .htrans(htrans),
+        .hburst(hburst),
+        .hwrite(hwrite),
+        .hwdata(hwdata),
+        .hrdata(hrdata),
+        .hresp(hresp),
+        .hready(hready)
+    );
+
+    // Supporting Tasks
+    task reset_model;
+        BFM.reset_model();
     endtask
-
 
     // Read from a register without checking the value
     task enqueue_poll ( input logic [3:0] addr, input logic [1:0] size );
@@ -162,27 +153,28 @@ module tb_ahb_subordinate ();
         BFM.wait_done();
     endtask
 
+    logic [31:0] data [];
 
     initial begin
         n_rst = 1;
-
+        reset_model();
         reset_dut();
 
-        INIT;
-
-        TEST_LC;
-
-        TEST_VALID_DR;
-
-        TEST_INVALID_DR;
-
-        TEST_OVERFLOW_MUL;
+        /****** EXAMPLE CODE ******/
+        // Always put data LSB-aligned. The model will automagically move bytes to their proper position.
+        enqueue_read(3'h1, 1'b0, 31'h00BB);
+        enqueue_write(3'h2, 1'b1, 31'h00BB);
+        
+        // Example Burst Setup - Dynamic Array Required
+        data = new [8];
+        data = {32'h8888_8888, 32'h7777_7777,32'h6666_6666,32'h5555_5555,32'h4444_4444,32'h3333_3333,32'h2222_2222,32'h1111_1111};
+        enqueue_burst_read(4'hC, 1'b1, BURST_WRAP8, data);
+        execute_transactions(10); // Burst counts as 8 transactions for 8 beats
+        finish_transactions();
+        /****** EXAMPLE CODE ******/
 
         $finish;
     end
 endmodule
 
 /* verilator coverage_on */
-
-
-
