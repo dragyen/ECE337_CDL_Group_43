@@ -25,3 +25,45 @@ module ahb_subordinate (
     input logic tx_transfer_active, tx_error
 );
 
+
+// write logic
+always_comb begin
+    logic [31:0] next_hwdata = '0;
+
+    if (hsel && hwrite && hready) begin
+        case (haddr)
+            // hsize?
+            4'h0: // data buffer reg, push to stack
+            4'hC: // tx packet control
+            4'hD: // flush buffer control
+        endcase
+    end
+end
+
+// read logic
+always_comb begin
+    logic [31:0] next_hrdata = '0;
+
+    if (hsel && !hwrite && hready) begin
+        case (haddr)
+            4'h0:
+            4'h4:
+            4'h6:
+            4'h8:
+            4'hC:
+            4'hD:
+        endcase
+    end
+end
+
+// error
+always_comb begin
+    // if hresp high
+    hready = 1'b0; // pull hready low to extend data phase (at least 2 cycles)
+    
+end
+
+
+
+endmodule
+

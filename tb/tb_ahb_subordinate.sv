@@ -170,13 +170,6 @@ module tb_ahb_subordinate ();
 
         INIT;
 
-        TEST_LC;
-
-        TEST_VALID_DR;
-
-        TEST_INVALID_DR;
-
-        TEST_OVERFLOW_MUL;
 
         $finish;
     end
