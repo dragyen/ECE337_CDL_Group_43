@@ -1,30 +1,33 @@
 CAPI=2:
-name: "u337mg158:ece337:edge_detector:1.0.0"
-description: ""
+name: "u337mg158:ece337:edge_dual:1.0.0"
+description: "Rising and falling edge detector"
 
 filesets:
     rtl:
         files:
-            - "source/edge_detector.sv"
+            - "source/edge_dual.sv"
         file_type: systemVerilogSource
+        depend:
+            - "u337mg158:ece337:edge_det"
 
     synth:
         depend:
             - "ece337:tech:AMI_05_LIB"
-            - "u337mg158:ece337:edge_detector_syn"
+            - "u337mg158:ece337:edge_dual_syn"
 
     tb:
         files:
-            - "testbench/tb_edge_detector.sv"
-            - "waves/edge_detector.do": { file_type: user }
-            - "waves/edge_detector.gtkw": { file_type: user }
+            - "testbench/tb_edge_det.sv"
+            - "waves/edge_dual.do": { file_type: user }
+            - "waves/edge_dual.gtkw": { file_type: user }
+            # - "data/file.txt": { file_type: user }
         file_type: systemVerilogSource
         depend:
             - "u337mg158:ece337:questafiles"
 
     synfiles:
         files:
-            - "scripts/syn_edge_detector.tcl"
+            - "scripts/syn_edge_dual.tcl"
         file_type: tclSource
         depend:
             - "u337mg158:ece337:synfiles"
@@ -33,21 +36,21 @@ targets:
     default: &default
         filesets:
             - rtl
-        toplevel: edge_detector
+        toplevel: edge_dual
 
     sim: &sim
         <<: *default
         default_tool: verilator
         filesets_append:
             - tb
-        toplevel: tb_edge_detector
+        toplevel: tb_edge_det
         tools:
             modelsim:
                 vsim_options:
                     - -vopt
                     - -voptargs='+acc'
                     - -t ps
-                    - -do "source waves.tcl ; load_wave waves/edge_detector.do"
+                    - -do "source waves.tcl ; load_wave waves/edge_dual.do"
                     - -onfinish stop
                     - -do "set PrefSource(OpenOnFinish) 0 ; set PrefMain(LinePrefix) \"\" ; set PrefMain(colorizeTranscript) 1"
                     - -coverage
@@ -62,6 +65,8 @@ targets:
                     - --coverage
                 make_options:
                     - -j
+        parameters:
+            - edge_type=2
 
     lint:
         <<: *default
@@ -80,7 +85,7 @@ targets:
         filesets_append:
             - synfiles
         default_tool: design_compiler
-        toplevel: edge_detector
+        toplevel: edge_dual
         tools:
             design_compiler:
                 script_dir: "src/u337mg158_ece337_synfiles_0"
@@ -94,3 +99,9 @@ targets:
         filesets:
             - synth
             - tb
+
+parameters:
+    edge_type:
+        datatype: int
+        description: Design to test (rise -> 1, dual -> 2)
+        paramtype: vlogparam

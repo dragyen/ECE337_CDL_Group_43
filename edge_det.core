@@ -1,0 +1,14 @@
+CAPI=2:
+name: "u337mg158:ece337:edge_det"
+description: "Parameterized edge detector"
+
+filesets:
+    rtl:
+        files:
+            - "source/edge_det.sv"
+        file_type: systemVerilogSource
+
+targets:
+    default:
+        filesets:
+            - rtl
