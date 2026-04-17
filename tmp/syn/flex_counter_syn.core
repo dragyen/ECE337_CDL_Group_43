@@ -1,0 +1,15 @@
+CAPI=2:
+name: "u337mg158:ece337:flex_counter_syn"
+
+filesets:
+    netlist:
+        files:
+            - "flex_counter.v"
+        file_type: systemVerilogSource
+
+targets:
+    default:
+        filesets:
+            - netlist
+        toplevel: flex_counter
+

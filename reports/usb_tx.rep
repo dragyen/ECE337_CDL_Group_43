@@ -1,0 +1,128 @@
+Information: Updating design information... (UID-85)
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 1
+Design : usb_tx
+Version: W-2024.09-SP4
+Date   : Wed Apr 15 21:47:50 2026
+****************************************
+
+Operating Conditions: typical   Library: osu05_stdcells
+Wire Load Model Mode: top
+
+  Startpoint: currentState_reg[1]
+              (rising edge-triggered flip-flop)
+  Endpoint: dp_out (output port)
+  Path Group: (none)
+  Path Type: max
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  currentState_reg[1]/CLK (DFFSR)          0.00       0.00 r
+  currentState_reg[1]/Q (DFFSR)            0.53       0.53 f
+  U218/Y (INVX1)                           0.28       0.81 r
+  U217/Y (NOR2X1)                          0.40       1.21 f
+  U215/Y (NAND3X1)                         0.47       1.68 r
+  U214/Y (NOR2X1)                          0.30       1.99 f
+  U212/Y (INVX1)                           0.19       2.17 r
+  U211/Y (AND2X1)                          0.09       2.26 r
+  dp_out (out)                             0.00       2.26 r
+  data arrival time                                   2.26
+  -----------------------------------------------------------
+  (Path is unconstrained)
+
+
+1
+ 
+****************************************
+Report : area
+Design : usb_tx
+Version: W-2024.09-SP4
+Date   : Wed Apr 15 21:47:50 2026
+****************************************
+
+Library(s) Used:
+
+    osu05_stdcells (File: /home/ecegrid/a/ece337/summer24-refactor/tech/ami05/osu05_stdcells.db)
+
+Number of ports:                           59
+Number of nets:                           263
+Number of cells:                          223
+Number of combinational cells:            165
+Number of sequential cells:                27
+Number of macros/black boxes:               0
+Number of buf/inv:                         45
+Number of references:                      14
+
+Combinational area:              40599.000000
+Buf/Inv area:                     6480.000000
+Noncombinational area:           42768.000000
+Macro/Black Box area:                0.000000
+Net Interconnect area:      undefined  (No wire load specified)
+
+Total cell area:                 83367.000000
+Total area:                 undefined
+1
+Loading db file '/home/ecegrid/a/ece337/summer24-refactor/tech/ami05/osu05_stdcells.db'
+Information: Propagating switching activity (low effort zero delay simulation). (PWR-6)
+Warning: There is no defined clock in the design. (PWR-80)
+Warning: Design has unannotated primary inputs. (PWR-414)
+Warning: Design has unannotated sequential cell outputs. (PWR-415)
+ 
+****************************************
+Report : power
+        -analysis_effort low
+Design : usb_tx
+Version: W-2024.09-SP4
+Date   : Wed Apr 15 21:47:50 2026
+****************************************
+
+
+Library(s) Used:
+
+    osu05_stdcells (File: /home/ecegrid/a/ece337/summer24-refactor/tech/ami05/osu05_stdcells.db)
+
+
+Operating Conditions: typical   Library: osu05_stdcells
+Wire Load Model Mode: top
+
+
+Global Operating Voltage = 5    
+Power-specific unit information :
+    Voltage Units = 1V
+    Capacitance Units = 1.000000pf
+    Time Units = 1ns
+    Dynamic Power Units = 1mW    (derived from V,C,T units)
+    Leakage Power Units = 1nW
+
+
+Attributes
+----------
+i - Including register clock pin internal power
+
+
+  Cell Internal Power  =   4.4592 mW   (80%)
+  Net Switching Power  =   1.1251 mW   (20%)
+                         ---------
+Total Dynamic Power    =   5.5843 mW  (100%)
+
+Cell Leakage Power     =  25.5446 nW
+
+Information: report_power power group summary does not include estimated clock tree power. (PWR-789)
+
+                 Internal         Switching           Leakage            Total
+Power Group      Power            Power               Power              Power   (   %    )  Attrs
+--------------------------------------------------------------------------------------------------
+io_pad             0.0000            0.0000            0.0000            0.0000  (   0.00%)
+memory             0.0000            0.0000            0.0000            0.0000  (   0.00%)
+black_box          0.0000            0.0000            0.0000            0.0000  (   0.00%)
+clock_network      0.0000            0.0000            0.0000            0.0000  (   0.00%)  i
+register           0.0000            0.0000            0.0000            0.0000  (   0.00%)
+sequential         3.3981            0.1745           14.3904            3.5726  (  63.98%)
+combinational      1.0610            0.9506           11.1542            2.0117  (  36.02%)
+--------------------------------------------------------------------------------------------------
+Total              4.4592 mW         1.1251 mW        25.5446 nW         5.5843 mW
+1

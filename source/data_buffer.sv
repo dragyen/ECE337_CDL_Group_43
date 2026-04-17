@@ -1,4 +1,5 @@
 `timescale 1ns / 10ps
+/* verilator coverage_off */
 
 
 module data_buffer (
@@ -18,16 +19,19 @@ module data_buffer (
 );
 
     logic [7:0] reg_mem [0:63];
-    logic [6:0] write_ptr, read_ptr, counter;
-    logic [6:0] next_write_ptr, next_read_ptr, next_counter;
-    logic [7:0] next_reg_mem [0:63];
+    logic [5:0] write_ptr, read_ptr;
+    logic [5:0] next_write_ptr, next_read_ptr;
+    logic [6:0] counter,next_counter;
     logic full, empty;
+    logic [7:0] write_data;
+    logic [7:0] read_data;
 
     assign full = (counter == 7'd64);
     assign empty = (counter == 7'd0);
-    assign tx_packet_data = reg_mem[read_ptr];
-    assign rx_data = reg_mem[read_ptr];
     assign buffer_occupancy = counter;
+
+    assign tx_packet_data = read_data;
+    assign rx_data = read_data;
 
     always_comb begin
         next_write_ptr = write_ptr;
@@ -35,35 +39,51 @@ module data_buffer (
         next_counter = counter;
 
         if (flush | clear) begin
-            next_write_ptr = 0;
-            next_read_ptr = 0;
-            next_counter = 0;
+            next_write_ptr = '0;
+            next_read_ptr = '0;
+            next_counter = '0;
         end else begin
             if ((store_tx_data | store_rx_packet_data) && !full) begin
-                next_write_ptr = (write_ptr + 1) % 64;
+                next_write_ptr = (write_ptr + 1);
                 next_counter = counter + 1;
             end
             if ((get_tx_packet_data | get_rx_data) && !empty) begin
-                next_read_ptr = (read_ptr + 1) % 64;
-                next_counter = next_counter - 1;
+                next_read_ptr = (read_ptr + 1);
+                next_counter = counter - 1;
             end
         end
     end
 
     always_ff @(posedge clk or negedge n_rst) begin
         if (!n_rst) begin
-            write_ptr <= 0;
-            read_ptr <= 0;
-            counter <= 0;
+            write_ptr <= '0;
+            read_ptr <= '0;
+            counter <= '0;
+            read_data <= '0;
         end else begin
             write_ptr <= next_write_ptr;
             read_ptr <= next_read_ptr;
             counter <= next_counter;
-            if (store_tx_data && !full) 
-                reg_mem[write_ptr] <= tx_data;
-            else if (store_rx_packet_data && !full)
-                reg_mem[write_ptr] <= rx_packet_data;
-            end
+            reg_mem[write_ptr] <= write_data;
+            read_data <= reg_mem[read_ptr];
+        end
         end
 
+    always_comb begin
+    write_data = '0;
+    if (store_tx_data)
+        write_data = tx_data;
+    else if (store_rx_packet_data)
+        write_data = rx_packet_data;
+    end
+    
+
+
 endmodule
+
+/* verilator coverage_on */
+
+
+
+
+

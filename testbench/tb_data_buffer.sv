@@ -1,6 +1,6 @@
 `timescale 1ns / 10ps
 /* verilator coverage_off */
-module tb_stp_4bit ();
+module tb_data_buffer ();
     localparam CLK_PERIOD = 2.5ns;
     logic clk, n_rst;
     logic [7:0] tx_data;
@@ -15,7 +15,7 @@ module tb_stp_4bit ();
     logic [7:0] tx_packet_data;
     logic [7:0] rx_data;
 
-stp_4bit DUT (
+data_buffer DUT (
     .clk(clk),
     .n_rst(n_rst),
     .tx_data(tx_data),

@@ -1,0 +1,15 @@
+CAPI=2:
+name: "u337mg158:ece337:data_buffer_syn"
+
+filesets:
+    netlist:
+        files:
+            - "data_buffer.v"
+        file_type: systemVerilogSource
+
+targets:
+    default:
+        filesets:
+            - netlist
+        toplevel: data_buffer
+
