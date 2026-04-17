@@ -49,7 +49,7 @@ logic [15:0] crc16, next_crc16;
             crc16 <= next_crc16;
         end
     end
-
+    
     typedef enum logic [3:0] {
         PID_OUT   = 4'b0001,
         PID_IN    = 4'b1001,
@@ -105,32 +105,28 @@ default: pid = PID_STALL;
                 end
             end
             DATA: begin
-    next_bit_counter = 0;
-    if(buffer_occupancy == 0)
-        nextState = ERROR;
-    else if(bit_pulse && !stuff_active)
-        nextState = WAIT_DATA;
+            next_bit_counter = 0;
+            if(buffer_occupancy == 0)
+                nextState = ERROR;
+            else if(bit_pulse && !stuff_active)
+                nextState = WAIT_DATA;
             end
             WAIT_DATA: begin
-                next_bit_counter = bit_counter;
-    if(bit_pulse && !stuff_active)
-        next_bit_counter = bit_counter + 1;
-
-    if(bit_counter == 7 && !stuff_active) begin
-        next_bit_counter = 0;
-
-        if(buffer_occupancy != 0)
-            nextState = DATA;
-        else
-            nextState = CRC;
-    end
+            next_bit_counter = bit_counter;
+            if(bit_pulse && !stuff_active)
+                next_bit_counter = bit_counter + 1;
+            if(bit_counter == 7 && !stuff_active) begin
+                next_bit_counter = 0;
+                if(buffer_occupancy != 0)
+                    nextState = DATA;
+                else
+                    nextState = CRC;
+            end
             end
             ERROR: begin
                 next_bit_counter = 0;
-
                 if(bit_pulse && !stuff_active) 
-               nextState = IDLE;
-                
+                    nextState = IDLE;
             end
             CRC: begin
                 if (bit_pulse && !stuff_active)
@@ -151,7 +147,7 @@ default: pid = PID_STALL;
             WAIT: begin
                 next_bit_counter = 0;
                 if(bit_pulse && !stuff_active)
-        nextState = IDLE;
+                    nextState = IDLE;
             end
             default : nextState = currentState;
         endcase
@@ -183,9 +179,9 @@ default: pid = PID_STALL;
             end
             if(currentState == DATA) begin
                 load_en = (bit_counter == 0);
-    tx_transfer_active = 1;
-    shift_en = 0;
-    get_tx_packet_data = 1;
+                tx_transfer_active = 1;
+                shift_en = 0;
+                get_tx_packet_data = 1;
             end
             if(currentState == ERROR) begin
                 tx_transfer_active = 0;
@@ -194,9 +190,9 @@ default: pid = PID_STALL;
                 tx_error = 1; 
             end
             if(currentState == WAIT_DATA) begin
-    tx_transfer_active = 1;
-    shift_en = bit_pulse;
-    get_tx_packet_data = 0;
+                tx_transfer_active = 1;
+                shift_en = bit_pulse;
+                get_tx_packet_data = 0;
             end
             if(currentState == CRC) begin
                 tx_transfer_active = 1;
@@ -217,14 +213,14 @@ default: pid = PID_STALL;
 
     logic [7:0] sr_load_data;
 
-always_comb begin
-    case (currentState)
-        SYNC:     sr_load_data = 8'b00000001;  
-        PID:      sr_load_data = {~pid, pid};  // PID + complement
-        DATA:     sr_load_data = tx_packet_data;
-        default:  sr_load_data = tx_packet_data;
-    endcase
-end
+    always_comb begin
+        case (currentState)
+            SYNC:     sr_load_data = 8'b00000001;  
+            PID:      sr_load_data = {~pid, pid};  // PID + complement
+            DATA:     sr_load_data = tx_packet_data;
+            default:  sr_load_data = tx_packet_data;
+        endcase
+    end
 
 
         // flex counter
@@ -276,13 +272,12 @@ end
     );
 
 
-always_comb begin
+    always_comb begin
     next_ones_count   = ones_count;
     next_stuff_active = stuff_active;
 
     // Reset outside stuffable states
-    if (!(currentState == SYNC || currentState == PID ||
-          currentState == WAIT_DATA || currentState == CRC)) begin
+    if (!(currentState == SYNC || currentState == PID || currentState == WAIT_DATA || currentState == CRC)) begin
         next_ones_count   = '0;
         next_stuff_active = 1'b0;
     end else if (bit_pulse) begin
@@ -302,39 +297,39 @@ always_comb begin
         end
     end
 end
-logic [15:0] crc16_inv;
-assign crc16_inv = ~crc16;
-assign nrzi_bit = (currentState == CRC) ? crc16_inv[bit_counter[3:0]] : serial_out;
+    logic [15:0] crc16_inv;
+    assign crc16_inv = ~crc16;
+    assign nrzi_bit = (currentState == CRC) ? crc16_inv[bit_counter[3:0]] : serial_out;
 
-logic fb;
-assign fb = serial_out ^ crc16[15];
+    logic fb;
+    assign fb = serial_out ^ crc16[15];
 
-always_comb begin
-    next_crc16 = crc16;
-    
-    if (currentState == IDLE) begin
-        next_crc16 = 16'hFFFF;
-    end else if (bit_pulse && !stuff_active &&
-                 (currentState == SYNC || currentState == PID ||
-                  currentState == WAIT_DATA)) begin
-        next_crc16[0]  = fb;
-        next_crc16[1]  = crc16[0];
-        next_crc16[2]  = crc16[1]  ^ fb;
-        next_crc16[3]  = crc16[2];
-        next_crc16[4]  = crc16[3];
-        next_crc16[5]  = crc16[4];
-        next_crc16[6]  = crc16[5];
-        next_crc16[7]  = crc16[6];
-        next_crc16[8]  = crc16[7];
-        next_crc16[9]  = crc16[8];
-        next_crc16[10] = crc16[9];
-        next_crc16[11] = crc16[10];
-        next_crc16[12] = crc16[11];
-        next_crc16[13] = crc16[12];
-        next_crc16[14] = crc16[13];
-        next_crc16[15] = crc16[14] ^ fb;
+    always_comb begin
+        next_crc16 = crc16;
+        
+        if (currentState == IDLE) begin
+            next_crc16 = 16'hFFFF;
+        end else if (bit_pulse && !stuff_active &&
+                    (currentState == SYNC || currentState == PID ||
+                    currentState == WAIT_DATA)) begin
+            next_crc16[0]  = fb;
+            next_crc16[1]  = crc16[0];
+            next_crc16[2]  = crc16[1]  ^ fb;
+            next_crc16[3]  = crc16[2];
+            next_crc16[4]  = crc16[3];
+            next_crc16[5]  = crc16[4];
+            next_crc16[6]  = crc16[5];
+            next_crc16[7]  = crc16[6];
+            next_crc16[8]  = crc16[7];
+            next_crc16[9]  = crc16[8];
+            next_crc16[10] = crc16[9];
+            next_crc16[11] = crc16[10];
+            next_crc16[12] = crc16[11];
+            next_crc16[13] = crc16[12];
+            next_crc16[14] = crc16[13];
+            next_crc16[15] = crc16[14] ^ fb;
+        end
     end
-end
 
 
     // DP/DM + NRZI encoder
