@@ -13,32 +13,33 @@ module edge_det #(
 );
 
 logic ff1;
-logic ff2;
+logic [1:0] warmup;
 
-always_comb begin : edgeflag
-    if (TRIG_RISE & !ff2 & sync_out) begin
-        edge_flag = 1'b1;
-    end
-    else if (TRIG_FALL & ff2 & !sync_out) begin
-        edge_flag = 1'b1;
-    end
-    else begin
-        edge_flag = 1'b0;
-    end
-end
-
-always_ff @(posedge clk, negedge n_rst) begin : ffs
-    if (n_rst == 1'b0) begin
-        ff1 <= RST_VAL;
-        ff2 <= RST_VAL;
+always_ff @(posedge clk or negedge n_rst) begin
+    if (!n_rst) begin
+        ff1      <= RST_VAL;
         sync_out <= RST_VAL;
+        warmup   <= 2'd0;
     end
     else begin
-        ff2 <= sync_out;
+        ff1      <= async_in;
         sync_out <= ff1;
-        ff1 <= async_in;
+
+        if (warmup != 2'd2)
+            warmup <= warmup + 1'b1;
     end
 end
+
+always_comb begin
+    edge_flag = 1'b0;
+    if (warmup == 2'd2) begin
+        if (TRIG_RISE && !sync_out && ff1)
+            edge_flag = 1'b1;
+        else if (TRIG_FALL && sync_out && !ff1)
+            edge_flag = 1'b1;
+    end
+end
+
 
 endmodule
 

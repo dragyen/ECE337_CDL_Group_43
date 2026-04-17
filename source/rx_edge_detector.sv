@@ -26,6 +26,7 @@ module rx_edge_detector (
     // end
     logic sync_out; //unused
 
+
     edge_dual ed (.clk(clk), .n_rst(n_rst), .async_in(dp_in), .edge_flag(edge_det), .sync_out(sync_out));
 
 endmodule
