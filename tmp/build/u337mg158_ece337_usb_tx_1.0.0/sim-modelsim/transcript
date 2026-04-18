@@ -1,0 +1,91 @@
+Reading pref.tclError: tag "Error" isn't defined in text widget
+
+//  Questa Sim-64
+//  Version 2021.4 linux_x86_64 Oct 13 2021
+//
+//  Copyright 1991-2021 Mentor Graphics Corporation
+//  All Rights Reserved.
+//
+//  QuestaSim and its associated documentation contain trade
+//  secrets and commercial or financial information that are the property of
+//  Mentor Graphics Corporation and are privileged, confidential,
+//  and exempt from disclosure under the Freedom of Information Act,
+//  5 U.S.C. Section 552. Furthermore, this information
+//  is prohibited from disclosure under the Trade Secrets Act,
+//  18 U.S.C. Section 1905.
+//
+vsim -gui -vopt -voptargs="+acc" -t ps -do "source waves.tcl ; load_wave waves/usb_tx.do" -do "set PrefSource(OpenOnFinish) 0 ; set PrefMain(LinePrefix) "" ; set PrefMain(colorizeTranscript) 1" -onfinish stop -coverage tb_usb_tx 
+Start time: 14:07:36 on Apr 17,2026
+** Note: (vsim-3812) Design is being optimized...
+** Note: (vopt-143) Recognized 1 FSM in module "usb_tx(fast)".
+Loading sv_std.std
+Loading work.tb_usb_tx(fast)
+Loading work.usb_tx(fast)
+Loading work.flex_counter(fast)
+Loading work.flex_sr(fast)
+source waves.tcl 
+ load_wave waves/usb_tx.do
+set PrefSource(OpenOnFinish) 0 
+0
+ set PrefMain(LinePrefix) "" 
+ set PrefMain(colorizeTranscript) 1
+1
+run -all
+TEST 1: ACK packet FSM traversal
+PASSED: SYNC active
+PASSED: EOP correct
+PASSED: WAIT correct
+PASSED: IDLE correct
+TEST 2: NAK packet FSM traversal
+PASSED: SYNC active
+PASSED: EOP correct
+TEST 3: DATA0 packet FSM traversal
+PASSED: DATA active
+PASSED: EOP correct
+TEST 4: ERROR state
+PASSED: error flag
+PASSED: inactive in error
+Test 5: entering WAIT_DATA, prev_dp=0 at t=7295000
+PASSED: bit0 no toggle (dp=0) at t=7370000
+PASSED: bit1 no toggle (dp=0) at t=7440000
+PASSED: bit2 toggle (dp=1) at t=7520000
+PASSED: bit3 no toggle (dp=1) at t=7590000
+PASSED: bit4 no toggle (dp=1) at t=7660000
+PASSED: bit5 toggle (dp=0) at t=7740000
+PASSED: bit6 toggle (dp=1) at t=7810000
+PASSED: bit7 no toggle (dp=1) at t=7880000
+TEST 6: Bit stuffing
+Test 6: entering WAIT_DATA, prev_dp=0 at t=9005000
+PASSED: bit0 no toggle (dp=0) at t=9080000
+PASSED: bit1 no toggle (dp=0) at t=9150000
+PASSED: bit2 no toggle (dp=0) at t=9230000
+PASSED: bit3 no toggle (dp=0) at t=9300000
+PASSED: bit4 no toggle (dp=0) at t=9370000
+PASSED: bit5 no toggle (dp=0) at t=9450000
+PASSED: stuff bit toggled (dp=1) at t=9520000
+PASSED: bit6 no toggle (dp=1) at t=9590000
+PASSED: bit7 no toggle (dp=1) at t=9670000
+TEST 7: CRC16 check
+PASSED: CRC correct (7ffd) at t=11316000
+TEST 7b: CRC bits on wire
+PASSED: CRC bit 0 transmitted at t=11380000
+PASSED: CRC bit 1 transmitted at t=11460000
+PASSED: CRC bit 2 transmitted at t=11530000
+PASSED: CRC bit 3 transmitted at t=11600000
+PASSED: CRC bit 4 transmitted at t=11680000
+PASSED: CRC bit 5 transmitted at t=11750000
+PASSED: CRC bit 6 transmitted at t=11820000
+PASSED: CRC bit 7 transmitted at t=11900000
+PASSED: CRC bit 8 transmitted at t=11970000
+PASSED: CRC bit 9 transmitted at t=12040000
+PASSED: CRC bit 10 transmitted at t=12120000
+PASSED: CRC bit 11 transmitted at t=12190000
+PASSED: CRC bit 12 transmitted at t=12260000
+PASSED: CRC bit 13 transmitted at t=12340000
+PASSED: CRC bit 14 transmitted at t=12410000
+PASSED: CRC bit 15 transmitted at t=12480000
+** Note: $finish    : src/u337mg158_ece337_usb_tx_1.0.0/testbench/tb_usb_tx.sv(356)
+   Time: 12480 ns  Iteration: 1  Instance: /tb_usb_tx
+Break in Module tb_usb_tx at src/u337mg158_ece337_usb_tx_1.0.0/testbench/tb_usb_tx.sv line 356
+End time: 14:08:13 on Apr 17,2026, Elapsed time: 0:00:37
+Errors: 0, Warnings: 0

@@ -15,6 +15,8 @@ module usb_tx
     output logic dp_out
 );
 
+
+
     // fsm
 
     typedef enum logic [3:0] {IDLE, SYNC, PID,DATA,WAIT_DATA,ERROR,EOP,CRC,WAIT} state_e;
@@ -26,8 +28,8 @@ module usb_tx
     logic [4:0] bit_counter;
     logic [4:0] next_bit_counter;
     logic [2:0] ones_count, next_ones_count;
-    logic stuff_active, next_stuff_active;
-    logic [15:0] crc16, next_crc16;
+logic       stuff_active, next_stuff_active;
+logic [15:0] crc16, next_crc16;
     logic nrzi_bit;
 
 
@@ -42,19 +44,19 @@ module usb_tx
         else begin
             currentState <= nextState;
             bit_counter <= next_bit_counter;
-            ones_count <= next_ones_count;
+            ones_count   <= next_ones_count;
             stuff_active <= next_stuff_active;
             crc16 <= next_crc16;
         end
     end
     
     typedef enum logic [3:0] {
-        PID_OUT = 4'b0001,
-        PID_IN = 4'b1001,
+        PID_OUT   = 4'b0001,
+        PID_IN    = 4'b1001,
         PID_DATA0 = 4'b0011,
         PID_DATA1 = 4'b1011,
-        PID_ACK = 4'b0010,
-        PID_NAK = 4'b1010,
+        PID_ACK   = 4'b0010,
+        PID_NAK   = 4'b1010,
         PID_STALL = 4'b1110
     } pid_e;
 
@@ -213,10 +215,10 @@ default: pid = PID_STALL;
 
     always_comb begin
         case (currentState)
-            SYNC: sr_load_data = 8'b00000001;  
-            PID: sr_load_data = {~pid, pid};  // PID + complement
-            DATA: sr_load_data = tx_packet_data;
-            default: sr_load_data = tx_packet_data;
+            SYNC:     sr_load_data = 8'b00000001;  
+            PID:      sr_load_data = {~pid, pid};  // PID + complement
+            DATA:     sr_load_data = tx_packet_data;
+            default:  sr_load_data = tx_packet_data;
         endcase
     end
 
@@ -271,22 +273,22 @@ default: pid = PID_STALL;
 
 
     always_comb begin
-    next_ones_count = ones_count;
+    next_ones_count   = ones_count;
     next_stuff_active = stuff_active;
 
     // Reset outside stuffable states
     if (!(currentState == SYNC || currentState == PID || currentState == WAIT_DATA || currentState == CRC)) begin
-        next_ones_count = '0;
+        next_ones_count   = '0;
         next_stuff_active = 1'b0;
     end else if (bit_pulse) begin
         if (stuff_active) begin
             // Just sent the stuffed 0, resume
             next_stuff_active = 1'b0;
-            next_ones_count = '0;
+            next_ones_count   = '0;
         end else if (serial_out == 1'b1) begin
             if (ones_count == 3'd5) begin
                 next_stuff_active = 1'b1;  // next bit_pulse will be stuffed
-                next_ones_count = '0;
+                next_ones_count   = '0;
             end else begin
                 next_ones_count = ones_count + 1'b1;
             end
@@ -304,19 +306,20 @@ end
 
     always_comb begin
         next_crc16 = crc16;
+        
         if (currentState == IDLE) begin
             next_crc16 = 16'hFFFF;
         end else if (bit_pulse && !stuff_active && currentState == WAIT_DATA) begin
-            next_crc16[0] = fb;
-            next_crc16[1] = crc16[0];
-            next_crc16[2] = crc16[1]  ^ fb;
-            next_crc16[3] = crc16[2];
-            next_crc16[4] = crc16[3];
-            next_crc16[5] = crc16[4];
-            next_crc16[6] = crc16[5];
-            next_crc16[7] = crc16[6];
-            next_crc16[8] = crc16[7];
-            next_crc16[9] = crc16[8];
+            next_crc16[0]  = fb;
+            next_crc16[1]  = crc16[0];
+            next_crc16[2]  = crc16[1]  ^ fb;
+            next_crc16[3]  = crc16[2];
+            next_crc16[4]  = crc16[3];
+            next_crc16[5]  = crc16[4];
+            next_crc16[6]  = crc16[5];
+            next_crc16[7]  = crc16[6];
+            next_crc16[8]  = crc16[7];
+            next_crc16[9]  = crc16[8];
             next_crc16[10] = crc16[9];
             next_crc16[11] = crc16[10];
             next_crc16[12] = crc16[11];

@@ -1,0 +1,50 @@
+version: 0.2.1
+dependencies:
+  u337mg158:ece337:flex_counter:1.0.0: []
+  u337mg158:ece337:flex_sr:1.0.0: []
+  u337mg158:ece337:questafiles:0: []
+  u337mg158:ece337:usb_tx:1.0.0:
+  - u337mg158:ece337:flex_counter:1.0.0
+  - u337mg158:ece337:flex_sr:1.0.0
+  - u337mg158:ece337:questafiles:0
+files:
+- file_type: systemVerilogSource
+  name: src/u337mg158_ece337_flex_counter_1.0.0/source/flex_counter.sv
+  core: u337mg158:ece337:flex_counter:1.0.0
+- file_type: systemVerilogSource
+  name: src/u337mg158_ece337_flex_sr_1.0.0/source/flex_sr.sv
+  core: u337mg158:ece337:flex_sr:1.0.0
+- file_type: user
+  name: src/u337mg158_ece337_questafiles_0/waves.tcl
+  core: u337mg158:ece337:questafiles:0
+- file_type: systemVerilogSource
+  name: src/u337mg158_ece337_usb_tx_1.0.0/source/usb_tx.sv
+  core: u337mg158:ece337:usb_tx:1.0.0
+- file_type: systemVerilogSource
+  name: src/u337mg158_ece337_usb_tx_1.0.0/testbench/tb_usb_tx.sv
+  core: u337mg158:ece337:usb_tx:1.0.0
+- file_type: user
+  name: src/u337mg158_ece337_usb_tx_1.0.0/waves/usb_tx.do
+  core: u337mg158:ece337:usb_tx:1.0.0
+- file_type: user
+  name: src/u337mg158_ece337_usb_tx_1.0.0/waves/usb_tx.gtkw
+  core: u337mg158:ece337:usb_tx:1.0.0
+hooks: {}
+name: u337mg158_ece337_usb_tx_1.0.0
+parameters: {}
+tool_options:
+  modelsim:
+    vsim_options:
+    - -vopt
+    - -voptargs='+acc'
+    - -t ps
+    - -do "source waves.tcl ; load_wave waves/usb_tx.do"
+    - -onfinish stop
+    - -do "set PrefSource(OpenOnFinish) 0 ; set PrefMain(LinePrefix) \"\" ; set PrefMain(colorizeTranscript)
+      1"
+    - -coverage
+    vlog_options:
+    - +cover
+toplevel: tb_usb_tx
+vpi: []
+flow_options: {}
