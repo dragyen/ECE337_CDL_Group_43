@@ -62,12 +62,12 @@ module usb_tx
         
     always_comb begin
         case (tx_packet)
-3'b000: pid = PID_STALL;// idle - no packet
-3'b001: pid = PID_DATA0;
-3'b010: pid = PID_DATA1;
-3'b011: pid = PID_ACK;
-3'b100: pid = PID_NAK;
-default: pid = PID_STALL;
+        3'b000: pid = PID_STALL;// idle - no packet
+        3'b001: pid = PID_DATA0;
+        3'b010: pid = PID_DATA1;
+        3'b011: pid = PID_ACK;
+        3'b100: pid = PID_NAK;
+        default: pid = PID_STALL;
         endcase
     end
 
@@ -294,7 +294,7 @@ default: pid = PID_STALL;
             next_ones_count = '0;
         end
     end
-end
+    end
     logic [15:0] crc16_inv;
     assign crc16_inv = ~crc16;
     assign nrzi_bit = (currentState == CRC) ? crc16_inv[bit_counter[3:0]] : serial_out;

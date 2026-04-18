@@ -41,8 +41,8 @@ endtask
 
 task init_signals;
 begin
-    tx_packet_data   = 8'h00;
-    tx_packet        = 3'b000;
+    tx_packet_data = 8'h00;
+    tx_packet = 3'b000;
     buffer_occupancy = 7'h00;
 end
 endtask
@@ -63,7 +63,9 @@ usb_tx DUT (
 
 initial begin
     n_rst = 1;
-    init_signals();
+    tx_packet_data = 8'h00;
+    tx_packet = 3'b000;
+    buffer_occupancy = 7'h00;
     reset_dut();
 
     // TEST 1 ACK FSM traversal
@@ -101,7 +103,9 @@ initial begin
         $display("PASSED: IDLE correct");
 
     reset_dut();
-    init_signals();
+    tx_packet_data = 8'h00;
+    tx_packet = 3'b000;
+    buffer_occupancy = 7'h00;
 
     // TEST 2 NAK FSM traversal
     $display("TEST 2: NAK packet FSM traversal");
@@ -126,14 +130,16 @@ initial begin
         $display("PASSED: EOP correct");
 
     reset_dut();
-    init_signals();
+    tx_packet_data = 8'h00;
+    tx_packet = 3'b000;
+    buffer_occupancy = 7'h00;
 
     // TEST 3 DATA0 FSM traversal
     $display("TEST 3: DATA0 packet FSM traversal");
 
-    tx_packet        = 3'b001;
+    tx_packet = 3'b001;
     buffer_occupancy = 7'd4;
-    tx_packet_data   = 8'hAB;
+    tx_packet_data = 8'hAB;
 
     wait (DUT.currentState == DUT.SYNC);
     #20;
@@ -162,7 +168,9 @@ initial begin
         $display("PASSED: EOP correct");
 
     reset_dut();
-    init_signals();
+    tx_packet_data = 8'h00;
+    tx_packet = 3'b000;
+    buffer_occupancy = 7'h00;
 
     // TEST 4 ERROR state
     $display("TEST 4: ERROR state");
@@ -185,7 +193,9 @@ initial begin
         $display("PASSED: inactive in error");
 
     reset_dut();
-    init_signals();
+    tx_packet_data = 8'h00;
+    tx_packet = 3'b000;
+    buffer_occupancy = 7'h00;
 
     // TEST 5: NRZI encoding
     tx_packet = 3'b001;
@@ -265,14 +275,14 @@ initial begin
     else
         $display("PASSED: bit7 no toggle (dp=%0b) at t=%0t", dp_out, $time);
 
- // TEST 6: BIT STUFFING
-// Send 8'hFF (all 1s) — after 6 consecutive 1s a stuff bit (0/toggle) must be inserted
-$display("TEST 6: Bit stuffing");
+    // TEST 6: BIT STUFFING
+    // Send 8'hFF (all 1s) — after 6 consecutive 1s a stuff bit (0/toggle) must be inserted
+    $display("TEST 6: Bit stuffing");
 
-reset_dut();
-tx_packet        = 3'b001;
-tx_packet_data   = 8'hFF;
-buffer_occupancy = 7'd1;
+    reset_dut();
+    tx_packet = 3'b001;
+    tx_packet_data = 8'hFF;
+    buffer_occupancy = 7'd1;
 
 wait (DUT.currentState == DUT.WAIT_DATA);
 prev_dp = dp_out;
@@ -305,53 +315,54 @@ begin : stuffing_check
     end
 
     // bits 6-7: remaining data 1s, no toggle
-    for (i = 6; i < 8; i++) begin
+    for (i = 6; i < 8; i++) 
+    begin
         @(negedge DUT.bit_pulse);
         @(negedge clk);
         if (dp_out !== expected_dp)
             $display("FAILED TEST 6: bit%0d unexpected toggle after stuff, dp=%0b at t=%0t", i, dp_out, $time);
         else
             $display("PASSED: bit%0d no toggle (dp=%0b) at t=%0t", i, dp_out, $time);
+        end
     end
-end
-// TEST 7: CRC16
-$display("TEST 7: CRC16 check");
+    // TEST 7: CRC16
+    $display("TEST 7: CRC16 check");
 
-reset_dut();
-tx_packet        = 3'b001;
-tx_packet_data   = 8'hAB;
-buffer_occupancy = 7'd1;
+    reset_dut();
+    tx_packet = 3'b001;
+    tx_packet_data = 8'hAB;
+    buffer_occupancy = 7'd1;
 
-wait (DUT.currentState == DUT.WAIT_DATA);
-buffer_occupancy = 0;
+    wait (DUT.currentState == DUT.WAIT_DATA);
+    buffer_occupancy = 0;
 
-wait (DUT.currentState == DUT.CRC);
-#1;
-
-
-if (DUT.crc16 !== EXPECTED_CRC)
-    $display("FAILED TEST 7: CRC wrong, got %h expected %h at t=%0t",
-             DUT.crc16, EXPECTED_CRC, $time);
-else
-    $display("PASSED: CRC correct (%h) at t=%0t", DUT.crc16, $time);
+    wait (DUT.currentState == DUT.CRC);
+    #1;
 
 
-// TEST 7b: CRC bits on wire
-$display("TEST 7b: CRC bits on wire");
+    if (DUT.crc16 !== EXPECTED_CRC)
+        $display("FAILED TEST 7: CRC wrong, got %h expected %h at t=%0t",
+                DUT.crc16, EXPECTED_CRC, $time);
+    else
+        $display("PASSED: CRC correct (%h) at t=%0t", DUT.crc16, $time);
 
-begin : crc_wire_check
-    integer i;
 
-    for (i = 0; i < 16; i++) begin
-        @(negedge DUT.bit_pulse);
-        @(negedge clk);
+    // TEST 7b: CRC bits on wire
+    $display("TEST 7b: CRC bits on wire");
 
-        if (i < 15 && DUT.currentState !== DUT.CRC)
-            $display("FAILED TEST 7b: left CRC state early at bit %0d", i);
-        else
-            $display("PASSED: CRC bit %0d transmitted at t=%0t", i, $time);
+    begin : crc_wire_check
+        integer i;
+
+        for (i = 0; i < 16; i++) begin
+            @(negedge DUT.bit_pulse);
+            @(negedge clk);
+
+            if (i < 15 && DUT.currentState !== DUT.CRC)
+                $display("FAILED TEST 7b: left CRC state early at bit %0d", i);
+            else
+                $display("PASSED: CRC bit %0d transmitted at t=%0t", i, $time);
+        end
     end
-end
     
 $finish;
 end  
