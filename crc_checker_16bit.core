@@ -7,6 +7,8 @@ filesets:
         files:
             - "source/crc_checker_16bit.sv"
         file_type: systemVerilogSource
+        # depend:
+        #     - "fusesoc:core:name"
 
     synth:
         depend:
@@ -18,6 +20,7 @@ filesets:
             - "testbench/tb_crc_checker_16bit.sv"
             - "waves/crc_checker_16bit.do": { file_type: user }
             - "waves/crc_checker_16bit.gtkw": { file_type: user }
+            # - "data/file.txt": { file_type: user }
         file_type: systemVerilogSource
         depend:
             - "u337mg158:ece337:questafiles"
@@ -94,3 +97,4 @@ targets:
         filesets:
             - synth
             - tb
+
