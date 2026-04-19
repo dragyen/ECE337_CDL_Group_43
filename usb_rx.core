@@ -7,8 +7,17 @@ filesets:
         files:
             - "source/usb_rx.sv"
         file_type: systemVerilogSource
-        # depend:
-        #     - "fusesoc:core:name"
+        depend:
+            - "u337mg158:ece337:bit_stuffing_remover:1.0.0"
+            - "u337mg158:ece337:crc_checker_5bit:1.0.0"
+            - "u337mg158:ece337:crc_checker_16bit:1.0.0"
+            - "u337mg158:ece337:eop_detector:1.0.0"
+            - "u337mg158:ece337:nrzi_decoder:1.0.0"
+            - "u337mg158:ece337:rx_bit_timer:1.0.0"
+            - "u337mg158:ece337:rx_edge_detector:1.0.0"
+            - "u337mg158:ece337:rx_shift_register:1.0.0"
+            - "u337mg158:ece337:edge_det:1.0.0"
+            #     - "fusesoc:core:name"
 
     synth:
         depend:
