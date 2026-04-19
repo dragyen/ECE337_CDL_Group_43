@@ -12,6 +12,7 @@ filesets:
         depend:
             - "u337mg158:ece337:usb_tx:1.0.0"
             - "u337mg158:ece337:data_buffer:1.0.0"
+            - "u337mg158:ece337:usb_rx:1.0.0"
 
     synth:
         depend:
