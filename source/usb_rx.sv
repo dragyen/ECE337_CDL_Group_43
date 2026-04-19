@@ -19,7 +19,10 @@ logic edge_det, decoded_data, valid_bit,
 
 logic [3:0] count, next_count; //counter logic
 logic [15:0] data_parallel;
+
+/* verilator lint_off UNUSEDSIGNAL */
 logic [3:0] bit_count;
+/* verilator lint_on UNUSEDSIGNAL */
 
 rx_edge_detector ed1 (.*);
 eop_detector eopd1 (.*);
@@ -54,16 +57,41 @@ rx_shift_register sr1 (
     .clear(sr_clear)
 );
 
+typedef enum logic [2:0] { 
+    IDLE, SYNC, PID, ERROR,
+    TOKEN, DATA, EOP, DONE
+} state_t;
+
+typedef enum logic [3:0] {
+    OUT = 4'b0001,
+    IN = 4'b1001,
+    DATA0 = 4'b0011,
+    DATA1 = 4'b1011,
+    ACK = 4'b0010,
+    NAK = 4'b1010,
+    STALL = 4'b1110,
+    UNKNOWN = 4'b0000
+} pid_t;
+
+state_t state, next_state;
+pid_t pid, next_pid;
+
 logic next_byte_done, next_token_done;
 logic packet_size; //1 for 16 bit, 0 for 8 bit
+
+assign packet_size = (pid == OUT || pid == IN) ? 1 : 0;
 
 always_comb begin : counter_comb
     next_byte_done = 0;
     next_token_done = 0;
     next_count = count;
 
+    
     if (shift_strobe) begin
         next_count = count + 1;
+    end
+    if (clear_count) begin
+        next_count = 0;
     end
     if (count == 7) begin
         next_byte_done = 1;
@@ -91,26 +119,6 @@ always_ff @(posedge clk, negedge n_rst) begin : counter_ff
     end
 end
 
-typedef enum logic [2:0] { 
-    IDLE, SYNC, PID, ERROR,
-    TOKEN, DATA, EOP, DONE
-} state_t;
-
-typedef enum logic [3:0] {
-    OUT = 4'b0001,
-    IN = 4'b1001,
-    DATA0 = 4'b0011,
-    DATA1 = 4'b1011,
-    ACK = 4'b0010,
-    NAK = 4'b1010,
-    STALL = 4'b1110,
-    UNKNOWN = 4'b0000
-} pid_t;
-
-
-state_t state, next_state;
-pid_t pid, next_pid;
-
 always_comb begin : fsm_comb
     next_state = state;
     crc5_en = 0;
@@ -119,18 +127,20 @@ always_comb begin : fsm_comb
     crc16_clear = 0;
     sr_en = 0;
     sr_clear = 0;
-    packet_size = 0;
     clear_count = 0;
     flush = 0;
     rx_error = 0;
-    rx_packet = 0;
-    rx_data_ready = 4'b0;
+    rx_packet = pid;
+    rx_data_ready = 0;
     rx_transfer_active = 0;
     rx_packet_data = 8'b0;
-    next_pid = UNKNOWN;
+    store_rx_packet_data = 0;
+    next_pid = pid;
 
     case (state)
         IDLE: begin
+            clear_count = 1;
+
             if (edge_det) begin
                 next_state = SYNC;
             end
@@ -155,7 +165,7 @@ always_comb begin : fsm_comb
 
             if (byte_done) begin
                 if (data_parallel[3:0] == ~(data_parallel[7:4])) begin
-                    next_pid = data_parallel[7:4]; // inverted is 4 lsb
+                    next_pid = pid_t'(data_parallel[7:4]); // inverted is 4 lsb
                     if (next_pid == OUT || next_pid == IN) begin
                         next_state = TOKEN;
                     end
@@ -176,7 +186,7 @@ always_comb begin : fsm_comb
         end
         ERROR: begin
             if (eop_det) begin
-                next_state = IDLE;
+                next_state = DONE;
             end
 
             rx_transfer_active = 1;
@@ -185,6 +195,10 @@ always_comb begin : fsm_comb
             rx_transfer_active = 1;
             crc5_en = 1;
             sr_en = 1;
+
+            if (token_done) begin
+                next_state = EOP;
+            end
         end
         DATA: begin
             next_state = DATA;
@@ -192,8 +206,14 @@ always_comb begin : fsm_comb
                 next_state = EOP;
             end
             if (byte_done) begin
-                rx_packet_data = data_parallel[7:0];
-                store_rx_packet_data = 1;
+                if (buffer_occupancy >= 64) begin
+                    next_state = ERROR;
+                    flush = 1;
+                end
+                else begin
+                    rx_packet_data = data_parallel[7:0];
+                    store_rx_packet_data = 1;
+                end
             end
 
             rx_transfer_active = 1;
@@ -233,6 +253,7 @@ always_comb begin : fsm_comb
             crc16_clear = 1;
             crc5_clear = 1;
             sr_clear = 1;
+            clear_count = 1;
         end
     endcase
 end

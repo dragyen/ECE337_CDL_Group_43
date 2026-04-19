@@ -6,7 +6,7 @@ module crc_checker_16bit (
     input logic serial_in,
     input logic crc16_en,
     input logic valid_bit,
-    input logic crc16_clear
+    input logic crc16_clear,
     output logic crc16_valid
 );
 
@@ -22,11 +22,14 @@ module crc_checker_16bit (
     logic feedback;
     assign feedback = serial_in ^ crc[15];
 
+
     // Shift register with taps for x^16 + x^15 + x^2 + 1
     // USB CRC presets the register to all 1s on reset
     always_ff @(posedge clk, negedge n_rst) begin
         if (!n_rst) begin
             crc <= 16'hFFFF;    // USB "preset to -1" requirement
+        end else if (crc16_clear) begin
+            crc <= 16'hFFFF;
         end else if (en) begin
             // Most bits just shift normally...
             crc[15] <= crc[14] ^ feedback;  // tap for x^15

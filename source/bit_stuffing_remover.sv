@@ -1,3 +1,5 @@
+`timescale 1ns/10ps
+
 module bit_stuffing_remover(
     input logic decoded_data, clk, n_rst,
     output logic valid_bit

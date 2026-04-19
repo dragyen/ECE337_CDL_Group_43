@@ -22,6 +22,13 @@ module tb_usb_rx();
         clk = 1; #(CLK_PERIOD/2);
     end
 
+    logic rx_error_seen;
+
+    always_ff @(posedge clk, negedge n_rst) begin
+        if (!n_rst) rx_error_seen <= 0;
+        else if (rx_error) rx_error_seen <= 1;
+    end
+
     task reset_dut();
         n_rst = 0;
         dp_in = 1; dm_in = 0;
@@ -60,6 +67,8 @@ module tb_usb_rx();
         cur_line = 1;
         #(BIT_PERIOD);
     endtask
+
+    
 
     // dummy CRC5 = 5'b11111, change to match whatever your design uses
     task send_token_fields(input logic [6:0] addr, input logic [3:0] endp);
@@ -178,21 +187,22 @@ module tb_usb_rx();
         // Test 7: bad sync byte should trigger error
         tb_test_num = 7;
         reset_dut();
-        // send all 1s instead of valid sync
-        for (int i = 0; i < 8; i++) send_bit(1'b1);
+        // toggle the line so edge_det fires, then send wrong sync data
+        send_bit(0);            // forces a transition, edge_det fires
+        for (int i = 0; i < 7; i++) send_bit(1'b1); // rest is wrong sync
         send_eop();
         repeat(10) @(posedge clk);
-        assert(rx_error == 1) else $error("Test %0d failed: bad sync should trigger rx_error", tb_test_num);
+        assert(rx_error_seen == 1) else $error("Test %0d failed: bad sync should trigger rx_error", tb_test_num);
 
-        // Test 8: bad PID (check bits don't match ~pid)
+        // Test 8: bad PID check bits
         tb_test_num = 8;
         reset_dut();
         send_sync();
-        send_byte_lsb(8'hFF); // upper nibble = lower nibble, not inverted
+        send_byte_lsb(8'hFF);   // upper nibble == lower nibble, not inverted
         send_eop();
         repeat(10) @(posedge clk);
-        assert(rx_error == 1) else $error("Test %0d failed: bad PID should trigger rx_error", tb_test_num);
-
+        assert(rx_error_seen == 1) else $error("Test %0d failed: bad PID should trigger rx_error", tb_test_num);
+        
         // Test 9: rx_transfer_active goes high during reception
         tb_test_num = 9;
         reset_dut();
