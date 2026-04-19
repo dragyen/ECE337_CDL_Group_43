@@ -32,7 +32,7 @@ add wave -noupdate -expand -group {DUT Internal} /tb_usb_rx/DUT/token_done
 add wave -noupdate -expand -group {DUT Internal} /tb_usb_rx/DUT/eop_det
 add wave -noupdate -expand -group {DUT Internal} /tb_usb_rx/DUT/count
 add wave -noupdate -expand -group {DUT Internal} /tb_usb_rx/DUT/next_count
-add wave -noupdate -expand -group {DUT Internal} -radix binary /tb_usb_rx/DUT/data_parallel
+add wave -noupdate -expand -group {DUT Internal} /tb_usb_rx/DUT/data_parallel
 add wave -noupdate -expand -group {DUT Internal} /tb_usb_rx/DUT/bit_count
 add wave -noupdate -expand -group {DUT Internal} /tb_usb_rx/DUT/state
 add wave -noupdate -expand -group {DUT Internal} /tb_usb_rx/DUT/next_state
@@ -42,7 +42,7 @@ add wave -noupdate -expand -group {DUT Internal} /tb_usb_rx/DUT/next_byte_done
 add wave -noupdate -expand -group {DUT Internal} /tb_usb_rx/DUT/next_token_done
 add wave -noupdate -expand -group {DUT Internal} /tb_usb_rx/DUT/packet_size
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {45367 ps} 0}
+WaveRestoreCursors {{Cursor 1} {17602545 ps} 0}
 quietly wave cursor active 1
 configure wave -namecolwidth 150
 configure wave -valuecolwidth 100
@@ -58,4 +58,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ps
 update
-WaveRestoreZoom {0 ps} {329048 ps}
+WaveRestoreZoom {0 ps} {87576300 ps}
