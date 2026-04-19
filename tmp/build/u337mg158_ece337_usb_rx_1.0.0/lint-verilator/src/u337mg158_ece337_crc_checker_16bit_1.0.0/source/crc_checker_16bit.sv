@@ -1,12 +1,11 @@
 `timescale 1ns/10ps
 
 module crc_checker_16bit (
-    input logic clk,
-    input logic n_rst,
-    input logic serial_in,
-    input logic crc16_en,
-    input logic valid_bit,
-    input logic crc16_clear
+    input  logic clk,
+    input  logic n_rst,
+    input  logic serial_in,
+    input  logic crc16_en,
+    input  logic valid_bit,
     output logic crc16_valid
 );
 

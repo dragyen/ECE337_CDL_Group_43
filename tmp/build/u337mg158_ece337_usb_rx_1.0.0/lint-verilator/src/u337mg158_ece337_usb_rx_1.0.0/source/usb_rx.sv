@@ -38,9 +38,9 @@ crc_checker_5bit crc5 (
 crc_checker_16bit crc16 (
     .clk(shift_strobe),
     .n_rst(n_rst),
-    .crc16_valid(crc16_valid),
-    .crc16_en(crc16_en),
-    .crc16_clear(crc16_clear),
+    .crc_valid(crc16_valid),
+    .crc_en(crc16_en),
+    .crc_clear(crc16_clear),
     .valid_bit(valid_bit),
     .serial_in(decoded_data)
 );
@@ -249,3 +249,4 @@ always_ff @ (posedge clk, negedge n_rst) begin : fsm_ff
 end
 
 endmodule
+

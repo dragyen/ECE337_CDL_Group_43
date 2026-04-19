@@ -1,0 +1,31 @@
+version: 0.2.1
+dependencies:
+  u337mg158:ece337:synfiles:0: []
+  u337mg158:ece337:data_buffer:1.0.0:
+  - u337mg158:ece337:synfiles:0
+files:
+- file_type: user
+  name: src/u337mg158_ece337_synfiles_0/synth.tcl
+  core: u337mg158:ece337:synfiles:0
+- file_type: tclSource
+  name: src/u337mg158_ece337_synfiles_0/detect-reset-logic.tcl
+  core: u337mg158:ece337:synfiles:0
+- file_type: systemVerilogSource
+  name: src/u337mg158_ece337_data_buffer_1.0.0/source/data_buffer.sv
+  core: u337mg158:ece337:data_buffer:1.0.0
+- file_type: tclSource
+  name: src/u337mg158_ece337_data_buffer_1.0.0/scripts/syn_data_buffer.tcl
+  core: u337mg158:ece337:data_buffer:1.0.0
+hooks: {}
+name: u337mg158_ece337_data_buffer_1.0.0
+parameters: {}
+tool_options:
+  design_compiler:
+    script_dir: src/u337mg158_ece337_synfiles_0
+    dc_script: synth.tcl
+    report_dir: reports
+    target_library: /home/ecegrid/a/ece337/summer24-refactor/tech/ami05/osu05_stdcells.db
+    libs: /home/ecegrid/a/ece337/summer24-refactor/tech/ami05/osu05_stdcells.db dw_foundation.sldb
+toplevel: data_buffer
+vpi: []
+flow_options: {}
