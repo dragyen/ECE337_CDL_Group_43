@@ -1,0 +1,322 @@
+Info: [VCS_SAVE_RESTORE_INFO] ASLR (Address Space Layout Randomization) is detected on the machine. To enable $save functionality, ASLR will be switched off and simv re-executed.
+Please use '-no_save' simv switch to avoid this.
+
+                           Design Compiler Graphical 
+                                 DC Ultra (TM)
+                                  DFTMAX (TM)
+                              Power Compiler (TM)
+                                 DesignWare (R)
+                                 DC Expert (TM)
+                               Design Vision (TM)
+                               HDL Compiler (TM)
+                               VHDL Compiler (TM)
+                                  DFT Compiler
+                               Design Compiler(R)
+
+               Version W-2024.09-SP4 for linux64 - Feb 26, 2025 
+
+                    Copyright (c) 1988 - 2025 Synopsys, Inc.
+   This software and the associated documentation are proprietary to Synopsys,
+ Inc. This software may only be used in accordance with the terms and conditions
+ of a written license agreement with Synopsys, Inc. All other use, reproduction,
+   or distribution of this software is strictly prohibited.  Licensed Products
+     communicate with Synopsys servers for the purpose of providing software
+    updates, detecting software piracy and verifying that customers are using
+    Licensed Products in conformity with the applicable License Key for such
+  Licensed Products. Synopsys will use information gathered in connection with
+    this process to deliver software updates and pursue software pirates and
+                                   infringers.
+
+ Inclusivity & Diversity - Visit SolvNetPlus to read the "Synopsys Statement on
+            Inclusivity and Diversity" (Refer to article 000036315 at
+                        https://solvnetplus.synopsys.com)
+Initializing...
+Initializing gui preferences from file  /home/ecegridfs/a/337mg193/.synopsys_dc_gui/preferences.tcl
+Current time:       Sat Apr 18 15:16:56 2026
+Hostname:           ececomp5.ecn.purdue.edu
+CPU Model:          AMD EPYC 7513 32-Core Processor
+CPU Details:        Cores = 128 : Sockets = 2 : Cache Size = 512 KB : Freq = 3.58 GHz
+OS:                 Linux 5.15.0-318.199.3.2.el8uek.x86_64
+RAM:                502 GB (Free  72 GB)
+Swap:                63 GB (Free  63 GB)
+Work Filesystem:    /home/ecegridfs/a mounted to ecegridfs.ecn.purdue.edu:/export/home/a
+Tmp Filesystem:     /tmp mounted to tmpfs
+Work Disk:          2968 GB (Free 369 GB)
+Tmp Disk:            17 GB (Free  16 GB)
+
+CPU Load: 17%, Ram Free: 72 GB, Swap Free: 63 GB, Work Disk Free: 369 GB, Tmp Disk Free: 16 GB
+############################################
+#
+# Auto-generated project tcl file:
+#  * sets up variable
+#  * runs customized script
+#
+############################################
+sh date
+Sat Apr 18 15:16:56 EDT 2026
+set TOP_MODULE data_buffer
+data_buffer
+set DC_SCRIPT synth.tcl
+synth.tcl
+set READ_SOURCES u337mg158_ece337_data_buffer_1.0.0-read-sources
+u337mg158_ece337_data_buffer_1.0.0-read-sources
+set SCRIPT_DIR src/u337mg158_ece337_synfiles_0
+src/u337mg158_ece337_synfiles_0
+set REPORT_DIR reports
+reports
+sh mkdir -p ${REPORT_DIR}
+set target_library /home/ecegrid/a/ece337/summer24-refactor/tech/ami05/osu05_stdcells.db
+/home/ecegrid/a/ece337/summer24-refactor/tech/ami05/osu05_stdcells.db
+set link_library   [concat "*"  /home/ecegrid/a/ece337/summer24-refactor/tech/ami05/osu05_stdcells.db dw_foundation.sldb]
+* /home/ecegrid/a/ece337/summer24-refactor/tech/ami05/osu05_stdcells.db dw_foundation.sldb
+############################################
+#
+# Run custom script
+#
+############################################
+source ${SCRIPT_DIR}/${DC_SCRIPT}
+Running PRESTO HDLC
+Compiling source file ./src/u337mg158_ece337_data_buffer_1.0.0/source/data_buffer.sv
+Presto compilation completed successfully.
+Loading db file '/home/ecegrid/a/ece337/summer24-refactor/tech/ami05/osu05_stdcells.db'
+Loading db file '/package/eda/synopsys/syn/W-2024.09-SP4/libraries/syn/dw_foundation.sldb'
+Loading db file '/package/eda/synopsys/syn/W-2024.09-SP4/libraries/syn/gtech.db'
+Loading db file '/package/eda/synopsys/syn/W-2024.09-SP4/libraries/syn/standard.sldb'
+  Loading link library 'osu05_stdcells'
+  Loading link library 'gtech'
+Running PRESTO HDLC
+
+Inferred memory devices in process in routine 'data_buffer' in file
+	 ./src/u337mg158_ece337_data_buffer_1.0.0/source/data_buffer.sv'.
+==================================================================================
+|    Register Name    |   Type    | Width | Bus | MB |  Set  | Reset | ST | Line |
+==================================================================================
+|     reg_mem_reg     | Flip-flop |  512  |  Y  | N  | None  | None  | N  |  58  |
+|    write_ptr_reg    | Flip-flop |   6   |  Y  | N  | None  | Async | N  |  58  |
+|    read_ptr_reg     | Flip-flop |   6   |  Y  | N  | None  | Async | N  |  58  |
+|     counter_reg     | Flip-flop |   7   |  Y  | N  | None  | Async | N  |  58  |
+|    read_data_reg    | Flip-flop |   8   |  Y  | N  | None  | Async | N  |  58  |
+==================================================================================
+Statistics for MUX_OPs
+======================================================
+| block name/line  | Inputs | Outputs | # sel inputs |
+======================================================
+|  data_buffer/69  |   64   |    8    |      6       |
+======================================================
+Presto compilation completed successfully. (data_buffer)
+Module: data_buffer, Ports: 47, Input: 24, Output: 23, Inout: 0
+Module: data_buffer, Registers: 539, Async set/reset: 27, Sync set/reset: 0
+Information: Module data_buffer report end. (ELAB-965)
+Elaborated 1 design.
+Current design is now 'data_buffer'.
+CPU Load: 17%, Ram Free: 72 GB, Swap Free: 63 GB, Work Disk Free: 369 GB, Tmp Disk Free: 16 GB
+Information: Checking out the license 'DesignWare'. (SEC-104)
+Information: Evaluating DesignWare library utilization. (UISN-27)
+
+============================================================================
+| DesignWare Building Block Library  |         Version         | Available |
+============================================================================
+| Basic DW Building Blocks           | W-2024.09-DWBB_202409.4 |     *     |
+| Licensed DW Building Blocks        | W-2024.09-DWBB_202409.4 |     *     |
+============================================================================
+
+====================================================================================================
+| Flow Information                                                                                 |
+----------------------------------------------------------------------------------------------------
+| Flow         | Design Compiler                                                                   |
+====================================================================================================
+| Design Information                                      | Value                                  |
+====================================================================================================
+| Number of Scenarios                                     | 0                                      |
+| Leaf Cell Count                                         | 765                                    |
+| Number of User Hierarchies                              | 0                                      |
+| Sequential Cell Count                                   | 539                                    |
+| Macro Count                                             | 0                                      |
+| Pad Count                                               | 0                                      |
+| Number of Power Domains                                 | 0                                      |
+| Number of Path Groups                                   | 1                                      |
+| Number of VT Class                                      | 0                                      |
+| Number of Clocks                                        | 0                                      |
+| Number of Dont Touch Cells                              | 99                                     |
+| Number of Dont Touch Nets                               | 0                                      |
+| Number of Size Only Cells                               | 0                                      |
+| Design with Target Library Subset (with clock_path)     | false  (false )                        |
+| Design with UPF Data                                    | false                                  |
+====================================================================================================
+
+Information: There are 10 potential problems in your design. Please run 'check_design' for more information. (LINT-99)
+
+
+
+  Beginning Pass 1 Mapping
+  ------------------------
+  Processing 'data_buffer'
+Module: DW01_MUX, Ports: 4, Input: 3, Output: 1, Inout: 0
+Module: DW01_MUX, Registers: 0, Async set/reset: 0, Sync set/reset: 0
+Module: DW01_mmux_width2, Ports: 7, Input: 5, Output: 2, Inout: 0
+Module: DW01_mmux_width2, Registers: 0, Async set/reset: 0, Sync set/reset: 0
+Module: DW01_mmux_width3, Ports: 10, Input: 7, Output: 3, Inout: 0
+Module: DW01_mmux_width3, Registers: 0, Async set/reset: 0, Sync set/reset: 0
+Module: DW01_mmux_width4, Ports: 13, Input: 9, Output: 4, Inout: 0
+Module: DW01_mmux_width4, Registers: 0, Async set/reset: 0, Sync set/reset: 0
+Module: DW01_mmux_width5, Ports: 16, Input: 11, Output: 5, Inout: 0
+Module: DW01_mmux_width5, Registers: 0, Async set/reset: 0, Sync set/reset: 0
+Module: DW01_inc_width6, Ports: 12, Input: 6, Output: 6, Inout: 0
+Module: DW01_inc_width6, Registers: 0, Async set/reset: 0, Sync set/reset: 0
+Module: DW01_NAND2, Ports: 3, Input: 2, Output: 1, Inout: 0
+Module: DW01_NAND2, Registers: 0, Async set/reset: 0, Sync set/reset: 0
+Module: DW01_inc_width7, Ports: 14, Input: 7, Output: 7, Inout: 0
+Module: DW01_inc_width7, Registers: 0, Async set/reset: 0, Sync set/reset: 0
+Module: DW01_dec_width7, Ports: 14, Input: 7, Output: 7, Inout: 0
+Module: DW01_dec_width7, Registers: 0, Async set/reset: 0, Sync set/reset: 0
+Module: DW01_NOT, Ports: 2, Input: 1, Output: 1, Inout: 0
+Module: DW01_NOT, Registers: 0, Async set/reset: 0, Sync set/reset: 0
+Module: DW01_add_width7, Ports: 23, Input: 15, Output: 8, Inout: 0
+Module: DW01_add_width7, Registers: 0, Async set/reset: 0, Sync set/reset: 0
+Module: DW01_incdec_width7, Ports: 15, Input: 8, Output: 7, Inout: 0
+Module: DW01_incdec_width7, Registers: 0, Async set/reset: 0, Sync set/reset: 0
+Module: DW01_add_width6, Ports: 20, Input: 13, Output: 7, Inout: 0
+Module: DW01_add_width6, Registers: 0, Async set/reset: 0, Sync set/reset: 0
+Module: DW01_incdec_width6, Ports: 13, Input: 7, Output: 6, Inout: 0
+Module: DW01_incdec_width6, Registers: 0, Async set/reset: 0, Sync set/reset: 0
+Module: DW01_sub_width7, Ports: 23, Input: 15, Output: 8, Inout: 0
+Module: DW01_sub_width7, Registers: 0, Async set/reset: 0, Sync set/reset: 0
+
+  Updating timing information
+Information: Updating design information... (UID-85)
+Information: Design 'data_buffer' has no optimization constraints set. (OPT-108)
+
+  Beginning Implementation Selection
+  ----------------------------------
+  Processing 'data_buffer_DW01_dec_0'
+  Processing 'data_buffer_DW01_inc_0'
+  Processing 'data_buffer_DW01_inc_1'
+  Processing 'data_buffer_DW01_inc_2'
+
+  Beginning Mapping Optimizations  (Medium effort)
+  -------------------------------
+  Structuring 'data_buffer'
+  Mapping 'data_buffer'
+
+                                  TOTAL                                      
+   ELAPSED            WORST NEG   SETUP    DESIGN                            
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT         
+  --------- --------- --------- --------- --------- -------------------------
+    0:00:01 1000035.0      0.00       0.0    1641.5                          
+    0:00:01 1000035.0      0.00       0.0    1641.5                          
+    0:00:01 1000035.0      0.00       0.0    1641.5                          
+    0:00:01 1000035.0      0.00       0.0    1641.5                          
+    0:00:01 1000035.0      0.00       0.0    1641.5                          
+    0:00:01 1000035.0      0.00       0.0    1641.5                          
+    0:00:01 1000035.0      0.00       0.0    1641.5                          
+    0:00:01 1000035.0      0.00       0.0    1641.5                          
+    0:00:01 1000035.0      0.00       0.0    1641.5                          
+    0:00:01 1000035.0      0.00       0.0    1641.4                          
+    0:00:01 1000035.0      0.00       0.0    1641.3                          
+    0:00:01 1000035.0      0.00       0.0    1641.3                          
+    0:00:01 1000035.0      0.00       0.0    1641.3                          
+    0:00:01 1000035.0      0.00       0.0    1641.3                          
+
+
+
+  Beginning Delay Optimization Phase
+  ----------------------------------
+
+                                  TOTAL                                      
+   ELAPSED            WORST NEG   SETUP    DESIGN                            
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT         
+  --------- --------- --------- --------- --------- -------------------------
+    0:00:01 1000035.0      0.00       0.0    1641.3                          
+    0:00:01 1000035.0      0.00       0.0    1641.3                          
+    0:00:01 1000035.0      0.00       0.0    1641.3                          
+    0:00:01 1000035.0      0.00       0.0    1641.3                          
+    0:00:01 1000035.0      0.00       0.0    1641.3                          
+
+
+  Beginning Design Rule Fixing  (max_capacitance)
+  ----------------------------
+
+                                  TOTAL                                      
+   ELAPSED            WORST NEG   SETUP    DESIGN                            
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT         
+  --------- --------- --------- --------- --------- -------------------------
+    0:00:01 1000035.0      0.00       0.0    1641.3                          
+    0:00:01 1007955.0      0.00       0.0       0.0                          
+
+
+  Beginning Area-Recovery Phase  (cleanup)
+  -----------------------------
+
+                                  TOTAL                                      
+   ELAPSED            WORST NEG   SETUP    DESIGN                            
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT         
+  --------- --------- --------- --------- --------- -------------------------
+    0:00:01 1007955.0      0.00       0.0       0.0                          
+    0:00:01 1007955.0      0.00       0.0       0.0                          
+    0:00:02 1007235.0      0.00       0.0       0.0                          
+    0:00:02 1007235.0      0.00       0.0       0.0                          
+    0:00:02 1007235.0      0.00       0.0       0.0                          
+    0:00:02 1007235.0      0.00       0.0       0.0                          
+    0:00:02 1007235.0      0.00       0.0       0.0                          
+    0:00:02 1007235.0      0.00       0.0       0.0                          
+    0:00:02 1007235.0      0.00       0.0       0.0                          
+    0:00:02 1007235.0      0.00       0.0       0.0                          
+    0:00:02 1007235.0      0.00       0.0       0.0                          
+    0:00:02 1007235.0      0.00       0.0       0.0                          
+Loading db file '/home/ecegrid/a/ece337/summer24-refactor/tech/ami05/osu05_stdcells.db'
+
+
+Note: Symbol # after min delay cost means estimated hold TNS across all active scenarios 
+
+
+  Optimization Complete
+  ---------------------
+CPU Load: 16%, Ram Free: 72 GB, Swap Free: 63 GB, Work Disk Free: 369 GB, Tmp Disk Free: 16 GB
+Information: Total number of MV cells in the design.
+----------------------------------------------------------------------------------------------------
+ MV Cells                                           Total Number                                   
+----------------------------------------------------------------------------------------------------
+ Level Shifter:                                     0                                             
+ Enable Level Shifter:                              0                                             
+ Isolation Cell:                                    0                                             
+ Retention Cell:                                    0                                             
+ Retention Clamp Cell:                              0                                             
+ Switch Cell:                                       0                                             
+ Always-On Cell:                                    0                                             
+ Repeater Cell:                                     0                                             
+
+----------------------------------------------------------------------------------------------------
+Unmapped MV Cells 
+----------------------------------------------------------------------------------------------------
+0 Isolation Cells are unmapped 
+0 Retention Clamp Cells are unmapped 
+----------------------------------------------------------------------------------------------------
+ 
+****************************************
+check_design summary:
+Version:     W-2024.09-SP4
+Date:        Sat Apr 18 15:16:59 2026
+****************************************
+
+                   Name                                            Total
+--------------------------------------------------------------------------------
+Inputs/Outputs                                                      8
+    Shorted outputs (LINT-31)                                       8
+--------------------------------------------------------------------------------
+
+Warning: In design 'data_buffer', output port 'tx_packet_data[7]' is connected directly to output port 'rx_data[7]'. (LINT-31)
+Warning: In design 'data_buffer', output port 'tx_packet_data[6]' is connected directly to output port 'rx_data[6]'. (LINT-31)
+Warning: In design 'data_buffer', output port 'tx_packet_data[5]' is connected directly to output port 'rx_data[5]'. (LINT-31)
+Warning: In design 'data_buffer', output port 'tx_packet_data[4]' is connected directly to output port 'rx_data[4]'. (LINT-31)
+Warning: In design 'data_buffer', output port 'tx_packet_data[3]' is connected directly to output port 'rx_data[3]'. (LINT-31)
+Warning: In design 'data_buffer', output port 'tx_packet_data[2]' is connected directly to output port 'rx_data[2]'. (LINT-31)
+Warning: In design 'data_buffer', output port 'tx_packet_data[1]' is connected directly to output port 'rx_data[1]'. (LINT-31)
+Warning: In design 'data_buffer', output port 'tx_packet_data[0]' is connected directly to output port 'rx_data[0]'. (LINT-31)
+Writing verilog file '/home/ecegridfs/a/337mg193/ECE337_CDL_Group_43/tmp/build/u337mg158_ece337_data_buffer_1.0.0/syn-design_compiler/data_buffer.v'.
+
+Memory usage for this session 140 Mbytes.
+Memory usage for this session including child processes 140 Mbytes.
+CPU usage for this session 4 seconds ( 0.00 hours ).
+Elapsed time for this session 5 seconds ( 0.00 hours ).
+
+Thank you...
