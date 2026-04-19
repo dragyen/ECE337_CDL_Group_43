@@ -47,12 +47,12 @@ logic        dm_out;
     task reset_dut;
     begin
         n_rst = 0;
-        @(posedge clk);
-        @(posedge clk);
+        @(negedge clk);
+        @(negedge clk);
         @(negedge clk);
         n_rst = 1;
-        @(posedge clk);
-        @(posedge clk);
+        @(negedge clk);
+        @(negedge clk);
     end
     endtask
 
@@ -87,8 +87,8 @@ logic        dm_out;
 
     initial begin
         n_rst = 1;
-        dp_in,
-        dm_in,
+        dp_in = '0;
+        dm_in = '0;
         tx_packet = '0;
         store_tx_data = '0;
         tx_data = '0;
@@ -98,29 +98,29 @@ logic        dm_out;
         @(negedge clk);
   tx_data       = 8'hAA;
   store_tx_data = 1;
-  @(posedge clk);
+  @(negedge clk);
   @(negedge clk);
   store_tx_data = 0;
   tx_data       = '0;
-  @(posedge clk);
+  @(negedge clk);
   // Push 0xBB
   @(negedge clk);
   tx_data       = 8'hBB;
   store_tx_data = 1;
-  @(posedge clk);
+  @(negedge clk);
   @(negedge clk);
   store_tx_data = 0;
   tx_data       = '0;
-  @(posedge clk);
+  @(negedge clk);
   // Push 0xCC
   @(negedge clk);
   tx_data       = 8'hCC;
   store_tx_data = 1;
-  @(posedge clk);
+  @(negedge clk);
   @(negedge clk);
   store_tx_data = 0;
   tx_data       = '0;
-  @(posedge clk);
+  @(negedge clk);
   // Expect occupancy = 3
   if (buffer_occupancy == 7'd3)
     $display("PASS Test 1: buffer_occupancy = %0d", buffer_occupancy);
@@ -133,10 +133,10 @@ logic        dm_out;
   // Pop first byte
   @(negedge clk);
   get_rx_data = 1;
-  @(posedge clk);
+  @(negedge clk);
   @(negedge clk);
   get_rx_data = 0;
-  @(posedge clk);
+  @(negedge clk);
   if (rx_data == 8'hAA)
     $display("PASS Test 2a: rx_data = 0x%0h", rx_data);
   else
@@ -144,10 +144,10 @@ logic        dm_out;
   // Pop second byte
   @(negedge clk);
   get_rx_data = 1;
-  @(posedge clk);
+  @(negedge clk);
   @(negedge clk);
   get_rx_data = 0;
-  @(posedge clk);
+  @(negedge clk);
   if (rx_data == 8'hBB)
     $display("PASS Test 2b: rx_data = 0x%0h", rx_data);
   else
@@ -155,10 +155,10 @@ logic        dm_out;
   // Pop third byte
   @(negedge clk);
   get_rx_data = 1;
-  @(posedge clk);
+  @(negedge clk);
   @(negedge clk);
   get_rx_data = 0;
-  @(posedge clk);
+  @(negedge clk);
   if (rx_data == 8'hCC)
     $display("PASS Test 2c: rx_data = 0x%0h", rx_data);
   else
@@ -175,24 +175,24 @@ logic        dm_out;
   @(negedge clk);
   tx_data       = 8'hDE;
   store_tx_data = 1;
-  @(posedge clk);
+  @(negedge clk);
   @(negedge clk);
   store_tx_data = 0;
   @(negedge clk);
   tx_data       = 8'hAD;
   store_tx_data = 1;
-  @(posedge clk);
+  @(negedge clk);
   @(negedge clk);
   store_tx_data = 0;
   tx_data       = '0;
-  @(posedge clk);
+  @(negedge clk);
   // Assert clear
   @(negedge clk);
   clear = 1;
-  @(posedge clk);
+  @(negedge clk);
   @(negedge clk);
   clear = 0;
-  @(posedge clk);
+  @(negedge clk);
   if (buffer_occupancy == 7'd0)
     $display("PASS Test 3: buffer cleared, occupancy = %0d", buffer_occupancy);
   else
@@ -203,7 +203,7 @@ logic        dm_out;
   // =======================================================
   @(negedge clk);
   clear = 1;
-  @(posedge clk);
+  @(negedge clk);
   @(negedge clk);
   clear = 0;
   // Push 65 bytes
@@ -211,11 +211,11 @@ logic        dm_out;
     @(negedge clk);
     tx_data       = 8'hFF;
     store_tx_data = 1;
-    @(posedge clk);
+    @(negedge clk);
     @(negedge clk);
     store_tx_data = 0;
   end
-  @(posedge clk);
+  @(negedge clk);
   if (buffer_occupancy == 7'd64)
     $display("PASS Test 4: overflow protected, occupancy = %0d", buffer_occupancy);
   else
@@ -226,16 +226,16 @@ logic        dm_out;
   // =======================================================
   @(negedge clk);
   clear = 1;
-  @(posedge clk);
+  @(negedge clk);
   @(negedge clk);
   clear = 0;
-  @(posedge clk);
+  @(negedge clk);
   @(negedge clk);
   get_rx_data = 1;
-  @(posedge clk);
+  @(negedge clk);
   @(negedge clk);
   get_rx_data = 0;
-  @(posedge clk);
+  @(negedge clk);
   if (buffer_occupancy == 7'd0)
     $display("PASS Test 5: underflow protected, occupancy = %0d", buffer_occupancy);
   else
@@ -264,16 +264,16 @@ logic        dm_out;
   // =======================================================
   @(negedge clk);
   clear = 1;
-  @(posedge clk);
+  @(negedge clk);
   @(negedge clk);
   clear = 0;
   // Push 3 bytes
   @(negedge clk); tx_data = 8'h01; store_tx_data = 1;
-  @(posedge clk); @(negedge clk); store_tx_data = 0;
+  @(negedge clk); @(negedge clk); store_tx_data = 0;
   @(negedge clk); tx_data = 8'h02; store_tx_data = 1;
-  @(posedge clk); @(negedge clk); store_tx_data = 0;
+  @(negedge clk); @(negedge clk); store_tx_data = 0;
   @(negedge clk); tx_data = 8'h03; store_tx_data = 1;
-  @(posedge clk); @(negedge clk); store_tx_data = 0;
+  @(negedge clk); @(negedge clk); store_tx_data = 0;
   tx_data = '0;
   // Command DATA0 send
   @(negedge clk);
@@ -350,7 +350,7 @@ logic        dm_out;
   dp_in = 0; dm_in = 0; #(USB_BIT_PERIOD);
   dp_in = 1; dm_in = 0; #(USB_BIT_PERIOD); // return to idle
   // Wait for RX to process
-  repeat(20) @(posedge clk);
+  repeat(20) @(negedge clk);
   $display("INFO Test 8: rx_packet=%0b rx_transfer_active=%0b rx_error=%0b",
            rx_packet, rx_transfer_active, rx_error);
   if (rx_error == 0)
