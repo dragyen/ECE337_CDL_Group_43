@@ -231,20 +231,20 @@ clear = 0;
 @(negedge clk); @(negedge clk); store_tx_data = 0;
 tx_data = '0;
 
-@(negedge clk);
-tx_packet = 3'd1;
-@(posedge tx_transfer_active);
-$display("INFO Test 7: DATA0 TX started");
-@(negedge tx_transfer_active);
-$display("INFO Test 7: DATA0 TX complete");
-@(negedge clk);
-@(negedge clk);
-@(negedge clk);
-tx_packet = 3'd0;
-if (tx_error == 0)
-    $display("PASS Test 7: DATA0 sent with no tx_error");
-else
-    $display("FAIL Test 7: tx_error asserted on DATA0");
+    @(negedge clk);
+    tx_packet = 3'd1;
+    @(posedge tx_transfer_active);
+    $display("INFO Test 7: DATA0 TX started");
+    @(negedge tx_transfer_active);
+    $display("INFO Test 7: DATA0 TX complete");
+    @(negedge clk);
+    @(negedge clk);
+    @(negedge clk);
+    tx_packet = 3'd0;
+        if (tx_error == 0)
+            $display("PASS Test 7: DATA0 sent with no tx_error");
+        else
+            $display("FAIL Test 7: tx_error asserted on DATA0");
 
         // =======================================================
         // Test 8: Send NAK (tx_packet=4)
@@ -276,8 +276,21 @@ else
         else
             $display("FAIL Test 9: tx_error asserted on STALL");
 
-        
-
+        // RX -> DB -> TX
+        clear = 1; 
+        get_tx_packet_data = '0;
+        @(negedge clk);
+        flush = 0;
+        dp_in = 1;
+        dm_in = '0;
+    
+        repeat(7) @(negedge clk);
+        dp_in = 0;
+        @(negedge clk);
+        // store_rx_packet_data = 1; // store byte   
+        @(negedge clk);
+        // get_tx_packet_data = 1;
+        repeat(10) @(negedge clk);
 
 
 
