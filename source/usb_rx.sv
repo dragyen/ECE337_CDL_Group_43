@@ -91,7 +91,8 @@ always_comb begin : counter_comb
     next_byte_done = 0;
     next_token_done = 0;
     next_count = count;
-    
+    next_shift_strobe_seen = shift_strobe_seen;
+
     if (clear_count) begin
         next_count = 0;
     end
@@ -202,7 +203,7 @@ always_comb begin : fsm_comb
             if (eop_det) begin
                 next_state = DONE;
             end
-
+            rx_error = 1;
             rx_transfer_active = 1;
         end
         TOKEN: begin

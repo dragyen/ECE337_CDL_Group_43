@@ -40,7 +40,7 @@ module tb_usb_rx();
     endtask
 
     task send_bit(input logic b);
-        $display("%d: sending bit: %d", $time, b);
+        //$display("%d: sending bit: %d", $time, b);
         if (b == 0) cur_line = ~cur_line;
         dp_in = cur_line;
         dm_in = ~cur_line;
@@ -75,51 +75,49 @@ module tb_usb_rx();
     endtask
 
 
-    // dummy CRC5 = 5'b11111, change to match whatever your design uses
-    task send_token_fields(input logic [6:0] addr, input logic [3:0] endp);
+    task send_token_fields(input logic [6:0] addr, input logic [3:0] endp, input logic [4:0] crc5);
         for (int i = 0; i < 7; i++) send_bit(addr[i]);
         for (int i = 0; i < 4; i++) send_bit(endp[i]);
-        for (int i = 0; i < 5; i++) send_bit(1'b1); // dummy CRC5
+        for (int i = 0; i < 5; i++) send_bit(crc5[i]);
     endtask
 
-    // dummy CRC16 = 16'hFFFF, change to match whatever your design uses
-    task send_data_payload(input logic [7:0] data[], input int len);
+    task send_data_payload(input logic [7:0] data[], input int len, input logic [15:0] crc16);
         for (int i = 0; i < len; i++) send_byte_lsb(data[i]);
-        send_byte_lsb(8'hFF);
-        send_byte_lsb(8'hFF);
+        send_byte_lsb(crc16[7:0]);   // low byte first
+        send_byte_lsb(crc16[15:8]);  // high byte
     endtask
 
-    task send_out_token(input logic [6:0] addr, input logic [3:0] endp);
+    task send_out_token(input logic [6:0] addr, input logic [3:0] endp, input logic [4:0] crc5);
         send_sync();
         send_pid(4'b0001);
-        send_token_fields(addr, endp);
+        send_token_fields(addr, endp, crc5);
         send_eop();
     endtask
 
-    task send_in_token(input logic [6:0] addr, input logic [3:0] endp);
+    task send_in_token(input logic [6:0] addr, input logic [3:0] endp, input logic [4:0] crc5);
         send_sync();
         send_pid(4'b1001);
-        send_token_fields(addr, endp);
+        send_token_fields(addr, endp, crc5);
+        send_eop();
+    endtask
+
+    task send_data0(input logic [7:0] data[], input int len, input logic [15:0] crc16);
+        send_sync();
+        send_pid(4'b0011);
+        send_data_payload(data, len, crc16);
+        send_eop();
+    endtask
+
+    task send_data1(input logic [7:0] data[], input int len, input logic [15:0] crc16);
+        send_sync();
+        send_pid(4'b1011);
+        send_data_payload(data, len, crc16);
         send_eop();
     endtask
 
     task send_ack();
         send_sync();
         send_pid(4'b0010);
-        send_eop();
-    endtask
-
-    task send_data0(input logic [7:0] data[], input int len);
-        send_sync();
-        send_pid(4'b0011);
-        send_data_payload(data, len);
-        send_eop();
-    endtask
-
-    task send_data1(input logic [7:0] data[], input int len);
-        send_sync();
-        send_pid(4'b1011);
-        send_data_payload(data, len);
         send_eop();
     endtask
 
@@ -143,14 +141,14 @@ module tb_usb_rx();
         // Test 1: OUT token, matching address + endpoint
         tb_test_num = 1;
         reset_dut();
-        send_out_token(7'h00, 4'h0);
+        send_out_token(7'h00, 4'h0, 5'h02);
         repeat(10) @(posedge clk);
         assert(rx_error == 0) else $error("Test %0d failed: OUT token caused rx_error", tb_test_num);
 
         // Test 2: IN token, matching address + endpoint
         tb_test_num = 2;
         reset_dut();
-        send_in_token(7'h00, 4'h0);
+        send_in_token(7'h00, 4'h0, 5'h02);
         repeat(10) @(posedge clk);
         assert(rx_error == 0) else $error("Test %0d failed: IN token caused rx_error", tb_test_num);
 
@@ -166,7 +164,7 @@ module tb_usb_rx();
         reset_dut();
         test_data = new[1];
         test_data[0] = 8'hAB;
-        send_data0(test_data, 1);
+        send_data0(test_data, 1, 16'h0001);
         repeat(10) @(posedge clk);
         assert(rx_error == 0) else $error("Test %0d failed: DATA0 single byte caused rx_error", tb_test_num);
 
@@ -176,7 +174,7 @@ module tb_usb_rx();
         test_data = new[4];
         test_data[0] = 8'hDE; test_data[1] = 8'hAD;
         test_data[2] = 8'hBE; test_data[3] = 8'hEF;
-        send_data1(test_data, 4);
+        send_data1(test_data, 4, 16'h3E64);
         repeat(10) @(posedge clk);
         assert(rx_error == 0) else $error("Test %0d failed: DATA1 multi-byte caused rx_error", tb_test_num);
 
@@ -185,7 +183,7 @@ module tb_usb_rx();
         reset_dut();
         test_data = new[64];
         for (int i = 0; i < 64; i++) test_data[i] = i[7:0];
-        send_data0(test_data, 64);
+        send_data0(test_data, 64, 16'hF726);
         repeat(10) @(posedge clk);
         assert(rx_error == 0) else $error("Test %0d failed: 64-byte DATA0 caused rx_error", tb_test_num);
 
@@ -212,7 +210,7 @@ module tb_usb_rx();
         tb_test_num = 9;
         reset_dut();
         fork
-            send_out_token(7'h00, 4'h0);
+            send_out_token(7'h00, 4'h0, 5'h02);
             begin
                 #(BIT_PERIOD * 4); // a few bits in, mid-sync
                 assert(rx_transfer_active == 1) else $error("Test %0d failed: transfer_active should be high mid-packet", tb_test_num);
@@ -224,7 +222,7 @@ module tb_usb_rx();
         reset_dut();
         test_data = new[2];
         test_data[0] = 8'hCA; test_data[1] = 8'hFE;
-        send_data0(test_data, 2);
+        send_data0(test_data, 2, 16'h6F29);
         // just verify no error - store pulse checking is better in waveform viewer
         repeat(10) @(posedge clk);
         assert(rx_error == 0) else $error("Test %0d failed: DATA0 2-byte store check caused rx_error", tb_test_num);
@@ -232,9 +230,9 @@ module tb_usb_rx();
         // Test 11: flush asserted at start of each new packet
         tb_test_num = 11;
         reset_dut();
-        send_out_token(7'h00, 4'h0);
+        send_out_token(7'h00, 4'h0, 5'h02);
         #(BIT_PERIOD * 2);
-        send_out_token(7'h00, 4'h0);
+        send_out_token(7'h00, 4'h0, 5'h02);
         repeat(10) @(posedge clk);
         assert(rx_error == 0) else $error("Test %0d failed: back-to-back tokens caused rx_error", tb_test_num);
 
@@ -242,7 +240,7 @@ module tb_usb_rx();
         // (per manual, SoC core should not be able to discern a mismatch occurred)
         tb_test_num = 12;
         reset_dut();
-        send_out_token(7'h7F, 4'hF); // wrong addr and endp
+        send_out_token(7'h7F, 4'hF, 5'h08); // wrong addr and endp
         repeat(10) @(posedge clk);
         assert(rx_data_ready == 0) else $error("Test %0d failed: mismatched addr/endp should not set rx_data_ready", tb_test_num);
 
