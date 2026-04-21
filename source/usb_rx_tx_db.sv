@@ -87,7 +87,8 @@ module usb_rx_tx_db #(
     .tx_error(tx_error),
     // From Data Buffer
     .tx_packet_data(tx_packet_data),
-    .get_tx_packet_data(get_tx_packet_data)
+    .get_tx_packet_data(get_tx_packet_data),
+    .buffer_occupancy(buffer_occupancy)
   );
 
 endmodule

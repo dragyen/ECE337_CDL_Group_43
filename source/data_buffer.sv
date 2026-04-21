@@ -23,16 +23,17 @@ module data_buffer (
     logic [5:0] next_write_ptr, next_read_ptr;
     logic [6:0] counter,next_counter;
     logic full, empty;
+    /* verilator lint_off UNDRIVEN */
     logic [7:0] write_data;
-    logic [7:0] read_data;
+    /* verilator lint_on UNDRIVEN */
     logic [7:0] next_write_data;
 
     assign full = (counter == 7'd64);
     assign empty = (counter == 7'd0);
     assign buffer_occupancy = counter;
 
-    assign tx_packet_data = read_data;
-    assign rx_data = read_data;
+    assign tx_packet_data = reg_mem[read_ptr];
+    assign rx_data = reg_mem[read_ptr];
 
     always_comb begin
         next_write_ptr = write_ptr;
@@ -60,13 +61,11 @@ module data_buffer (
             write_ptr <= '0;
             read_ptr <= '0;
             counter <= '0;
-            read_data <= '0;
         end else begin
             write_ptr <= next_write_ptr;
             read_ptr <= next_read_ptr;
             counter <= next_counter;
             reg_mem[write_ptr] <= next_write_data;
-            read_data <= reg_mem[read_ptr];
         end
         end
 

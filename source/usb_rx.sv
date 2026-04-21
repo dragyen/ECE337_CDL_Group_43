@@ -3,7 +3,7 @@
 module usb_rx (
     input logic clk, n_rst, 
     dp_in, dm_in,
-    input logic [7:0] buffer_occupancy,
+    input logic [6:0] buffer_occupancy,
     output logic rx_data_ready, rx_transfer_active,
     rx_error, flush, store_rx_packet_data,
     output logic [3:0] rx_packet,

@@ -1,0 +1,130 @@
+Information: Updating design information... (UID-85)
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 1
+Design : usb_rx_tx_db
+Version: W-2024.09-SP4
+Date   : Sun Apr 19 14:28:15 2026
+****************************************
+
+Operating Conditions: typical   Library: osu05_stdcells
+Wire Load Model Mode: top
+
+  Startpoint: u_usb_tx/currentState_reg[0]
+              (rising edge-triggered flip-flop)
+  Endpoint: tx_transfer_active
+            (output port)
+  Path Group: (none)
+  Path Type: max
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  u_usb_tx/currentState_reg[0]/CLK (DFFSR)                0.00       0.00 r
+  u_usb_tx/currentState_reg[0]/Q (DFFSR)                  0.82       0.82 f
+  u_usb_tx/U265/Y (INVX1)                                 0.25       1.07 r
+  u_usb_tx/U251/Y (NAND3X1)                               0.39       1.46 f
+  u_usb_tx/U216/Y (NAND2X1)                               0.37       1.83 r
+  u_usb_tx/U191/Y (NOR2X1)                                0.28       2.11 f
+  u_usb_tx/U51/Y (NAND2X1)                                0.38       2.50 r
+  u_usb_tx/U4/Y (OR2X1)                                   0.20       2.70 r
+  u_usb_tx/tx_transfer_active (usb_tx)                    0.00       2.70 r
+  tx_transfer_active (out)                                0.00       2.70 r
+  data arrival time                                                  2.70
+  --------------------------------------------------------------------------
+  (Path is unconstrained)
+
+
+1
+ 
+****************************************
+Report : area
+Design : usb_rx_tx_db
+Version: W-2024.09-SP4
+Date   : Sun Apr 19 14:28:15 2026
+****************************************
+
+Library(s) Used:
+
+    osu05_stdcells (File: /home/ecegrid/a/ece337/summer24-refactor/tech/ami05/osu05_stdcells.db)
+
+Number of ports:                          261
+Number of nets:                          3547
+Number of cells:                         3348
+Number of combinational cells:           2542
+Number of sequential cells:               649
+Number of macros/black boxes:               0
+Number of buf/inv:                        816
+Number of references:                       3
+
+Combinational area:             690075.000000
+Buf/Inv area:                   125280.000000
+Noncombinational area:          659376.000000
+Macro/Black Box area:                0.000000
+Net Interconnect area:      undefined  (No wire load specified)
+
+Total cell area:               1349451.000000
+Total area:                 undefined
+1
+Loading db file '/home/ecegrid/a/ece337/summer24-refactor/tech/ami05/osu05_stdcells.db'
+Information: Propagating switching activity (low effort zero delay simulation). (PWR-6)
+Warning: There is no defined clock in the design. (PWR-80)
+Warning: Design has unannotated primary inputs. (PWR-414)
+Warning: Design has unannotated sequential cell outputs. (PWR-415)
+ 
+****************************************
+Report : power
+        -analysis_effort low
+Design : usb_rx_tx_db
+Version: W-2024.09-SP4
+Date   : Sun Apr 19 14:28:16 2026
+****************************************
+
+
+Library(s) Used:
+
+    osu05_stdcells (File: /home/ecegrid/a/ece337/summer24-refactor/tech/ami05/osu05_stdcells.db)
+
+
+Operating Conditions: typical   Library: osu05_stdcells
+Wire Load Model Mode: top
+
+
+Global Operating Voltage = 5    
+Power-specific unit information :
+    Voltage Units = 1V
+    Capacitance Units = 1.000000pf
+    Time Units = 1ns
+    Dynamic Power Units = 1mW    (derived from V,C,T units)
+    Leakage Power Units = 1nW
+
+
+Attributes
+----------
+i - Including register clock pin internal power
+
+
+  Cell Internal Power  = 154.7827 mW   (70%)
+  Net Switching Power  =  65.3803 mW   (30%)
+                         ---------
+Total Dynamic Power    = 220.1630 mW  (100%)
+
+Cell Leakage Power     = 391.4413 nW
+
+Information: report_power power group summary does not include estimated clock tree power. (PWR-789)
+
+                 Internal         Switching           Leakage            Total
+Power Group      Power            Power               Power              Power   (   %    )  Attrs
+--------------------------------------------------------------------------------------------------
+io_pad             0.0000            0.0000            0.0000            0.0000  (   0.00%)
+memory             0.0000            0.0000            0.0000            0.0000  (   0.00%)
+black_box          0.0000            0.0000            0.0000            0.0000  (   0.00%)
+clock_network      0.0000            0.0000            0.0000            0.0000  (   0.00%)  i
+register           0.0000            0.0000            0.0000            0.0000  (   0.00%)
+sequential       141.2904            0.5648          197.5697          141.8555  (  64.43%)
+combinational     13.4922           64.8154          193.8716           78.3078  (  35.57%)
+--------------------------------------------------------------------------------------------------
+Total            154.7827 mW        65.3803 mW       391.4413 nW       220.1633 mW
+1
