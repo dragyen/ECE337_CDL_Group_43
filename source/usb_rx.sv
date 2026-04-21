@@ -11,7 +11,7 @@ module usb_rx (
 );
 
 logic edge_det, decoded_data, valid_bit,
-    shift_strobe, crc5_en, crc16_en,
+    shift_strobe, new_bit, crc5_en, crc16_en,
     crc5_valid, crc16_valid,
     crc5_clear, crc16_clear,
     sr_en, sr_clear, clear_count,
@@ -27,7 +27,12 @@ logic [3:0] bit_count;
 rx_edge_detector ed1 (.*);
 eop_detector eopd1 (.*);
 nrzi_decoder nrzi1 (.*);
-bit_stuffing_remover bsr1 (.*);
+bit_stuffing_remover bsr1 (
+    .clk(shift_strobe),
+    .n_rst(n_rst),
+    .valid_bit(valid_bit),
+    .decoded_data(decoded_data)
+    );
 rx_bit_timer bt1 (.*);
 crc_checker_5bit crc5 (
     .clk(shift_strobe),
@@ -76,8 +81,9 @@ typedef enum logic [3:0] {
 state_t state, next_state;
 pid_t pid, next_pid;
 
-logic next_byte_done, next_token_done;
+logic next_byte_done, next_token_done, shift_strobe_seen, next_shift_strobe_seen;
 logic packet_size; //1 for 16 bit, 0 for 8 bit
+
 
 assign packet_size = (pid == OUT || pid == IN) ? 1 : 0;
 
@@ -85,25 +91,31 @@ always_comb begin : counter_comb
     next_byte_done = 0;
     next_token_done = 0;
     next_count = count;
-
     
-    if (shift_strobe) begin
-        next_count = count + 1;
-    end
     if (clear_count) begin
         next_count = 0;
     end
-    if (count == 7) begin
-        next_byte_done = 1;
-
-        if (packet_size == 0) begin
-            next_count = 0;
+    else begin
+        if (shift_strobe) begin
+            next_shift_strobe_seen = 1;
         end
+        if (new_bit && shift_strobe_seen) begin
+            next_count = count + 1;
+            if (count == 7) begin
+                next_byte_done = 1;
+
+                if (packet_size == 0) begin
+                    next_count = 0;
+                end
+            end
+            else if (count == 15) begin
+                next_token_done = 1;
+                next_count = 0;
+            end
+        end
+
     end
-    else if (count == 15) begin
-        next_token_done = 1;
-        next_count = 0;
-    end
+    
 end
 
 always_ff @(posedge clk, negedge n_rst) begin : counter_ff
@@ -111,11 +123,13 @@ always_ff @(posedge clk, negedge n_rst) begin : counter_ff
         count <= 0;
         byte_done <= 0;
         token_done <= 0;
+        shift_strobe_seen <= 0;
     end
     else begin
         count <= next_count;
         byte_done <= next_byte_done;
         token_done <= next_token_done;
+        shift_strobe_seen <= next_shift_strobe_seen;
     end
 end
 
@@ -151,7 +165,7 @@ always_comb begin : fsm_comb
             sr_en = 1;
             rx_transfer_active = 1;
 
-            if (byte_done && data_parallel == 16'h0001) begin
+            if (byte_done && data_parallel == 16'h8000) begin
                 next_state = PID;
             end
             else if (byte_done) begin
@@ -164,8 +178,8 @@ always_comb begin : fsm_comb
             rx_transfer_active = 1;
 
             if (byte_done) begin
-                if (data_parallel[3:0] == ~(data_parallel[7:4])) begin
-                    next_pid = pid_t'(data_parallel[7:4]); // inverted is 4 lsb
+                if (data_parallel[11:8] == ~(data_parallel[15:12])) begin
+                    next_pid = pid_t'(data_parallel[11:8]); // inverted is 4 lsb
                     if (next_pid == OUT || next_pid == IN) begin
                         next_state = TOKEN;
                     end
@@ -211,7 +225,7 @@ always_comb begin : fsm_comb
                     flush = 1;
                 end
                 else begin
-                    rx_packet_data = data_parallel[7:0];
+                    rx_packet_data = data_parallel[15:8];
                     store_rx_packet_data = 1;
                 end
             end

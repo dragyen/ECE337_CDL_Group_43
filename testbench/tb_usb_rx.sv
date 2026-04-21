@@ -13,7 +13,7 @@ module tb_usb_rx();
     usb_rx DUT (.*);
 
     localparam CLK_PERIOD = 10;
-    localparam BIT_PERIOD = 83; // ~12MHz in ns
+    localparam BIT_PERIOD = 83.33; // ~12MHz in ns
 
     logic cur_line; // tracks current NRZI line state
 
@@ -40,6 +40,7 @@ module tb_usb_rx();
     endtask
 
     task send_bit(input logic b);
+        $display("%d: sending bit: %d", $time, b);
         if (b == 0) cur_line = ~cur_line;
         dp_in = cur_line;
         dm_in = ~cur_line;
@@ -51,13 +52,18 @@ module tb_usb_rx();
     endtask
 
     task send_sync();
+        $display("Sending sync byte");
         // decoded = 0000_0001, sent LSB first
-        send_byte_lsb(8'b00000001);
+        send_byte_lsb(8'b10000000);
     endtask
 
     task send_pid(input logic [3:0] pid_val);
-        // lower nibble = pid, upper nibble = ~pid
-        send_byte_lsb({~pid_val, pid_val});
+        logic [3:0] check_bits;
+        logic [7:0] pid_byte;
+        check_bits = ~pid_val;
+        pid_byte = {check_bits, pid_val};
+        $display("sending PID byte: %b", pid_byte);
+        send_byte_lsb(pid_byte);
     endtask
 
     task send_eop();
@@ -68,7 +74,6 @@ module tb_usb_rx();
         #(BIT_PERIOD);
     endtask
 
-    
 
     // dummy CRC5 = 5'b11111, change to match whatever your design uses
     task send_token_fields(input logic [6:0] addr, input logic [3:0] endp);
