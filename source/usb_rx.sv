@@ -134,6 +134,10 @@ always_ff @(posedge clk, negedge n_rst) begin : counter_ff
     end
 end
 
+//data pipeline
+logic [7:0] pipeline, next_pipeline;
+logic delayed, next_delayed;
+
 always_comb begin : fsm_comb
     next_state = state;
     crc5_en = 0;
@@ -151,6 +155,8 @@ always_comb begin : fsm_comb
     rx_packet_data = 8'b0;
     store_rx_packet_data = 0;
     next_pid = pid;
+    next_pipeline = pipeline;
+    next_delayed = delayed;
 
     case (state)
         IDLE: begin
@@ -226,8 +232,13 @@ always_comb begin : fsm_comb
                     flush = 1;
                 end
                 else begin
-                    rx_packet_data = data_parallel[15:8];
-                    store_rx_packet_data = 1;
+                    rx_packet_data = pipeline;
+                    next_pipeline = data_parallel[15:8];
+                    
+                    if (delayed) begin
+                        store_rx_packet_data = 1;
+                    end
+                    next_delayed = 1;
                 end
             end
 
@@ -237,6 +248,8 @@ always_comb begin : fsm_comb
         end
         EOP: begin
             rx_transfer_active = 1;
+            next_pipeline = 0; //clear pipeline
+            next_delayed = 0;
 
             if (!eop_det) begin //from all packet types
                 next_state = ERROR;
@@ -269,6 +282,7 @@ always_comb begin : fsm_comb
             crc5_clear = 1;
             sr_clear = 1;
             clear_count = 1;
+            next_delayed = 0;
         end
     endcase
 end
@@ -277,10 +291,14 @@ always_ff @ (posedge clk, negedge n_rst) begin : fsm_ff
     if (n_rst == 1'b0) begin
         state <= IDLE;
         pid <= UNKNOWN;
+        pipeline <= 0;
+        delayed <= 0;
     end
     else begin
         state <= next_state;
         pid <= next_pid;
+        pipeline <= next_pipeline;
+        delayed <= next_delayed;
     end
 end
 

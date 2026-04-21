@@ -5,15 +5,17 @@ add wave -noupdate -expand -group Inputs /tb_usb_rx/n_rst
 add wave -noupdate -expand -group Inputs /tb_usb_rx/dp_in
 add wave -noupdate -expand -group Inputs /tb_usb_rx/dm_in
 add wave -noupdate -expand -group Inputs /tb_usb_rx/buffer_occupancy
-add wave -noupdate -group Outputs /tb_usb_rx/rx_data_ready
-add wave -noupdate -group Outputs /tb_usb_rx/rx_transfer_active
-add wave -noupdate -group Outputs /tb_usb_rx/rx_error
-add wave -noupdate -group Outputs /tb_usb_rx/flush
-add wave -noupdate -group Outputs /tb_usb_rx/store_rx_packet_data
-add wave -noupdate -group Outputs /tb_usb_rx/rx_packet
-add wave -noupdate -group Outputs /tb_usb_rx/rx_packet_data
+add wave -noupdate -expand -group Outputs /tb_usb_rx/rx_data_ready
+add wave -noupdate -expand -group Outputs /tb_usb_rx/rx_transfer_active
+add wave -noupdate -expand -group Outputs /tb_usb_rx/rx_error
+add wave -noupdate -expand -group Outputs /tb_usb_rx/flush
+add wave -noupdate -expand -group Outputs /tb_usb_rx/store_rx_packet_data
+add wave -noupdate -expand -group Outputs /tb_usb_rx/rx_packet
+add wave -noupdate -expand -group Outputs /tb_usb_rx/rx_packet_data
 add wave -noupdate -group {Internal TB} /tb_usb_rx/cur_line
 add wave -noupdate -group {Internal TB} /tb_usb_rx/tb_test_num
+add wave -noupdate -expand -group {DUT Internal} -expand -group Pipeline /tb_usb_rx/DUT/pipeline
+add wave -noupdate -expand -group {DUT Internal} -expand -group Pipeline /tb_usb_rx/DUT/next_pipeline
 add wave -noupdate -expand -group {DUT Internal} -expand -group CRC5 -radix binary /tb_usb_rx/DUT/crc5/crc_reg
 add wave -noupdate -expand -group {DUT Internal} -expand -group CRC5 -radix binary /tb_usb_rx/DUT/crc5/next_crc
 add wave -noupdate -expand -group {DUT Internal} -expand -group CRC16 /tb_usb_rx/DUT/crc16/crc
@@ -47,7 +49,7 @@ add wave -noupdate -expand -group {DUT Internal} /tb_usb_rx/DUT/sr_en
 add wave -noupdate -expand -group {DUT Internal} /tb_usb_rx/DUT/sr_clear
 add wave -noupdate -expand -group {DUT Internal} /tb_usb_rx/DUT/packet_size
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {1778769 ps} 0}
+WaveRestoreCursors {{Cursor 1} {9104516 ps} 0}
 quietly wave cursor active 1
 configure wave -namecolwidth 150
 configure wave -valuecolwidth 100
@@ -63,4 +65,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ps
 update
-WaveRestoreZoom {1730241 ps} {1945616 ps}
+WaveRestoreZoom {7847764 ps} {12009548 ps}
