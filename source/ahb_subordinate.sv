@@ -25,3 +25,4 @@ module ahb_subordinate (
     input logic tx_transfer_active, tx_error
 );
 
+endmodule
