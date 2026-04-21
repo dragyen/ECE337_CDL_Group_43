@@ -15,7 +15,7 @@ always_comb begin : sr_comb
         next_regs = 16'b0;
     end
     else if (valid_en) begin
-        next_regs = serial_in << 15 | regs >> 1;
+        next_regs = {serial_in, regs[15:1]};
     end
 end
 
