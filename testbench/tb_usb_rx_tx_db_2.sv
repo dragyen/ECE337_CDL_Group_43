@@ -407,23 +407,80 @@ module tb_usb_rx_tx_db_2();
         tb_test_num = 3;
         reset_dut();
         begin
-            // set up loopback: RX inputs driven by TX outputs
-            // simplest way: continuous assign in the testbench (remove tb's own dp_in/dm_in drives)
-            // but that conflicts with send_* tasks that drive dp_in directly
-            // so we'll just manually connect during this test
-
-            // disable tb driving of dp_in/dm_in, let TX drive through assign
-            // (done outside initial block - see note below)
+            force dp_in = dp_out;
+            force dm_in = dm_out;
 
             // trigger ACK
             trigger_tx(3'd3);
-            dp_in = dp_out;
-            dm_in = dm_out;
             repeat(100) @(posedge clk);
+
+
+            release dp_in;
+            release dm_in;
+            dp_in = 1; dm_in = 0;
 
             assert(rx_data_ready_seen == 1) else $error("Test %0d failed: RX never saw TX's ACK", tb_test_num);
             assert(rx_packet_captured == 4'b0010) else $error("Test %0d failed: RX decoded PID 0x%h, expected 0x2 (ACK)", tb_test_num, rx_packet_captured);
             assert(rx_error_seen == 0) else $error("Test %0d failed: rx_error during loopback", tb_test_num);
+        end
+
+        // Test 4: TX sends 64-byte DATA0, loopback verified by RX
+        // Flow: fill buffer -> trigger TX DATA0 -> loopback dp_out/dm_out to RX -> verify
+        tb_test_num = 4;
+        reset_dut();
+        begin
+            logic [7:0] popped_byte;
+
+            // Step 1: fill buffer with 64 incrementing bytes
+            test_data = new[64];
+            for (int i = 0; i < 64; i++) test_data[i] = i[7:0];
+            fill_tx_buffer(test_data, 64);
+            assert(buffer_occupancy == 7'd64) else $error("Test %0d failed: occupancy after fill expected 64, got %0d", tb_test_num, buffer_occupancy);
+
+            // Step 2: set up loopback from TX to RX
+            force dp_in = dp_out;
+            force dm_in = dm_out;
+
+            // Step 3: trigger TX DATA0, run capture in parallel
+            fork
+                trigger_tx(3'd1); // 1 = DATA0
+                begin
+                    // RX should catch the packet from the loopback
+                    // just wait until rx finishes or times out
+                    int t;
+                    t = 0;
+                    while (!rx_data_ready_seen && !rx_error_seen && t < 200000) begin
+                        @(posedge clk);
+                        t++;
+                    end
+                    if (t >= 200000) $error("Test %0d failed: RX never finished during loopback", tb_test_num);
+                end
+            join
+
+            // settle before releasing loopback
+            repeat(20) @(posedge clk);
+            release dp_in;
+            release dm_in;
+            dp_in = 1; dm_in = 0;
+            cur_line = 1;
+
+            // Step 4: verify RX decoded the TX output correctly
+            assert(rx_data_ready_seen == 1) else $error("Test %0d failed: rx_data_ready never pulsed", tb_test_num);
+            assert(rx_packet_captured == 4'b0011) else $error("Test %0d failed: expected DATA0 PID (0x3), got 0x%h", tb_test_num, rx_packet_captured);
+            assert(rx_error_seen == 0) else $error("Test %0d failed: rx_error during loopback", tb_test_num);
+            assert(tx_error_seen == 0) else $error("Test %0d failed: tx_error during DATA0 transmission", tb_test_num);
+
+            // Step 5: verify buffer contents
+            // After TX drains 64 bytes and RX re-pushes 64 bytes, occupancy should be 64 again
+            assert(buffer_occupancy == 7'd64) else $error("Test %0d failed: occupancy after loopback expected 64, got %0d", tb_test_num, buffer_occupancy);
+
+            // Step 6: pop the re-received bytes and verify content order matches
+            for (int i = 0; i < 64; i++) begin
+                pop_rx_byte(popped_byte);
+                assert(popped_byte == i[7:0]) else $error("Test %0d failed: byte %0d expected 0x%h, got 0x%h", tb_test_num, i, i[7:0], popped_byte);
+            end
+
+            assert(buffer_occupancy == 7'd0) else $error("Test %0d failed: buffer should be empty after all pops", tb_test_num);
         end
 
         $display("All tests completed");

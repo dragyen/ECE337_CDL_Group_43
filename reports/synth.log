@@ -31,20 +31,19 @@ Please use '-no_save' simv switch to avoid this.
             Inclusivity and Diversity" (Refer to article 000036315 at
                         https://solvnetplus.synopsys.com)
 Initializing...
-Initializing gui preferences from file  /home/ecegridfs/a/337mg193/.synopsys_dc_gui/preferences.tcl
-Current time:       Sun Apr 19 14:28:10 2026
-Hostname:           ececomp3.ecn.purdue.edu
+Current time:       Wed Apr 22 16:01:21 2026
+Hostname:           ececomp5.ecn.purdue.edu
 CPU Model:          AMD EPYC 7513 32-Core Processor
-CPU Details:        Cores = 128 : Sockets = 2 : Cache Size = 512 KB : Freq = 2.60 GHz
-OS:                 Linux 4.18.0-553.111.1.el8_10.x86_64
-RAM:                502 GB (Free 207 GB)
-Swap:                63 GB (Free  55 GB)
+CPU Details:        Cores = 128 : Sockets = 2 : Cache Size = 512 KB : Freq = 3.67 GHz
+OS:                 Linux 5.15.0-318.199.3.2.el8uek.x86_64
+RAM:                502 GB (Free  47 GB)
+Swap:                63 GB (Free  63 GB)
 Work Filesystem:    /home/ecegridfs/a mounted to ecegridfs.ecn.purdue.edu:/export/home/a
 Tmp Filesystem:     /tmp mounted to tmpfs
-Work Disk:          2968 GB (Free 357 GB)
-Tmp Disk:            19 GB (Free  18 GB)
+Work Disk:          2968 GB (Free 289 GB)
+Tmp Disk:            17 GB (Free  16 GB)
 
-CPU Load: 29%, Ram Free: 207 GB, Swap Free: 55 GB, Work Disk Free: 357 GB, Tmp Disk Free: 18 GB
+CPU Load: 8%, Ram Free: 47 GB, Swap Free: 63 GB, Work Disk Free: 289 GB, Tmp Disk Free: 16 GB
 ############################################
 #
 # Auto-generated project tcl file:
@@ -53,13 +52,13 @@ CPU Load: 29%, Ram Free: 207 GB, Swap Free: 55 GB, Work Disk Free: 357 GB, Tmp D
 #
 ############################################
 sh date
-Sun Apr 19 14:28:11 EDT 2026
-set TOP_MODULE usb_rx_tx_db
-usb_rx_tx_db
+Wed Apr 22 16:01:21 EDT 2026
+set TOP_MODULE usb_rx_tx_db_2
+usb_rx_tx_db_2
 set DC_SCRIPT synth.tcl
 synth.tcl
-set READ_SOURCES u337mg158_ece337_usb_rx_tx_db_1.0.0-read-sources
-u337mg158_ece337_usb_rx_tx_db_1.0.0-read-sources
+set READ_SOURCES u337mg158_ece337_usb_rx_tx_db_2_1.0.0-read-sources
+u337mg158_ece337_usb_rx_tx_db_2_1.0.0-read-sources
 set SCRIPT_DIR src/u337mg158_ece337_synfiles_0
 src/u337mg158_ece337_synfiles_0
 set REPORT_DIR reports
@@ -123,19 +122,19 @@ Running PRESTO HDLC
 Compiling source file ./src/u337mg158_ece337_usb_rx_1.0.0/source/usb_rx.sv
 Presto compilation completed successfully.
 Running PRESTO HDLC
-Compiling source file ./src/u337mg158_ece337_usb_rx_tx_db_1.0.0/source/usb_rx_tx_db.sv
+Compiling source file ./src/u337mg158_ece337_usb_rx_tx_db_2_1.0.0/source/usb_rx_tx_db_2.sv
 Presto compilation completed successfully.
 Loading db file '/package/eda/synopsys/syn/W-2024.09-SP4/libraries/syn/gtech.db'
 Loading db file '/package/eda/synopsys/syn/W-2024.09-SP4/libraries/syn/standard.sldb'
   Loading link library 'osu05_stdcells'
   Loading link library 'gtech'
 Running PRESTO HDLC
-Presto compilation completed successfully. (usb_rx_tx_db)
-Module: usb_rx_tx_db, Ports: 44, Input: 18, Output: 26, Inout: 0
-Module: usb_rx_tx_db, Registers: 0, Async set/reset: 0, Sync set/reset: 0
-Information: Module usb_rx_tx_db report end. (ELAB-965)
+Presto compilation completed successfully. (usb_rx_tx_db_2)
+Module: usb_rx_tx_db_2, Ports: 44, Input: 18, Output: 26, Inout: 0
+Module: usb_rx_tx_db_2, Registers: 0, Async set/reset: 0, Sync set/reset: 0
+Information: Module usb_rx_tx_db_2 report end. (ELAB-965)
 Elaborated 1 design.
-Current design is now 'usb_rx_tx_db'.
+Current design is now 'usb_rx_tx_db_2'.
 Information: Building the design 'data_buffer'. (HDL-193)
 
 Inferred memory devices in process in routine 'data_buffer' in file
@@ -143,47 +142,49 @@ Inferred memory devices in process in routine 'data_buffer' in file
 ==================================================================================
 |    Register Name    |   Type    | Width | Bus | MB |  Set  | Reset | ST | Line |
 ==================================================================================
-|     reg_mem_reg     | Flip-flop |  512  |  Y  | N  | None  | None  | N  |  60  |
-|    write_ptr_reg    | Flip-flop |   6   |  Y  | N  | None  | Async | N  |  60  |
-|    read_ptr_reg     | Flip-flop |   6   |  Y  | N  | None  | Async | N  |  60  |
-|     counter_reg     | Flip-flop |   7   |  Y  | N  | None  | Async | N  |  60  |
-|    read_data_reg    | Flip-flop |   8   |  Y  | N  | None  | Async | N  |  60  |
+|     reg_mem_reg     | Flip-flop |  512  |  Y  | N  | None  | None  | N  |  59  |
+|    write_ptr_reg    | Flip-flop |   6   |  Y  | N  | None  | Async | N  |  59  |
+|    read_ptr_reg     | Flip-flop |   6   |  Y  | N  | None  | Async | N  |  59  |
+|     counter_reg     | Flip-flop |   7   |  Y  | N  | None  | Async | N  |  59  |
 ==================================================================================
 Statistics for MUX_OPs
 ======================================================
 | block name/line  | Inputs | Outputs | # sel inputs |
 ======================================================
-|  data_buffer/71  |   64   |    8    |      6       |
+|  data_buffer/35  |   64   |    8    |      6       |
 ======================================================
 Presto compilation completed successfully. (data_buffer)
 Module: data_buffer, Ports: 47, Input: 24, Output: 23, Inout: 0
-Module: data_buffer, Registers: 539, Async set/reset: 27, Sync set/reset: 0
+Module: data_buffer, Registers: 531, Async set/reset: 19, Sync set/reset: 0
 Information: Module data_buffer report end. (ELAB-965)
 Information: Building the design 'usb_rx'. (HDL-193)
-Warning:  ./src/u337mg158_ece337_usb_rx_1.0.0/source/usb_rx.sv:82: signed to unsigned assignment occurs. (VER-318)
+Warning:  ./src/u337mg158_ece337_usb_rx_1.0.0/source/usb_rx.sv:88: signed to unsigned assignment occurs. (VER-318)
 
 Statistics for case statements in always block in file
 	'./src/u337mg158_ece337_usb_rx_1.0.0/source/usb_rx.sv'
 ============================================================
 |    Line    |  full/ parallel  |      block location      |
 ============================================================
-|    140     |    auto/auto     | always block at line 122 |
+|    161     |    auto/auto     | always block at line 141 |
 ============================================================
 
 Inferred memory devices in process in routine 'usb_rx' in file
 	 ./src/u337mg158_ece337_usb_rx_1.0.0/source/usb_rx.sv'.
-==================================================================================
-|    Register Name    |   Type    | Width | Bus | MB |  Set  | Reset | ST | Line |
-==================================================================================
-|    byte_done_reg    | Flip-flop |   1   |  N  | N  | None  | Async | N  | 109  |
-|   token_done_reg    | Flip-flop |   1   |  N  | N  | None  | Async | N  | 109  |
-|      count_reg      | Flip-flop |   4   |  Y  | N  | None  | Async | N  | 109  |
-|      state_reg      | Flip-flop |   3   |  Y  | N  | None  | Async | N  | 261  |
-|       pid_reg       | Flip-flop |   4   |  Y  | N  | None  | Async | N  | 261  |
-==================================================================================
+====================================================================================
+|     Register Name     |   Type    | Width | Bus | MB |  Set  | Reset | ST | Line |
+====================================================================================
+|    token_done_reg     | Flip-flop |   1   |  N  | N  | None  | Async | N  | 122  |
+| shift_strobe_seen_reg | Flip-flop |   1   |  N  | N  | None  | Async | N  | 122  |
+|       count_reg       | Flip-flop |   4   |  Y  | N  | None  | Async | N  | 122  |
+|     byte_done_reg     | Flip-flop |   1   |  N  | N  | None  | Async | N  | 122  |
+|     pipeline_reg      | Flip-flop |   8   |  Y  | N  | None  | Async | N  | 296  |
+|      delayed_reg      | Flip-flop |   1   |  N  | N  | None  | Async | N  | 296  |
+|       state_reg       | Flip-flop |   3   |  Y  | N  | None  | Async | N  | 296  |
+|        pid_reg        | Flip-flop |   4   |  Y  | N  | None  | Async | N  | 296  |
+====================================================================================
 Presto compilation completed successfully. (usb_rx)
 Module: usb_rx, Ports: 28, Input: 11, Output: 17, Inout: 0
-Module: usb_rx, Registers: 13, Async set/reset: 13, Sync set/reset: 0
+Module: usb_rx, Registers: 23, Async set/reset: 23, Sync set/reset: 0
 Information: Module usb_rx report end. (ELAB-965)
 Information: Building the design 'usb_tx'. (HDL-193)
 
@@ -192,10 +193,10 @@ Statistics for case statements in always block in file
 ============================================================
 |    Line    |  full/ parallel  |      block location      |
 ============================================================
-|     64     |    auto/auto     | always block at line 63  |
-|     77     |    auto/auto     | always block at line 74  |
-|    215     |    auto/auto     | always block at line 214 |
-|    239     |    auto/auto     | always block at line 238 |
+|     67     |    auto/auto     | always block at line 66  |
+|     81     |    auto/auto     | always block at line 77  |
+|    225     |    auto/auto     | always block at line 224 |
+|    250     |    auto/auto     | always block at line 249 |
 ============================================================
 
 Inferred memory devices in process in routine 'usb_tx' in file
@@ -203,23 +204,24 @@ Inferred memory devices in process in routine 'usb_tx' in file
 ==================================================================================
 |    Register Name    |   Type    | Width | Bus | MB |  Set  | Reset | ST | Line |
 ==================================================================================
-|      crc16_reg      | Flip-flop |  16   |  Y  | N  | Async | None  | N  |  34  |
-|  currentState_reg   | Flip-flop |   4   |  Y  | N  | None  | Async | N  |  34  |
-|   bit_counter_reg   | Flip-flop |   5   |  Y  | N  | None  | Async | N  |  34  |
-|   ones_count_reg    | Flip-flop |   3   |  Y  | N  | None  | Async | N  |  34  |
-|  stuff_active_reg   | Flip-flop |   1   |  N  | N  | None  | Async | N  |  34  |
-|  pattern_state_reg  | Flip-flop |   2   |  Y  | N  | None  | Async | N  | 230  |
-|     dp_orig_reg     | Flip-flop |   1   |  N  | N  | Async | None  | N  | 347  |
+|     loaded_reg      | Flip-flop |   1   |  N  | N  | None  | Async | N  |  35  |
+|  currentState_reg   | Flip-flop |   4   |  Y  | N  | None  | Async | N  |  35  |
+|   bit_counter_reg   | Flip-flop |   5   |  Y  | N  | None  | Async | N  |  35  |
+|   ones_count_reg    | Flip-flop |   3   |  Y  | N  | None  | Async | N  |  35  |
+|  stuff_active_reg   | Flip-flop |   1   |  N  | N  | None  | Async | N  |  35  |
+|      crc16_reg      | Flip-flop |  16   |  Y  | N  | Async | None  | N  |  35  |
+|  pattern_state_reg  | Flip-flop |   2   |  Y  | N  | None  | Async | N  | 240  |
+|     dp_orig_reg     | Flip-flop |   1   |  N  | N  | Async | None  | N  | 358  |
 ==================================================================================
 Statistics for MUX_OPs
 ======================================================
 | block name/line  | Inputs | Outputs | # sel inputs |
 ======================================================
-|    usb_tx/300    |   16   |    1    |      4       |
+|    usb_tx/311    |   16   |    1    |      4       |
 ======================================================
 Presto compilation completed successfully. (usb_tx)
 Module: usb_tx, Ports: 25, Input: 20, Output: 5, Inout: 0
-Module: usb_tx, Registers: 32, Async set/reset: 32, Sync set/reset: 0
+Module: usb_tx, Registers: 33, Async set/reset: 33, Sync set/reset: 0
 Information: Module usb_tx report end. (ELAB-965)
 Information: Building the design 'rx_edge_detector'. (HDL-193)
 Presto compilation completed successfully. (rx_edge_detector)
@@ -232,9 +234,18 @@ Module: eop_detector, Ports: 3, Input: 2, Output: 1, Inout: 0
 Module: eop_detector, Registers: 0, Async set/reset: 0, Sync set/reset: 0
 Information: Module eop_detector report end. (ELAB-965)
 Information: Building the design 'nrzi_decoder'. (HDL-193)
+
+Inferred memory devices in process in routine 'nrzi_decoder' in file
+	 ./src/u337mg158_ece337_nrzi_decoder_1.0.0/source/nrzi_decoder.sv'.
+==================================================================================
+|    Register Name    |   Type    | Width | Bus | MB |  Set  | Reset | ST | Line |
+==================================================================================
+|    edge_seen_reg    | Flip-flop |   1   |  N  | N  | None  | Async | N  |  27  |
+|  decoded_data_reg   | Flip-flop |   1   |  N  | N  | Async | None  | N  |  27  |
+==================================================================================
 Presto compilation completed successfully. (nrzi_decoder)
-Module: nrzi_decoder, Ports: 2, Input: 1, Output: 1, Inout: 0
-Module: nrzi_decoder, Registers: 0, Async set/reset: 0, Sync set/reset: 0
+Module: nrzi_decoder, Ports: 5, Input: 4, Output: 1, Inout: 0
+Module: nrzi_decoder, Registers: 2, Async set/reset: 2, Sync set/reset: 0
 Information: Module nrzi_decoder report end. (ELAB-965)
 Information: Building the design 'bit_stuffing_remover'. (HDL-193)
 
@@ -257,12 +268,13 @@ Inferred memory devices in process in routine 'rx_bit_timer' in file
 ==================================================================================
 |    Register Name    |   Type    | Width | Bus | MB |  Set  | Reset | ST | Line |
 ==================================================================================
-|      state_reg      | Flip-flop |   2   |  Y  | N  | None  | Async | N  |  39  |
-|      count_reg      | Flip-flop |   4   |  Y  | N  | None  | Async | N  |  39  |
+|     new_bit_reg     | Flip-flop |   1   |  N  | N  | None  | Async | N  |  50  |
+|      count_reg      | Flip-flop |   4   |  Y  | N  | None  | Async | N  |  50  |
+|      state_reg      | Flip-flop |   2   |  Y  | N  | None  | Async | N  |  50  |
 ==================================================================================
 Presto compilation completed successfully. (rx_bit_timer)
-Module: rx_bit_timer, Ports: 8, Input: 3, Output: 5, Inout: 0
-Module: rx_bit_timer, Registers: 6, Async set/reset: 6, Sync set/reset: 0
+Module: rx_bit_timer, Ports: 9, Input: 3, Output: 6, Inout: 0
+Module: rx_bit_timer, Registers: 7, Async set/reset: 7, Sync set/reset: 0
 Information: Module rx_bit_timer report end. (ELAB-965)
 Information: Building the design 'crc_checker_5bit'. (HDL-193)
 
@@ -271,12 +283,11 @@ Inferred memory devices in process in routine 'crc_checker_5bit' in file
 ==================================================================================
 |    Register Name    |   Type    | Width | Bus | MB |  Set  | Reset | ST | Line |
 ==================================================================================
-|     crc_reg_reg     | Flip-flop |   5   |  Y  | N  | Async | None  | N  |  47  |
-|    crc_valid_reg    | Flip-flop |   1   |  N  | N  | None  | Async | N  |  47  |
+|     crc_reg_reg     | Flip-flop |   5   |  Y  | N  | Async | None  | N  |  40  |
 ==================================================================================
 Presto compilation completed successfully. (crc_checker_5bit)
 Module: crc_checker_5bit, Ports: 7, Input: 6, Output: 1, Inout: 0
-Module: crc_checker_5bit, Registers: 6, Async set/reset: 6, Sync set/reset: 0
+Module: crc_checker_5bit, Registers: 5, Async set/reset: 5, Sync set/reset: 0
 Information: Module crc_checker_5bit report end. (ELAB-965)
 Information: Building the design 'crc_checker_16bit'. (HDL-193)
 
@@ -285,7 +296,7 @@ Inferred memory devices in process in routine 'crc_checker_16bit' in file
 ==================================================================================
 |    Register Name    |   Type    | Width | Bus | MB |  Set  | Reset | ST | Line |
 ==================================================================================
-|       crc_reg       | Flip-flop |  16   |  Y  | N  | Async | None  | N  |  28  |
+|       crc_reg       | Flip-flop |  16   |  Y  | N  | Async | None  | N  |  50  |
 ==================================================================================
 Presto compilation completed successfully. (crc_checker_16bit)
 Module: crc_checker_16bit, Ports: 7, Input: 6, Output: 1, Inout: 0
@@ -354,7 +365,7 @@ Presto compilation completed successfully. (edge_det_1_1_0)
 Module: edge_det_1_1_0, Ports: 5, Input: 3, Output: 2, Inout: 0
 Module: edge_det_1_1_0, Registers: 4, Async set/reset: 4, Sync set/reset: 0
 Information: Module edge_det_1_1_0 report end. (ELAB-965)
-CPU Load: 29%, Ram Free: 207 GB, Swap Free: 55 GB, Work Disk Free: 357 GB, Tmp Disk Free: 18 GB
+CPU Load: 8%, Ram Free: 47 GB, Swap Free: 63 GB, Work Disk Free: 289 GB, Tmp Disk Free: 16 GB
 Information: Checking out the license 'DesignWare'. (SEC-104)
 Information: Evaluating DesignWare library utilization. (UISN-27)
 
@@ -373,23 +384,23 @@ Information: Evaluating DesignWare library utilization. (UISN-27)
 | Design Information                                      | Value                                  |
 ====================================================================================================
 | Number of Scenarios                                     | 0                                      |
-| Leaf Cell Count                                         | 1729                                   |
+| Leaf Cell Count                                         | 1786                                   |
 | Number of User Hierarchies                              | 15                                     |
-| Sequential Cell Count                                   | 649                                    |
+| Sequential Cell Count                                   | 654                                    |
 | Macro Count                                             | 0                                      |
 | Pad Count                                               | 0                                      |
 | Number of Power Domains                                 | 0                                      |
 | Number of Path Groups                                   | 1                                      |
 | Number of VT Class                                      | 0                                      |
 | Number of Clocks                                        | 0                                      |
-| Number of Dont Touch Cells                              | 367                                    |
+| Number of Dont Touch Cells                              | 392                                    |
 | Number of Dont Touch Nets                               | 0                                      |
 | Number of Size Only Cells                               | 0                                      |
 | Design with Target Library Subset (with clock_path)     | false  (false )                        |
 | Design with UPF Data                                    | false                                  |
 ====================================================================================================
 
-Information: There are 39 potential problems in your design. Please run 'check_design' for more information. (LINT-99)
+Information: There are 30 potential problems in your design. Please run 'check_design' for more information. (LINT-99)
 
 
 
@@ -463,11 +474,11 @@ Module: DW01_incdec_width6, Ports: 13, Input: 7, Output: 6, Inout: 0
 Module: DW01_incdec_width6, Registers: 0, Async set/reset: 0, Sync set/reset: 0
 Module: DW01_sub_width7, Ports: 23, Input: 15, Output: 8, Inout: 0
 Module: DW01_sub_width7, Registers: 0, Async set/reset: 0, Sync set/reset: 0
-  Processing 'usb_rx_tx_db'
+  Processing 'usb_rx_tx_db_2'
 
   Updating timing information
 Information: Updating design information... (UID-85)
-Information: Design 'usb_rx_tx_db' has no optimization constraints set. (OPT-108)
+Information: Design 'usb_rx_tx_db_2' has no optimization constraints set. (OPT-108)
 
   Beginning Implementation Selection
   ----------------------------------
@@ -481,8 +492,8 @@ Information: Design 'usb_rx_tx_db' has no optimization constraints set. (OPT-108
    ELAPSED            WORST NEG   SETUP    DESIGN                            
     TIME      AREA      SLACK     COST    RULE COST         ENDPOINT         
   --------- --------- --------- --------- --------- -------------------------
-    0:00:03 1245942.0      0.00       0.0    1713.2                          
-    0:00:03 1245942.0      0.00       0.0    1713.2                          
+    0:00:02 1265553.0      0.00       0.0    1742.0                          
+    0:00:02 1265553.0      0.00       0.0    1742.0                          
 
   Beginning Mapping Optimizations  (Medium effort)
   -------------------------------
@@ -512,22 +523,22 @@ Information: Design 'usb_rx_tx_db' has no optimization constraints set. (OPT-108
   Mapping 'usb_rx'
   Structuring 'data_buffer'
   Mapping 'data_buffer'
-    0:00:03 1353411.0      0.00       0.0    1693.4                          
-    0:00:03 1353411.0      0.00       0.0    1693.4                          
-    0:00:03 1353411.0      0.00       0.0    1693.4                          
-    0:00:03 1353411.0      0.00       0.0    1693.4                          
-    0:00:03 1353411.0      0.00       0.0    1693.4                          
-    0:00:03 1344267.0      0.00       0.0    1693.4                          
-    0:00:03 1344195.0      0.00       0.0    1693.4                          
-    0:00:03 1344195.0      0.00       0.0    1693.4                          
-    0:00:03 1344195.0      0.00       0.0    1693.4                          
-    0:00:04 1344195.0      0.00       0.0    1693.4                          
-    0:00:04 1344195.0      0.00       0.0    1693.4                          
-    0:00:04 1344627.0      0.00       0.0    1646.9                          
-    0:00:04 1344771.0      0.00       0.0    1641.3                          
-    0:00:04 1344771.0      0.00       0.0    1641.3                          
-    0:00:04 1344771.0      0.00       0.0    1641.3                          
-    0:00:04 1344771.0      0.00       0.0    1641.3                          
+    0:00:03 1370466.0      0.00       0.0    1695.9                          
+    0:00:03 1370466.0      0.00       0.0    1695.9                          
+    0:00:03 1370466.0      0.00       0.0    1695.9                          
+    0:00:03 1370466.0      0.00       0.0    1695.9                          
+    0:00:03 1370466.0      0.00       0.0    1695.9                          
+    0:00:03 1361682.0      0.00       0.0    1695.9                          
+    0:00:03 1361610.0      0.00       0.0    1695.9                          
+    0:00:03 1361610.0      0.00       0.0    1695.9                          
+    0:00:03 1361610.0      0.00       0.0    1695.9                          
+    0:00:03 1361610.0      0.00       0.0    1695.9                          
+    0:00:03 1361610.0      0.00       0.0    1695.9                          
+    0:00:03 1362042.0      0.00       0.0    1647.3                          
+    0:00:03 1362402.0      0.00       0.0    1641.3                          
+    0:00:03 1362402.0      0.00       0.0    1641.3                          
+    0:00:03 1362402.0      0.00       0.0    1641.3                          
+    0:00:03 1362402.0      0.00       0.0    1641.3                          
 
 
 
@@ -538,11 +549,11 @@ Information: Design 'usb_rx_tx_db' has no optimization constraints set. (OPT-108
    ELAPSED            WORST NEG   SETUP    DESIGN                            
     TIME      AREA      SLACK     COST    RULE COST         ENDPOINT         
   --------- --------- --------- --------- --------- -------------------------
-    0:00:04 1344771.0      0.00       0.0    1641.3                          
-    0:00:04 1344771.0      0.00       0.0    1641.3                          
-    0:00:04 1344771.0      0.00       0.0    1641.3                          
-    0:00:04 1344771.0      0.00       0.0    1641.3                          
-    0:00:04 1344771.0      0.00       0.0    1641.3                          
+    0:00:03 1362402.0      0.00       0.0    1641.3                          
+    0:00:03 1362402.0      0.00       0.0    1641.3                          
+    0:00:03 1362402.0      0.00       0.0    1641.3                          
+    0:00:03 1362402.0      0.00       0.0    1641.3                          
+    0:00:03 1362402.0      0.00       0.0    1641.3                          
 
 
   Beginning Design Rule Fixing  (max_capacitance)
@@ -552,8 +563,8 @@ Information: Design 'usb_rx_tx_db' has no optimization constraints set. (OPT-108
    ELAPSED            WORST NEG   SETUP    DESIGN                            
     TIME      AREA      SLACK     COST    RULE COST         ENDPOINT         
   --------- --------- --------- --------- --------- -------------------------
-    0:00:04 1344771.0      0.00       0.0    1641.3                          
-    0:00:04 1352691.0      0.00       0.0       0.0                          
+    0:00:03 1362402.0      0.00       0.0    1641.3                          
+    0:00:03 1370322.0      0.00       0.0       0.0                          
 
 
   Beginning Area-Recovery Phase  (cleanup)
@@ -563,20 +574,20 @@ Information: Design 'usb_rx_tx_db' has no optimization constraints set. (OPT-108
    ELAPSED            WORST NEG   SETUP    DESIGN                            
     TIME      AREA      SLACK     COST    RULE COST         ENDPOINT         
   --------- --------- --------- --------- --------- -------------------------
-    0:00:04 1352691.0      0.00       0.0       0.0                          
-    0:00:04 1352691.0      0.00       0.0       0.0                          
-    0:00:04 1350819.0      0.00       0.0       0.0                          
-    0:00:04 1350171.0      0.00       0.0       0.0                          
-    0:00:04 1349595.0      0.00       0.0       0.0                          
-    0:00:04 1349451.0      0.00       0.0       0.0                          
-    0:00:04 1349451.0      0.00       0.0       0.0                          
-    0:00:04 1349451.0      0.00       0.0       0.0                          
-    0:00:04 1349451.0      0.00       0.0       0.0                          
-    0:00:04 1349451.0      0.00       0.0       0.0                          
-    0:00:04 1349451.0      0.00       0.0       0.0                          
-    0:00:04 1349451.0      0.00       0.0       0.0                          
-    0:00:04 1349451.0      0.00       0.0       0.0                          
-    0:00:04 1349451.0      0.00       0.0       0.0                          
+    0:00:03 1370322.0      0.00       0.0       0.0                          
+    0:00:03 1370322.0      0.00       0.0       0.0                          
+    0:00:03 1368378.0      0.00       0.0       0.0                          
+    0:00:03 1367946.0      0.00       0.0       0.0                          
+    0:00:03 1367730.0      0.00       0.0       0.0                          
+    0:00:03 1367730.0      0.00       0.0       0.0                          
+    0:00:03 1367730.0      0.00       0.0       0.0                          
+    0:00:03 1367730.0      0.00       0.0       0.0                          
+    0:00:03 1367730.0      0.00       0.0       0.0                          
+    0:00:03 1367730.0      0.00       0.0       0.0                          
+    0:00:03 1367730.0      0.00       0.0       0.0                          
+    0:00:03 1367730.0      0.00       0.0       0.0                          
+    0:00:03 1367730.0      0.00       0.0       0.0                          
+    0:00:03 1367730.0      0.00       0.0       0.0                          
 Loading db file '/home/ecegrid/a/ece337/summer24-refactor/tech/ami05/osu05_stdcells.db'
 
 
@@ -585,7 +596,7 @@ Note: Symbol # after min delay cost means estimated hold TNS across all active s
 
   Optimization Complete
   ---------------------
-CPU Load: 29%, Ram Free: 207 GB, Swap Free: 55 GB, Work Disk Free: 357 GB, Tmp Disk Free: 18 GB
+CPU Load: 8%, Ram Free: 47 GB, Swap Free: 63 GB, Work Disk Free: 289 GB, Tmp Disk Free: 16 GB
 Information: Total number of MV cells in the design.
 ----------------------------------------------------------------------------------------------------
  MV Cells                                           Total Number                                   
@@ -609,15 +620,14 @@ Unmapped MV Cells
 ****************************************
 check_design summary:
 Version:     W-2024.09-SP4
-Date:        Sun Apr 19 14:28:15 2026
+Date:        Wed Apr 22 16:01:26 2026
 ****************************************
 
                    Name                                            Total
 --------------------------------------------------------------------------------
-Inputs/Outputs                                                     18
+Inputs/Outputs                                                     16
     Unconnected ports (LINT-28)                                     7
     Shorted outputs (LINT-31)                                       9
-    Constant outputs (LINT-52)                                      2
 
 Cells                                                               4
     Connected to power or ground (LINT-32)                          3
@@ -648,13 +658,11 @@ Warning: In design 'usb_tx', a pin on submodule 'data_sr' is connected to logic 
    Pin 'serial_in' is connected to logic 0. 
 Warning: In design 'usb_tx', the same net is connected to more than one pin on submodule 'clk_div'. (LINT-33)
    Net 'rollover_val[2]' is connected to pins 'rollover_val[2]', 'rollover_val[1]'', 'rollover_val[0]'.
-Warning: In design 'usb_rx_tx_db', output port 'rx_error' is connected directly to 'logic 0'. (LINT-52)
-Warning: In design 'usb_rx', output port 'rx_error' is connected directly to 'logic 0'. (LINT-52)
-Writing verilog file '/home/ecegridfs/a/337mg193/ECE337_CDL_Group_43/tmp/build/u337mg158_ece337_usb_rx_tx_db_1.0.0/syn-design_compiler/usb_rx_tx_db.v'.
+Writing verilog file '/home/ecegridfs/a/337mg158/ece337cdl/tmp/build/u337mg158_ece337_usb_rx_tx_db_2_1.0.0/syn-design_compiler/usb_rx_tx_db_2.v'.
 
 Memory usage for this session 154 Mbytes.
 Memory usage for this session including child processes 154 Mbytes.
-CPU usage for this session 7 seconds ( 0.00 hours ).
-Elapsed time for this session 9 seconds ( 0.00 hours ).
+CPU usage for this session 6 seconds ( 0.00 hours ).
+Elapsed time for this session 8 seconds ( 0.00 hours ).
 
 Thank you...
