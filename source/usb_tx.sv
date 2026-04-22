@@ -163,15 +163,15 @@ module usb_tx
                 get_tx_packet_data = '0;   
             end
             if(currentState == SYNC) begin
-                load_en = (bit_counter == 0);
+                load_en = (bit_counter == 0) && !bit_pulse;
                 tx_transfer_active = 1;
-                shift_en = bit_pulse;
+                shift_en = bit_pulse && (bit_counter != 0);
                 get_tx_packet_data = '0;   
             end
             if(currentState == PID) begin
-                load_en = (bit_counter == 0);
+                load_en = (bit_counter == 0) && !bit_pulse;
                 tx_transfer_active = 1;
-                shift_en = bit_pulse;
+                shift_en = bit_pulse && (bit_counter != 0);
                 get_tx_packet_data = '0;   
             end
             if(currentState == DATA) begin

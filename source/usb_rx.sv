@@ -105,7 +105,6 @@ always_comb begin : counter_comb
             next_shift_strobe_seen = 0; //reset for this bit
             if (count == 7) begin
                 next_byte_done = 1;
-
                 if (packet_size == 0) begin
                     next_count = 0;
                 end
@@ -169,7 +168,7 @@ always_comb begin : fsm_comb
         end
         SYNC: begin
             //packet type 8 bit
-            flush = 1;
+            flush = 1; // Delete?
             sr_en = 1;
             rx_transfer_active = 1;
 
@@ -193,6 +192,7 @@ always_comb begin : fsm_comb
                     end
                     else if (next_pid == DATA0 || next_pid == DATA1) begin
                         next_state = DATA;
+                        //flush = 1; // CHANGED THIS HERE
                     end
                     else if (next_pid == ACK) begin
                         next_state = EOP;
