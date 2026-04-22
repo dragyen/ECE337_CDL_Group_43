@@ -269,7 +269,16 @@ module tb_usb_rx_tx_db_2();
             @(posedge clk);
             t++;
         end
-        if (t >= 10000) $error("wait_tx_eop: SE0 never seen");
+        if (t >= 10000) begin
+            $error("wait_tx_eop: SE0 never seen");
+            return;
+        end
+        t = 0;
+        while (tx_transfer_active && t < 10000) begin
+            @(posedge clk);
+            t++;
+        end
+        if (t >= 10000) $error("wait_tx_eop: tx_transfer_active stuck high");
     endtask
 
     int tb_test_num;
@@ -373,12 +382,13 @@ module tb_usb_rx_tx_db_2();
 
             // Step 3: SoC triggers endpoint to send ACK
             fork
-                trigger_tx(3'd3);           // holds tx_packet throughout
-                capture_tx_pid(tx_pid_captured);   // samples wire in parallel
+                trigger_tx(3'd3);
+                capture_tx_pid(tx_pid_captured);
             join
 
             assert(tx_pid_captured == 4'b0010) else $error("Test %0d failed: expected ACK PID (0x2), got 0x%h", tb_test_num, tx_pid_captured);
             assert(tx_error_seen == 0) else $error("Test %0d failed: tx_error during ACK", tb_test_num);
+
             // Step 4: SoC pops data and verifies
             pop_rx_byte(popped_byte);
             assert(popped_byte == 8'hDE) else $error("Test %0d failed: byte 0 expected 0xDE, got 0x%h", tb_test_num, popped_byte);
@@ -390,6 +400,30 @@ module tb_usb_rx_tx_db_2();
             assert(popped_byte == 8'hEF) else $error("Test %0d failed: byte 3 expected 0xEF, got 0x%h", tb_test_num, popped_byte);
 
             assert(buffer_occupancy == 7'd0) else $error("Test %0d failed: buffer should be empty after pops", tb_test_num);
+        end
+
+        // Test 3 (or replace test 2's TX check): verify TX by looping back into RX
+        // Trigger TX to send an ACK, loop dp_out/dm_out into dp_in/dm_in
+        tb_test_num = 3;
+        reset_dut();
+        begin
+            // set up loopback: RX inputs driven by TX outputs
+            // simplest way: continuous assign in the testbench (remove tb's own dp_in/dm_in drives)
+            // but that conflicts with send_* tasks that drive dp_in directly
+            // so we'll just manually connect during this test
+
+            // disable tb driving of dp_in/dm_in, let TX drive through assign
+            // (done outside initial block - see note below)
+
+            // trigger ACK
+            trigger_tx(3'd3);
+            dp_in = dp_out;
+            dm_in = dm_out;
+            repeat(100) @(posedge clk);
+
+            assert(rx_data_ready_seen == 1) else $error("Test %0d failed: RX never saw TX's ACK", tb_test_num);
+            assert(rx_packet_captured == 4'b0010) else $error("Test %0d failed: RX decoded PID 0x%h, expected 0x2 (ACK)", tb_test_num, rx_packet_captured);
+            assert(rx_error_seen == 0) else $error("Test %0d failed: rx_error during loopback", tb_test_num);
         end
 
         $display("All tests completed");

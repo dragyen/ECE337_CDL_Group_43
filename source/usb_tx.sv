@@ -123,7 +123,7 @@ module usb_tx
                 next_bit_counter = bit_counter;
                 if(bit_pulse && !stuff_active)
                     next_bit_counter = bit_counter + 1;
-                if(bit_counter == 7 && !stuff_active) begin
+                if(bit_counter == 7 && !stuff_active && bit_pulse) begin
                     next_bit_counter = 0;
                     if(buffer_occupancy != 0)
                         nextState = DATA;
@@ -139,7 +139,7 @@ module usb_tx
             CRC: begin
                 if (bit_pulse && !stuff_active)
                 next_bit_counter = bit_counter + 1;
-                if(bit_counter == 15) begin // crc bonus tx_packet_data == CONST
+                if(bit_counter == 15 && bit_pulse) begin // crc bonus tx_packet_data == CONST
                     nextState = EOP;
                     next_bit_counter = 0;
                 end
@@ -147,7 +147,7 @@ module usb_tx
             EOP: begin
                 if (bit_pulse && !stuff_active)
                 next_bit_counter = bit_counter + 1;
-                if(bit_counter == 2) begin
+                if(bit_counter == 2 && bit_pulse) begin
                     nextState = WAIT;
                     next_bit_counter = 0;
                 end
