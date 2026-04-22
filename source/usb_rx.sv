@@ -102,6 +102,7 @@ always_comb begin : counter_comb
         end
         if (new_bit && shift_strobe_seen) begin
             next_count = count + 1;
+            next_shift_strobe_seen = 0; //reset for this bit
             if (count == 7) begin
                 next_byte_done = 1;
 
@@ -283,6 +284,11 @@ always_comb begin : fsm_comb
             sr_clear = 1;
             clear_count = 1;
             next_delayed = 0;
+            next_pid = UNKNOWN;
+            
+            if (edge_det) begin
+                next_state = IDLE;
+            end
         end
     endcase
 end
