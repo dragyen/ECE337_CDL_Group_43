@@ -94,8 +94,6 @@ module usb_tx
     if(bit_counter == 7) begin
         if(pid == PID_ACK || pid == PID_NAK || pid == PID_STALL)
             nextState = EOP;
-        else if((pid == PID_DATA0 || pid == PID_DATA1) && buffer_occupancy == 0)
-            nextState = ERROR;
         else if(pid == PID_DATA0 || pid == PID_DATA1)
             nextState = DATA;
         else
