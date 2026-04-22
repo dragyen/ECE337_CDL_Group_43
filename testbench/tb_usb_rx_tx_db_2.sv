@@ -183,13 +183,19 @@ module tb_usb_rx_tx_db_2();
         int t;
         @(posedge clk); #1;
         tx_packet = pkt_type;
-        @(posedge clk); #1;
+
+        // wait for TX to start
         t = 0;
         while (!tx_transfer_active && t < 1000) begin
             @(posedge clk);
             t++;
         end
         if (t >= 1000) $error("trigger_tx: TX never started (tx_transfer_active stayed low)");
+
+        // hold tx_packet throughout the entire transmission (AHB register behavior)
+        while (tx_transfer_active) @(posedge clk);
+
+        // safe to clear only after TX finishes
         tx_packet = 0;
     endtask
 
@@ -263,16 +269,7 @@ module tb_usb_rx_tx_db_2();
             @(posedge clk);
             t++;
         end
-        if (t >= 10000) begin
-            $error("wait_tx_eop: SE0 never seen");
-            return;
-        end
-        t = 0;
-        while (tx_transfer_active && t < 10000) begin
-            @(posedge clk);
-            t++;
-        end
-        if (t >= 10000) $error("wait_tx_eop: tx_transfer_active stuck high");
+        if (t >= 10000) $error("wait_tx_eop: SE0 never seen");
     endtask
 
     int tb_test_num;
@@ -376,16 +373,12 @@ module tb_usb_rx_tx_db_2();
 
             // Step 3: SoC triggers endpoint to send ACK
             fork
-                begin
-                    trigger_tx(3'd3); // 3 = ACK
-                    capture_tx_pid(tx_pid_captured);
-                    wait_tx_eop();
-                end
+                trigger_tx(3'd3);           // holds tx_packet throughout
+                capture_tx_pid(tx_pid_captured);   // samples wire in parallel
             join
 
             assert(tx_pid_captured == 4'b0010) else $error("Test %0d failed: expected ACK PID (0x2), got 0x%h", tb_test_num, tx_pid_captured);
             assert(tx_error_seen == 0) else $error("Test %0d failed: tx_error during ACK", tb_test_num);
-
             // Step 4: SoC pops data and verifies
             pop_rx_byte(popped_byte);
             assert(popped_byte == 8'hDE) else $error("Test %0d failed: byte 0 expected 0xDE, got 0x%h", tb_test_num, popped_byte);

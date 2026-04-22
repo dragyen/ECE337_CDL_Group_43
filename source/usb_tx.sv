@@ -29,6 +29,7 @@ module usb_tx
     logic stuff_active, next_stuff_active;
     logic [15:0] crc16, next_crc16;
     logic nrzi_bit;
+    logic loaded, next_loaded;
 
 
     always_ff@(posedge clk, negedge n_rst) begin
@@ -38,6 +39,7 @@ module usb_tx
             ones_count <= '0;
             stuff_active <= '0;
             crc16 <= 16'hFFFF;
+            loaded <= 0;
         end
         else begin
             currentState <= nextState;
@@ -45,6 +47,7 @@ module usb_tx
             ones_count <= next_ones_count;
             stuff_active <= next_stuff_active;
             crc16 <= next_crc16;
+            loaded <= next_loaded;
         end
     end
     
@@ -59,7 +62,7 @@ module usb_tx
     } pid_e;
 
     logic [3:0] pid;
-        
+
     always_comb begin
         case (tx_packet)
         3'b000: pid = PID_STALL;// idle - no packet
@@ -74,6 +77,7 @@ module usb_tx
         always_comb begin
         nextState = currentState;   
         next_bit_counter = bit_counter;
+        next_loaded = loaded;
         case(currentState)
             IDLE: begin
                 if(tx_packet !== 3'b000) begin
@@ -83,42 +87,49 @@ module usb_tx
             SYNC: begin
                 if (bit_pulse && !stuff_active)
                 next_bit_counter = bit_counter + 1;
-                if(bit_counter == 7) begin
+                if(bit_counter == 7 && bit_pulse) begin
                     nextState = PID;
+                    next_loaded = 0;
                     next_bit_counter = 0;
+                end
+                else begin
+                    next_loaded = 1;
                 end
             end
             PID: begin
-    if (bit_pulse && !stuff_active)
-        next_bit_counter = bit_counter + 1;
-    if(bit_counter == 7) begin
-        if(pid == PID_ACK || pid == PID_NAK || pid == PID_STALL)
-            nextState = EOP;
-        else if(pid == PID_DATA0 || pid == PID_DATA1)
-            nextState = DATA;
-        else
-            nextState = ERROR;
-        next_bit_counter = 0;
-    end
+                if (bit_pulse && !stuff_active)
+                    next_bit_counter = bit_counter + 1;
+                if(bit_counter == 7 && bit_pulse) begin
+                    if(pid == PID_ACK || pid == PID_NAK || pid == PID_STALL)
+                        nextState = EOP;
+                    else if(pid == PID_DATA0 || pid == PID_DATA1)
+                        nextState = DATA;
+                    else
+                        nextState = ERROR;
+                    next_bit_counter = 0;
+                end
+                else begin
+                    next_loaded = 1;
+                end
             end
             DATA: begin
-    next_bit_counter = 0;
-    // NO occupancy check here at all
-    if(bit_pulse && !stuff_active)
-        nextState = WAIT_DATA;
+                next_bit_counter = 0;
+                // NO occupancy check here at all
+                if(bit_pulse && !stuff_active)
+                nextState = WAIT_DATA;
 
             end
             WAIT_DATA: begin
-            next_bit_counter = bit_counter;
-            if(bit_pulse && !stuff_active)
-                next_bit_counter = bit_counter + 1;
-            if(bit_counter == 7 && !stuff_active) begin
-                next_bit_counter = 0;
-                if(buffer_occupancy != 0)
-                    nextState = DATA;
-                else
-                    nextState = CRC;
-            end
+                next_bit_counter = bit_counter;
+                if(bit_pulse && !stuff_active)
+                    next_bit_counter = bit_counter + 1;
+                if(bit_counter == 7 && !stuff_active) begin
+                    next_bit_counter = 0;
+                    if(buffer_occupancy != 0)
+                        nextState = DATA;
+                    else
+                        nextState = CRC;
+                end
             end
             ERROR: begin
                 next_bit_counter = 0;
@@ -163,15 +174,15 @@ module usb_tx
                 get_tx_packet_data = '0;   
             end
             if(currentState == SYNC) begin
-                load_en = (bit_counter == 0) && !bit_pulse;
+                load_en = ~loaded;
                 tx_transfer_active = 1;
-                shift_en = bit_pulse && (bit_counter != 0);
+                shift_en = bit_pulse;
                 get_tx_packet_data = '0;   
             end
             if(currentState == PID) begin
-                load_en = (bit_counter == 0) && !bit_pulse;
+                load_en = ~loaded;
                 tx_transfer_active = 1;
-                shift_en = bit_pulse && (bit_counter != 0);
+                shift_en = bit_pulse;
                 get_tx_packet_data = '0;   
             end
             if(currentState == DATA) begin
@@ -212,7 +223,7 @@ module usb_tx
 
     always_comb begin
         case (currentState)
-            SYNC: sr_load_data = 8'b00000001;  
+            SYNC: sr_load_data = 8'b10000000;  
             PID: sr_load_data = {~pid, pid};  // PID + complement
             DATA: sr_load_data = tx_packet_data;
             default: sr_load_data = tx_packet_data;
@@ -231,6 +242,7 @@ module usb_tx
             pattern_state <= 0;
         else if(bit_pulse) begin
             pattern_state <= (pattern_state == 2) ? 0 : pattern_state + 1;
+            
         end
     end
 
