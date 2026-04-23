@@ -166,7 +166,7 @@ module usb_tx
             EOP: begin
                 if (bit_pulse && !stuff_active)
                 next_bit_counter = bit_counter + 1;
-                if(bit_counter == 2 && bit_pulse) begin
+                if(bit_counter == 1 && bit_pulse) begin
                     nextState = WAIT;
                     next_bit_counter = 0;
                 end
@@ -388,6 +388,10 @@ module usb_tx
             dm_out = ~dp_orig;
         if (currentState == EOP) begin
             dp_out = 1'b0;
+            dm_out = 1'b0;
+        end
+        if(currentState == WAIT) begin
+            dp_out = 1'b1;
             dm_out = 1'b0;
         end
     end
