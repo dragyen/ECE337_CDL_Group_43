@@ -28,7 +28,7 @@ add wave -noupdate -expand -group RX -color Cyan /tb_usb_rx_tx_db_2/DUT/u_usb_rx
 add wave -noupdate -expand -group RX /tb_usb_rx_tx_db_2/DUT/u_usb_rx/n_rst
 add wave -noupdate -expand -group RX -color Yellow /tb_usb_rx_tx_db_2/DUT/u_usb_rx/dp_in
 add wave -noupdate -expand -group RX -color Yellow /tb_usb_rx_tx_db_2/DUT/u_usb_rx/dm_in
-add wave -noupdate -expand -group RX /tb_usb_rx_tx_db_2/DUT/u_usb_rx/buffer_occupancy
+add wave -noupdate -expand -group RX -radix decimal /tb_usb_rx_tx_db_2/DUT/u_usb_rx/buffer_occupancy
 add wave -noupdate -expand -group RX /tb_usb_rx_tx_db_2/DUT/u_usb_rx/rx_data_ready
 add wave -noupdate -expand -group RX /tb_usb_rx_tx_db_2/DUT/u_usb_rx/rx_transfer_active
 add wave -noupdate -expand -group RX /tb_usb_rx_tx_db_2/DUT/u_usb_rx/rx_error
@@ -72,7 +72,7 @@ add wave -noupdate -expand -group RX -group NEXT_ /tb_usb_rx_tx_db_2/DUT/u_usb_r
 add wave -noupdate -expand -group RX -expand -group Enables -color {Orange Red} /tb_usb_rx_tx_db_2/DUT/u_usb_rx/sr_en
 add wave -noupdate -expand -group TX /tb_usb_rx_tx_db_2/DUT/u_usb_tx/tx_packet_data
 add wave -noupdate -expand -group TX /tb_usb_rx_tx_db_2/DUT/u_usb_tx/tx_packet
-add wave -noupdate -expand -group TX /tb_usb_rx_tx_db_2/DUT/u_usb_tx/buffer_occupancy
+add wave -noupdate -expand -group TX -radix decimal /tb_usb_rx_tx_db_2/DUT/u_usb_tx/buffer_occupancy
 add wave -noupdate -expand -group TX /tb_usb_rx_tx_db_2/DUT/u_usb_tx/get_tx_packet_data
 add wave -noupdate -expand -group TX /tb_usb_rx_tx_db_2/DUT/u_usb_tx/tx_transfer_active
 add wave -noupdate -expand -group TX /tb_usb_rx_tx_db_2/DUT/u_usb_tx/tx_error
@@ -85,9 +85,6 @@ add wave -noupdate -expand -group TX /tb_usb_rx_tx_db_2/DUT/u_usb_tx/sr_load_dat
 add wave -noupdate -expand -group TX /tb_usb_rx_tx_db_2/DUT/u_usb_tx/load_en
 add wave -noupdate -expand -group TX /tb_usb_rx_tx_db_2/DUT/u_usb_tx/bit_pulse
 add wave -noupdate -expand -group TX -color Gold /tb_usb_rx_tx_db_2/DUT/u_usb_tx/bit_counter
-add wave -noupdate -expand -group TX /tb_usb_rx_tx_db_2/DUT/u_usb_tx/next_bit_counter
-add wave -noupdate -expand -group TX /tb_usb_rx_tx_db_2/DUT/u_usb_tx/ones_count
-add wave -noupdate -expand -group TX /tb_usb_rx_tx_db_2/DUT/u_usb_tx/next_ones_count
 add wave -noupdate -expand -group TX /tb_usb_rx_tx_db_2/DUT/u_usb_tx/stuff_active
 add wave -noupdate -expand -group TX /tb_usb_rx_tx_db_2/DUT/u_usb_tx/next_stuff_active
 add wave -noupdate -expand -group TX -expand -group CRC /tb_usb_rx_tx_db_2/DUT/u_usb_tx/crc16
@@ -95,20 +92,14 @@ add wave -noupdate -expand -group TX -expand -group CRC /tb_usb_rx_tx_db_2/DUT/u
 add wave -noupdate -expand -group TX -expand -group CRC /tb_usb_rx_tx_db_2/DUT/u_usb_tx/crc16_inv
 add wave -noupdate -expand -group TX /tb_usb_rx_tx_db_2/DUT/u_usb_tx/nrzi_bit
 add wave -noupdate -expand -group TX -color Magenta -radix binary /tb_usb_rx_tx_db_2/DUT/u_usb_tx/pid
-add wave -noupdate -expand -group TX /tb_usb_rx_tx_db_2/DUT/u_usb_tx/pattern_state
-add wave -noupdate -expand -group TX /tb_usb_rx_tx_db_2/DUT/u_usb_tx/rollover_val
-add wave -noupdate -expand -group TX /tb_usb_rx_tx_db_2/DUT/u_usb_tx/serial_out
-add wave -noupdate -expand -group TX /tb_usb_rx_tx_db_2/DUT/u_usb_tx/fb
-add wave -noupdate -expand -group TX /tb_usb_rx_tx_db_2/DUT/u_usb_tx/dp_orig
-add wave -noupdate -expand -group TX /tb_usb_rx_tx_db_2/DUT/u_usb_tx/next_dp_orig
-add wave -noupdate -expand -group TX -expand -group {TX SR} -color Cyan /tb_usb_rx_tx_db_2/DUT/clk
-add wave -noupdate -expand -group TX -expand -group {TX SR} /tb_usb_rx_tx_db_2/DUT/u_usb_tx/data_sr/shift_enable
-add wave -noupdate -expand -group TX -expand -group {TX SR} /tb_usb_rx_tx_db_2/DUT/u_usb_tx/data_sr/load_enable
-add wave -noupdate -expand -group TX -expand -group {TX SR} /tb_usb_rx_tx_db_2/DUT/u_usb_tx/data_sr/serial_in
-add wave -noupdate -expand -group TX -expand -group {TX SR} /tb_usb_rx_tx_db_2/DUT/u_usb_tx/data_sr/parallel_in
-add wave -noupdate -expand -group TX -expand -group {TX SR} /tb_usb_rx_tx_db_2/DUT/u_usb_tx/data_sr/serial_out
-add wave -noupdate -expand -group TX -expand -group {TX SR} -radix binary /tb_usb_rx_tx_db_2/DUT/u_usb_tx/data_sr/parallel_out
-add wave -noupdate -expand -group TX -expand -group {TX SR} -radix binary /tb_usb_rx_tx_db_2/DUT/u_usb_tx/data_sr/next_parallel_out
+add wave -noupdate -expand -group TX -group {TX SR} -color Cyan /tb_usb_rx_tx_db_2/DUT/clk
+add wave -noupdate -expand -group TX -group {TX SR} /tb_usb_rx_tx_db_2/DUT/u_usb_tx/data_sr/shift_enable
+add wave -noupdate -expand -group TX -group {TX SR} /tb_usb_rx_tx_db_2/DUT/u_usb_tx/data_sr/load_enable
+add wave -noupdate -expand -group TX -group {TX SR} /tb_usb_rx_tx_db_2/DUT/u_usb_tx/data_sr/serial_in
+add wave -noupdate -expand -group TX -group {TX SR} /tb_usb_rx_tx_db_2/DUT/u_usb_tx/data_sr/parallel_in
+add wave -noupdate -expand -group TX -group {TX SR} /tb_usb_rx_tx_db_2/DUT/u_usb_tx/data_sr/serial_out
+add wave -noupdate -expand -group TX -group {TX SR} -radix binary /tb_usb_rx_tx_db_2/DUT/u_usb_tx/data_sr/parallel_out
+add wave -noupdate -expand -group TX -group {TX SR} -radix binary /tb_usb_rx_tx_db_2/DUT/u_usb_tx/data_sr/next_parallel_out
 add wave -noupdate -group {Data Buffer} /tb_usb_rx_tx_db_2/DUT/u_data_buffer/clk
 add wave -noupdate -group {Data Buffer} /tb_usb_rx_tx_db_2/DUT/u_data_buffer/n_rst
 add wave -noupdate -group {Data Buffer} /tb_usb_rx_tx_db_2/DUT/u_data_buffer/tx_data
@@ -132,8 +123,9 @@ add wave -noupdate -group {Data Buffer} /tb_usb_rx_tx_db_2/DUT/u_data_buffer/ful
 add wave -noupdate -group {Data Buffer} /tb_usb_rx_tx_db_2/DUT/u_data_buffer/empty
 add wave -noupdate -group {Data Buffer} /tb_usb_rx_tx_db_2/DUT/u_data_buffer/write_data
 add wave -noupdate -group {Data Buffer} /tb_usb_rx_tx_db_2/DUT/u_data_buffer/next_write_data
+add wave -noupdate -color {Violet Red} /tb_usb_rx_tx_db_2/tb_test_num
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {18070140 ps} 0}
+WaveRestoreCursors {{Cursor 1} {20091025 ps} 0} {{Test 3} {18992966 ps} 1 Cyan default} {{Test 4} {21199215 ps} 1}
 quietly wave cursor active 1
 configure wave -namecolwidth 211
 configure wave -valuecolwidth 139
@@ -149,4 +141,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ps
 update
-WaveRestoreZoom {17767501 ps} {18561793 ps}
+WaveRestoreZoom {6240168 ps} {28035781 ps}
