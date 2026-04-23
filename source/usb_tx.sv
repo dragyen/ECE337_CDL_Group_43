@@ -31,7 +31,6 @@ module usb_tx
     logic nrzi_bit;
     logic loaded, next_loaded;
     logic retrieved, next_retrieved;
-    logic last_bit_shifted, next_last_bit_shifted;
 
     always_ff@(posedge clk, negedge n_rst) begin
         if(!n_rst) begin
@@ -42,7 +41,6 @@ module usb_tx
             crc16 <= 16'hFFFF;
             loaded <= 0;
             retrieved <= 0;
-            last_bit_shifted <= 0;
         end
         else begin
             currentState <= nextState;
@@ -82,6 +80,7 @@ module usb_tx
         nextState = currentState;   
         next_bit_counter = bit_counter;
         next_loaded = loaded;
+        next_retrieved = retrieved;
         case(currentState)
             IDLE: begin
                 if(tx_packet !== 3'b000) begin

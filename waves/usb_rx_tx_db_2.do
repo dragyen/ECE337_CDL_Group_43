@@ -125,8 +125,8 @@ add wave -noupdate -group {Data Buffer} /tb_usb_rx_tx_db_2/DUT/u_data_buffer/wri
 add wave -noupdate -group {Data Buffer} /tb_usb_rx_tx_db_2/DUT/u_data_buffer/reg_mem
 add wave -noupdate -color Pink /tb_usb_rx_tx_db_2/tb_test_num
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {47380922 ps} 0} {{Test 2} {51770579 ps} 1}
-quietly wave cursor active 1
+WaveRestoreCursors {{Cursor 1} {103111070 ps} 0} {{Test 2} {51770579 ps} 1} {{Bit stuffing} {103097158 ps} 1}
+quietly wave cursor active 3
 configure wave -namecolwidth 150
 configure wave -valuecolwidth 100
 configure wave -justifyvalue left
@@ -141,4 +141,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ps
 update
-WaveRestoreZoom {40958073 ps} {53112984 ps}
+WaveRestoreZoom {102760937 ps} {104648411 ps}

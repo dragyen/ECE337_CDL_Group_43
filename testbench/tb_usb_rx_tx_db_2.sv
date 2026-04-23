@@ -27,6 +27,9 @@ module tb_usb_rx_tx_db_2();
     // USB physical interface
     logic dp_in, dm_in, dp_out, dm_out;
 
+        int tx_ones_run;
+    int tx_stuff_count;
+    logic tx_prev_dp;
     usb_rx_tx_db_2 DUT (.*);
 
     localparam CLK_PERIOD = 10;
@@ -60,6 +63,85 @@ module tb_usb_rx_tx_db_2();
             end
         end
     end
+
+int rx_ones_run;
+
+    task send_bit_stuffed(input logic b);
+        send_bit(b);
+        if (b == 1) begin
+            rx_ones_run++;
+            if (rx_ones_run == 6) begin
+                // insert stuffed 0 so the RX's bit-stuffing remover has to strip it
+                send_bit(0);
+                rx_ones_run = 0;
+            end
+        end
+        else begin
+            rx_ones_run = 0;
+        end
+    endtask
+
+    task send_byte_stuffed(input logic [7:0] data);
+        for (int i = 0; i < 8; i++) send_bit_stuffed(data[i]);
+    endtask
+
+    task send_sync_stuffed();
+        rx_ones_run = 0; // reset stuff tracking at start of packet (sync has no long 1 run)
+        send_byte_lsb(8'b10000000); // sync itself won't trigger stuffing
+    endtask
+
+    task send_pid_stuffed(input logic [3:0] pid_val);
+        logic [3:0] check_bits;
+        logic [7:0] pid_byte;
+        check_bits = ~pid_val;
+        pid_byte = {check_bits, pid_val};
+        send_byte_stuffed(pid_byte);
+    endtask
+
+    task send_data_payload_stuffed(input logic [7:0] data[], input int len, input logic [15:0] crc16);
+        for (int i = 0; i < len; i++) send_byte_stuffed(data[i]);
+        send_byte_stuffed(crc16[7:0]);
+        send_byte_stuffed(crc16[15:8]);
+    endtask
+
+    task send_data0_stuffed(input logic [7:0] data[], input int len, input logic [15:0] crc16);
+        send_sync_stuffed();
+        send_pid_stuffed(4'b0011);
+        send_data_payload_stuffed(data, len, crc16);
+        send_eop();
+    endtask
+
+
+    task capture_tx_bit_unstuffed(output logic decoded_bit);
+        logic raw_bit;
+        capture_tx_bit(raw_bit);
+        if (tx_ones_run == 6) begin
+            // this bit should be a stuffed 0, discard and capture the next one
+            assert(raw_bit == 0) else $error("Bit stuffing: expected stuffed 0 after 6 ones, got 1");
+            tx_stuff_count++;
+            tx_ones_run = 0;
+            capture_tx_bit(raw_bit); // real next bit
+        end
+        if (raw_bit == 1) tx_ones_run++;
+        else tx_ones_run = 0;
+        decoded_bit = raw_bit;
+    endtask
+
+    task capture_tx_byte_unstuffed(output logic [7:0] byte_val);
+        logic bit_val;
+        byte_val = 0;
+        for (int i = 0; i < 8; i++) begin
+            capture_tx_bit_unstuffed(bit_val);
+            byte_val[i] = bit_val;
+        end
+    endtask
+
+    task start_tx_capture_unstuffed();
+        while (!tx_transfer_active) @(posedge clk);
+        tx_prev_dp = 1;
+        tx_ones_run = 0;
+        tx_stuff_count = 0;
+    endtask
 
     task reset_dut();
         n_rst = 0;
@@ -232,7 +314,7 @@ module tb_usb_rx_tx_db_2();
     //tx
     // Captures one bit from dp_out/dm_out (synchronized to the TX's bit rate)
     // Returns the NRZI-decoded bit
-    logic tx_prev_dp;
+    
 
     task capture_tx_bit(output logic decoded_bit);
         #(BIT_PERIOD);
@@ -446,8 +528,142 @@ module tb_usb_rx_tx_db_2();
             assert(rx_error_seen == 0) else $error("Test %0d failed: rx_error during host ACK", tb_test_num);
         end
         
+        // Test: Bit stuffing verification on TX
+        // Payload {0xFF, 0xFF, 0x00, 0xAA} produces ~16 consecutive 1 bits in the
+        // decoded stream, forcing the TX to insert stuffed 0s. Capture must un-stuff.
+        tb_test_num = 3;
+        reset_dut();
+        begin
+            logic [7:0] captured_byte;
+            logic [15:0] captured_crc;
+            logic [7:0] payload[];
 
-        $display("All tests completed");
+            payload = new[4];
+            payload[0] = 8'hFF;
+            payload[1] = 8'hFF;
+            payload[2] = 8'h00;
+            payload[3] = 8'hAA;
+            fill_tx_buffer(payload, 4);
+            assert(buffer_occupancy == 7'd4) else $error("Test %0d failed: occupancy expected 4, got %0d", tb_test_num, buffer_occupancy);
+
+            fork
+                trigger_tx(3'd1); // DATA0
+                begin
+                    start_tx_capture_unstuffed();
+
+                    capture_tx_byte_unstuffed(captured_byte); // sync
+                    capture_tx_byte_unstuffed(captured_byte); // PID
+                    assert(captured_byte[3:0] == 4'b0011) else $error("Test %0d failed: expected DATA0 PID, got 0x%h", tb_test_num, captured_byte[3:0]);
+
+                    capture_tx_byte_unstuffed(captured_byte);
+                    assert(captured_byte == 8'hFF) else $error("Test %0d failed: byte 0 expected 0xFF, got 0x%h", tb_test_num, captured_byte);
+                    capture_tx_byte_unstuffed(captured_byte);
+                    assert(captured_byte == 8'hFF) else $error("Test %0d failed: byte 1 expected 0xFF, got 0x%h", tb_test_num, captured_byte);
+                    capture_tx_byte_unstuffed(captured_byte);
+                    assert(captured_byte == 8'h00) else $error("Test %0d failed: byte 2 expected 0x00, got 0x%h", tb_test_num, captured_byte);
+                    capture_tx_byte_unstuffed(captured_byte);
+                    assert(captured_byte == 8'hAA) else $error("Test %0d failed: byte 3 expected 0xAA, got 0x%h", tb_test_num, captured_byte);
+
+                    capture_tx_byte_unstuffed(captured_crc[7:0]);
+                    capture_tx_byte_unstuffed(captured_crc[15:8]);
+                    assert(captured_crc == 16'h807F) else $error("Test %0d failed: CRC expected 0x807F, got 0x%h", tb_test_num, captured_crc);
+                end
+            join
+
+            // Verify TX actually did stuff - we expect at least 2 stuffing events
+            assert(tx_stuff_count >= 2) else $error("Test %0d failed: expected bit stuffing but only %0d stuffs detected - is bit stuffing enabled?", tb_test_num, tx_stuff_count);
+            $display("Test %0d: detected %0d bit-stuffing events", tb_test_num, tx_stuff_count);
+
+            assert(tx_error_seen == 0) else $error("Test %0d failed: tx_error during bit-stuffed transmission", tb_test_num);
+            assert(buffer_occupancy == 7'd0) else $error("Test %0d failed: buffer should be drained", tb_test_num);
+        end
+
+        //
+        // Test: Bit stuffing verification on RX
+        // Send a DATA0 packet with stuffed bits in the stream. If RX bit-stuffing
+        // is working, it will strip the stuffed 0s and decode the original payload.
+       tb_test_num = 4;
+        reset_dut();
+        begin
+            logic [7:0] popped_byte;
+            logic [7:0] payload[];
+
+            payload = new[4];
+            payload[0] = 8'hFF;
+            payload[1] = 8'hFF;
+            payload[2] = 8'hFF;
+            payload[3] = 8'hFF;
+
+            send_data0_stuffed(payload, 4, 16'h4FFE);
+            repeat(20) @(posedge clk);
+
+            assert(rx_data_ready_seen == 1) else $error("Test %0d failed: rx_data_ready never pulsed", tb_test_num);
+            assert(rx_packet_captured == 4'b0011) else $error("Test %0d failed: expected DATA0 PID, got 0x%h", tb_test_num, rx_packet_captured);
+            assert(rx_error_seen == 0) else $error("Test %0d failed: rx_error - bit stuffing may not be working", tb_test_num);
+            assert(buffer_occupancy == 7'd4) else $error("Test %0d failed: occupancy expected 4, got %0d", tb_test_num, buffer_occupancy);
+
+            pop_rx_byte(popped_byte);
+            assert(popped_byte == 8'hFF) else $error("Test %0d failed: byte 0 expected 0xFF, got 0x%h", tb_test_num, popped_byte);
+            pop_rx_byte(popped_byte);
+            assert(popped_byte == 8'hFF) else $error("Test %0d failed: byte 1 expected 0xFF, got 0x%h", tb_test_num, popped_byte);
+            pop_rx_byte(popped_byte);
+            assert(popped_byte == 8'hFF) else $error("Test %0d failed: byte 2 expected 0xFF, got 0x%h", tb_test_num, popped_byte);
+            pop_rx_byte(popped_byte);
+            assert(popped_byte == 8'hFF) else $error("Test %0d failed: byte 3 expected 0xFF, got 0x%h", tb_test_num, popped_byte);
+
+            assert(buffer_occupancy == 7'd0) else $error("Test %0d failed: buffer should be empty", tb_test_num);
+
+                    tb_test_num = 5;
+        reset_dut();
+        begin
+            logic [7:0] payload[];
+
+            payload = new[65];
+            for (int i = 0; i < 65; i++) payload[i] = i[7:0];
+
+            // Host sends OUT token first (normal start)
+            send_out_token(7'h00, 4'h0, 5'h02);
+            repeat(10) @(posedge clk);
+            assert(rx_data_ready_seen == 1) else $error("Test %0d failed: no rx_data_ready for OUT", tb_test_num);
+            assert(rx_error_seen == 0) else $error("Test %0d failed: rx_error during OUT token", tb_test_num);
+            clear_rx_flags();
+
+            // Host sends oversized DATA0 packet
+            send_data0(payload, 65, 16'h9537);
+            repeat(20) @(posedge clk);
+
+            assert(rx_error_seen == 1) else $error("Test %0d failed: expected rx_error on oversized packet but it never asserted", tb_test_num);
+            assert(buffer_occupancy == 7'd0) else $error("Test %0d failed: buffer should be flushed after error, got %0d", tb_test_num, buffer_occupancy);
+        end
+
+        // Test 6: Error handling for invalid sync byte
+        // Send garbage instead of valid sync pattern. Expect rx_error to assert
+        // and design to return to idle cleanly.
+        tb_test_num = 6;
+        reset_dut();
+        begin
+            // Trigger an edge to wake up the RX, then send bad sync data
+            send_bit(0); // forces edge_det, RX enters SYNC
+            for (int i = 0; i < 7; i++) send_bit(1'b1); // garbage sync content
+            send_eop();
+            repeat(20) @(posedge clk);
+
+            assert(rx_error_seen == 1) else $error("Test %0d failed: expected rx_error on bad sync but it never asserted", tb_test_num);
+            assert(rx_data_ready_seen == 0) else $error("Test %0d failed: rx_data_ready should not fire on bad sync", tb_test_num);
+            assert(buffer_occupancy == 7'd0) else $error("Test %0d failed: buffer should remain empty", tb_test_num);
+
+            // After error handling, RX should be back to idle and able to recover
+            clear_rx_flags();
+            repeat(10) @(posedge clk);
+
+            // Send a valid OUT token to confirm recovery
+            send_out_token(7'h00, 4'h0, 5'h02);
+            repeat(10) @(posedge clk);
+            assert(rx_data_ready_seen == 1) else $error("Test %0d failed: RX did not recover from error state", tb_test_num);
+            assert(rx_packet_captured == 4'b0001) else $error("Test %0d failed: after recovery expected OUT PID, got 0x%h", tb_test_num, rx_packet_captured);
+            assert(rx_error_seen == 0) else $error("Test %0d failed: rx_error on recovery packet", tb_test_num);
+        end
+        end
         $finish;
     end
 
