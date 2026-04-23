@@ -168,7 +168,6 @@ always_comb begin : fsm_comb
         end
         SYNC: begin
             //packet type 8 bit
-            flush = 1; // Delete?
             sr_en = 1;
             rx_transfer_active = 1;
 
@@ -192,7 +191,6 @@ always_comb begin : fsm_comb
                     end
                     else if (next_pid == DATA0 || next_pid == DATA1) begin
                         next_state = DATA;
-                        //flush = 1; // CHANGED THIS HERE
                     end
                     else if (next_pid == ACK) begin
                         next_state = EOP;
@@ -212,6 +210,7 @@ always_comb begin : fsm_comb
             end
             rx_error = 1;
             rx_transfer_active = 1;
+            flush = 1;
         end
         TOKEN: begin
             rx_transfer_active = 1;
