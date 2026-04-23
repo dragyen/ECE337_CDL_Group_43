@@ -15,7 +15,7 @@ logic edge_det, decoded_data, valid_bit,
     crc5_valid, crc16_valid,
     crc5_clear, crc16_clear,
     sr_en, sr_clear, clear_count,
-    byte_done, token_done, eop_det;
+    byte_done, token_done, eop_det, eop_det_reg;
 
 logic [3:0] count, next_count; //counter logic
 logic [15:0] data_parallel;
@@ -251,7 +251,7 @@ always_comb begin : fsm_comb
             next_pipeline = 0; //clear pipeline
             next_delayed = 0;
 
-            if (!eop_det) begin //from all packet types
+            if (!eop_det_reg) begin //from all packet types
                 next_state = ERROR;
             end
 
@@ -298,12 +298,14 @@ always_ff @ (posedge clk, negedge n_rst) begin : fsm_ff
         pid <= UNKNOWN;
         pipeline <= 0;
         delayed <= 0;
+        eop_det_reg <= 0;
     end
     else begin
         state <= next_state;
         pid <= next_pid;
         pipeline <= next_pipeline;
         delayed <= next_delayed;
+        eop_det_reg <= eop_det;
     end
 end
 

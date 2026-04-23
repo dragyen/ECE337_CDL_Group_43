@@ -28,7 +28,7 @@ add wave -noupdate -expand -group RX -color Cyan /tb_usb_rx_tx_db_2/DUT/u_usb_rx
 add wave -noupdate -expand -group RX /tb_usb_rx_tx_db_2/DUT/u_usb_rx/n_rst
 add wave -noupdate -expand -group RX -color Yellow /tb_usb_rx_tx_db_2/DUT/u_usb_rx/dp_in
 add wave -noupdate -expand -group RX -color Yellow /tb_usb_rx_tx_db_2/DUT/u_usb_rx/dm_in
-add wave -noupdate -expand -group RX -radix decimal /tb_usb_rx_tx_db_2/DUT/u_usb_rx/buffer_occupancy
+add wave -noupdate -expand -group RX -radix unsigned /tb_usb_rx_tx_db_2/DUT/u_usb_rx/buffer_occupancy
 add wave -noupdate -expand -group RX /tb_usb_rx_tx_db_2/DUT/u_usb_rx/rx_data_ready
 add wave -noupdate -expand -group RX /tb_usb_rx_tx_db_2/DUT/u_usb_rx/rx_transfer_active
 add wave -noupdate -expand -group RX /tb_usb_rx_tx_db_2/DUT/u_usb_rx/rx_error
@@ -125,7 +125,7 @@ add wave -noupdate -group {Data Buffer} /tb_usb_rx_tx_db_2/DUT/u_data_buffer/wri
 add wave -noupdate -group {Data Buffer} /tb_usb_rx_tx_db_2/DUT/u_data_buffer/reg_mem
 add wave -noupdate -color Pink /tb_usb_rx_tx_db_2/tb_test_num
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {22439984 ps} 0} {{Test 2} {8817285 ps} 1} {{Test 3} {18991092 ps} 1} {{Cursor 4} {21182961 ps} 1}
+WaveRestoreCursors {{Cursor 1} {47380922 ps} 0} {{Test 2} {51770579 ps} 1}
 quietly wave cursor active 1
 configure wave -namecolwidth 150
 configure wave -valuecolwidth 100
@@ -141,4 +141,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ps
 update
-WaveRestoreZoom {20952251 ps} {24691932 ps}
+WaveRestoreZoom {40958073 ps} {53112984 ps}

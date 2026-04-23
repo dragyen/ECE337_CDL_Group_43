@@ -188,12 +188,14 @@ module usb_tx
                 tx_error = '0;
                 load_en = 0;
             if(currentState == IDLE) begin
+                if(tx_packet !== 3'b000) begin
+                    load_en = 1;
+                end
                 tx_transfer_active = '0;
                 shift_en = '0;
                 get_tx_packet_data = '0;   
             end
             if(currentState == SYNC) begin
-                load_en = ~loaded;
                 tx_transfer_active = 1;
                 shift_en = bit_pulse;
                 get_tx_packet_data = '0;   
@@ -244,6 +246,7 @@ module usb_tx
 
     always_comb begin
         case (currentState)
+            IDLE: sr_load_data = 8'b10000000;
             SYNC: sr_load_data = 8'b10000000;  
             PID: sr_load_data = {~pid, pid};  // PID + complement
             DATA: sr_load_data = tx_packet_data;

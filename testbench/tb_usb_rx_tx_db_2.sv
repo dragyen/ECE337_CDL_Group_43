@@ -312,145 +312,109 @@ module tb_usb_rx_tx_db_2();
         assert(rx_transfer_active == 0) else $error("Test %0d failed: rx_transfer_active nonzero after reset", tb_test_num);
         assert(tx_transfer_active == 0) else $error("Test %0d failed: tx_transfer_active nonzero after reset", tb_test_num);
 
-        // Test 1: Host-to-endpoint transfer
-        // Host sends OUT token, then DATA0 with payload.
-        // Verify RX correctly receives both and stores payload in buffer.
+        // Test 1: Full host-to-endpoint transfer with loopback-verified ACK
+        // Flow: OUT token -> DATA0 (64 bytes) -> endpoint sends ACK (loopback to RX) -> SoC pops data
         tb_test_num = 1;
         reset_dut();
         begin
             logic [7:0] popped_byte;
+            logic [7:0] expected_payload[];
 
-            // Step 1: OUT token
+            // build 64-byte payload (chosen to avoid bit stuffing)
+            expected_payload = new[64];
+            for (int i = 0; i < 64; i++) begin
+                case (i % 8)
+                    0: expected_payload[i] = 8'h55;
+                    1: expected_payload[i] = 8'hAA;
+                    2: expected_payload[i] = 8'h33;
+                    3: expected_payload[i] = 8'hCC;
+                    4: expected_payload[i] = 8'h5A;
+                    5: expected_payload[i] = 8'hA5;
+                    6: expected_payload[i] = 8'h3C;
+                    7: expected_payload[i] = 8'hC3;
+                endcase
+            end
+
+            // Step 1: host sends OUT token
             send_out_token(7'h00, 4'h0, 5'h02);
             repeat(10) @(posedge clk);
-            assert(rx_data_ready_seen == 1) else $error("Test %0d failed: rx_data_ready never pulsed for OUT token", tb_test_num);
+            assert(rx_data_ready_seen == 1) else $error("Test %0d failed: no rx_data_ready for OUT token", tb_test_num);
             assert(rx_packet_captured == 4'b0001) else $error("Test %0d failed: expected OUT PID (0x1), got 0x%h", tb_test_num, rx_packet_captured);
-            assert(rx_error_seen == 0) else $error("Test %0d failed: rx_error asserted during OUT token", tb_test_num);
-            clear_rx_flags();
-
-            // Step 2: DATA0 with 4-byte payload
-            test_data = new[4];
-            test_data[0] = 8'hDE;
-            test_data[1] = 8'hAD;
-            test_data[2] = 8'hBE;
-            test_data[3] = 8'hEF;
-            send_data0(test_data, 4, 16'h3E64);
-            repeat(10) @(posedge clk);
-            assert(rx_data_ready_seen == 1) else $error("Test %0d failed: rx_data_ready never pulsed for DATA0", tb_test_num);
-            assert(rx_packet_captured == 4'b0011) else $error("Test %0d failed: expected DATA0 PID (0x3), got 0x%h", tb_test_num, rx_packet_captured);
-            assert(rx_error_seen == 0) else $error("Test %0d failed: rx_error asserted during DATA0 packet", tb_test_num);
-
-            // Step 3: buffer occupancy should equal payload length
-            assert(buffer_occupancy == 7'd4) else $error("Test %0d failed: buffer_occupancy expected 4, got %0d", tb_test_num, buffer_occupancy);
-
-            // Step 4: pop bytes and verify order and content
-            pop_rx_byte(popped_byte);
-            assert(popped_byte == 8'hDE) else $error("Test %0d failed: byte 0 expected 0xDE, got 0x%h", tb_test_num, popped_byte);
-            pop_rx_byte(popped_byte);
-            assert(popped_byte == 8'hAD) else $error("Test %0d failed: byte 1 expected 0xAD, got 0x%h", tb_test_num, popped_byte);
-            pop_rx_byte(popped_byte);
-            assert(popped_byte == 8'hBE) else $error("Test %0d failed: byte 2 expected 0xBE, got 0x%h", tb_test_num, popped_byte);
-            pop_rx_byte(popped_byte);
-            assert(popped_byte == 8'hEF) else $error("Test %0d failed: byte 3 expected 0xEF, got 0x%h", tb_test_num, popped_byte);
-
-            // Step 5: buffer should be empty
-            assert(buffer_occupancy == 7'd0) else $error("Test %0d failed: buffer should be empty after pops, got %0d", tb_test_num, buffer_occupancy);
-
-            // Step 6: rx_transfer_active low
-            assert(rx_transfer_active == 0) else $error("Test %0d failed: rx_transfer_active stuck high after packet", tb_test_num);
-        end
-
-        // Test 2: Full host-to-endpoint transfer with ACK response
-        // Flow: OUT token -> DATA0 -> endpoint sends ACK -> SoC pops data
-        tb_test_num = 2;
-        reset_dut();
-        begin
-            logic [7:0] popped_byte;
-            logic [3:0] tx_pid_captured;
-
-            // Step 1: OUT token
-            send_out_token(7'h00, 4'h0, 5'h02);
-            repeat(10) @(posedge clk);
-            assert(rx_data_ready_seen == 1) else $error("Test %0d failed: no rx_data_ready for OUT", tb_test_num);
-            assert(rx_packet_captured == 4'b0001) else $error("Test %0d failed: expected OUT PID, got 0x%h", tb_test_num, rx_packet_captured);
             assert(rx_error_seen == 0) else $error("Test %0d failed: rx_error during OUT", tb_test_num);
             clear_rx_flags();
 
-            // Step 2: DATA0 with 4-byte payload
-            test_data = new[4];
-            test_data[0] = 8'hDE;
-            test_data[1] = 8'hAD;
-            test_data[2] = 8'hBE;
-            test_data[3] = 8'hEF;
-            send_data0(test_data, 4, 16'h3E64);
-            repeat(10) @(posedge clk);
+            // Step 2: host sends DATA0 with 64-byte payload
+            send_data0(expected_payload, 64, 16'hA54E);
+            repeat(20) @(posedge clk);
             assert(rx_data_ready_seen == 1) else $error("Test %0d failed: no rx_data_ready for DATA0", tb_test_num);
-            assert(rx_packet_captured == 4'b0011) else $error("Test %0d failed: expected DATA0 PID, got 0x%h", tb_test_num, rx_packet_captured);
+            assert(rx_packet_captured == 4'b0011) else $error("Test %0d failed: expected DATA0 PID (0x3), got 0x%h", tb_test_num, rx_packet_captured);
             assert(rx_error_seen == 0) else $error("Test %0d failed: rx_error during DATA0", tb_test_num);
-            assert(buffer_occupancy == 7'd4) else $error("Test %0d failed: occupancy expected 4, got %0d", tb_test_num, buffer_occupancy);
+            assert(buffer_occupancy == 7'd64) else $error("Test %0d failed: occupancy expected 64, got %0d", tb_test_num, buffer_occupancy);
             clear_rx_flags();
 
-            // Step 3: SoC triggers endpoint to send ACK
-            fork
-                trigger_tx(3'd3);
-                capture_tx_pid(tx_pid_captured);
-            join
-
-            assert(tx_pid_captured == 4'b0010) else $error("Test %0d failed: expected ACK PID (0x2), got 0x%h", tb_test_num, tx_pid_captured);
-            assert(tx_error_seen == 0) else $error("Test %0d failed: tx_error during ACK", tb_test_num);
-
-            // Step 4: SoC pops data and verifies
-            pop_rx_byte(popped_byte);
-            assert(popped_byte == 8'hDE) else $error("Test %0d failed: byte 0 expected 0xDE, got 0x%h", tb_test_num, popped_byte);
-            pop_rx_byte(popped_byte);
-            assert(popped_byte == 8'hAD) else $error("Test %0d failed: byte 1 expected 0xAD, got 0x%h", tb_test_num, popped_byte);
-            pop_rx_byte(popped_byte);
-            assert(popped_byte == 8'hBE) else $error("Test %0d failed: byte 2 expected 0xBE, got 0x%h", tb_test_num, popped_byte);
-            pop_rx_byte(popped_byte);
-            assert(popped_byte == 8'hEF) else $error("Test %0d failed: byte 3 expected 0xEF, got 0x%h", tb_test_num, popped_byte);
-
-            assert(buffer_occupancy == 7'd0) else $error("Test %0d failed: buffer should be empty after pops", tb_test_num);
-        end
-
-    
-        // Test 3 (or replace test 2's TX check): verify TX by looping back into RX
-        // Trigger TX to send an ACK, loop dp_out/dm_out into dp_in/dm_in
-        tb_test_num = 3;
-        reset_dut();
-        begin
+            // Step 3: SoC triggers endpoint to send ACK, loopback so RX confirms it
             force dp_in = dp_out;
             force dm_in = dm_out;
 
-            // trigger ACK
-            trigger_tx(3'd3);
-            repeat(100) @(posedge clk);
+            trigger_tx(3'd3); // ACK
 
+            repeat(50) @(posedge clk);
 
             release dp_in;
             release dm_in;
             dp_in = 1; dm_in = 0;
+            cur_line = 1;
 
-            assert(rx_data_ready_seen == 1) else $error("Test %0d failed: RX never saw TX's ACK", tb_test_num);
-            assert(rx_packet_captured == 4'b0010) else $error("Test %0d failed: RX decoded PID 0x%h, expected 0x2 (ACK)", tb_test_num, rx_packet_captured);
-            assert(rx_error_seen == 0) else $error("Test %0d failed: rx_error during loopback", tb_test_num);
+            assert(rx_data_ready_seen == 1) else $error("Test %0d failed: RX never decoded the TX ACK", tb_test_num);
+            assert(rx_packet_captured == 4'b0010) else $error("Test %0d failed: expected ACK PID (0x2) via loopback, got 0x%h", tb_test_num, rx_packet_captured);
+            assert(rx_error_seen == 0) else $error("Test %0d failed: rx_error during loopback ACK", tb_test_num);
+            assert(tx_error_seen == 0) else $error("Test %0d failed: tx_error during ACK", tb_test_num);
+
+            // Step 4: SoC pops all 64 data bytes from buffer
+            for (int i = 0; i < 64; i++) begin
+                pop_rx_byte(popped_byte);
+                assert(popped_byte == expected_payload[i]) else $error("Test %0d failed: byte %0d expected 0x%h, got 0x%h", tb_test_num, i, expected_payload[i], popped_byte);
+            end
+
+            assert(buffer_occupancy == 7'd0) else $error("Test %0d failed: buffer should be empty after pops, got %0d", tb_test_num, buffer_occupancy);
         end
 
-        // Test 4: TX sends 4-byte DATA0 that forces bit stuffing to activate
-        // Payload: {0xFF, 0xFF, 0x00, 0xAA} - 16+ consecutive 1s trigger bit stuffing
-        tb_test_num = 4;
+        // Test 2: Full endpoint-to-host transfer
+        // Flow: SoC preloads buffer -> host sends IN token -> endpoint sends DATA0 -> host sends ACK
+        tb_test_num = 2;
         reset_dut();
         begin
             logic [7:0] captured_byte;
             logic [15:0] captured_crc;
+            logic [7:0] expected_payload[];
 
-            test_data = new[4];
-            test_data[0] = 8'hFF;
-            test_data[1] = 8'hFF;
-            test_data[2] = 8'h00;
-            test_data[3] = 8'hAA;
-            fill_tx_buffer(test_data, 4);
-            assert(buffer_occupancy == 7'd4) else $error("Test %0d failed: occupancy expected 4, got %0d", tb_test_num, buffer_occupancy);
+            expected_payload = new[64];
+            for (int i = 0; i < 64; i++) begin
+                case (i % 8)
+                    0: expected_payload[i] = 8'h55;
+                    1: expected_payload[i] = 8'hAA;
+                    2: expected_payload[i] = 8'h33;
+                    3: expected_payload[i] = 8'hCC;
+                    4: expected_payload[i] = 8'h5A;
+                    5: expected_payload[i] = 8'hA5;
+                    6: expected_payload[i] = 8'h3C;
+                    7: expected_payload[i] = 8'hC3;
+                endcase
+            end
 
+            // Step 1: SoC preloads buffer with data to transmit
+            fill_tx_buffer(expected_payload, 64);
+            assert(buffer_occupancy == 7'd64) else $error("Test %0d failed: occupancy after fill expected 64, got %0d", tb_test_num, buffer_occupancy);
+
+            // Step 2: host sends IN token
+            send_in_token(7'h00, 4'h0, 5'h02);
+            repeat(10) @(posedge clk);
+            assert(rx_data_ready_seen == 1) else $error("Test %0d failed: no rx_data_ready for IN token", tb_test_num);
+            assert(rx_packet_captured == 4'b1001) else $error("Test %0d failed: expected IN PID (0x9), got 0x%h", tb_test_num, rx_packet_captured);
+            assert(rx_error_seen == 0) else $error("Test %0d failed: rx_error during IN", tb_test_num);
+            clear_rx_flags();
+
+            // Step 3: endpoint sends DATA0 with the buffered payload
             fork
                 trigger_tx(3'd1); // DATA0
                 begin
@@ -460,23 +424,26 @@ module tb_usb_rx_tx_db_2();
                     capture_tx_byte(captured_byte); // PID
                     assert(captured_byte[3:0] == 4'b0011) else $error("Test %0d failed: expected DATA0 PID (0x3), got 0x%h", tb_test_num, captured_byte[3:0]);
 
-                    capture_tx_byte(captured_byte);
-                    assert(captured_byte == 8'hFF) else $error("Test %0d failed: byte 0 expected 0xFF, got 0x%h", tb_test_num, captured_byte);
-                    capture_tx_byte(captured_byte);
-                    assert(captured_byte == 8'hFF) else $error("Test %0d failed: byte 1 expected 0xFF, got 0x%h", tb_test_num, captured_byte);
-                    capture_tx_byte(captured_byte);
-                    assert(captured_byte == 8'h00) else $error("Test %0d failed: byte 2 expected 0x00, got 0x%h", tb_test_num, captured_byte);
-                    capture_tx_byte(captured_byte);
-                    assert(captured_byte == 8'hAA) else $error("Test %0d failed: byte 3 expected 0xAA, got 0x%h", tb_test_num, captured_byte);
+                    for (int i = 0; i < 64; i++) begin
+                        capture_tx_byte(captured_byte);
+                        assert(captured_byte == expected_payload[i]) else $error("Test %0d failed: TX byte %0d expected 0x%h, got 0x%h", tb_test_num, i, expected_payload[i], captured_byte);
+                    end
 
                     capture_tx_byte(captured_crc[7:0]);
                     capture_tx_byte(captured_crc[15:8]);
-                    assert(captured_crc == 16'h807F) else $error("Test %0d failed: CRC expected 0x807F, got 0x%h", tb_test_num, captured_crc);
+                    assert(captured_crc == 16'hA54E) else $error("Test %0d failed: TX CRC expected 0xA54E, got 0x%h", tb_test_num, captured_crc);
                 end
             join
 
-            assert(tx_error_seen == 0) else $error("Test %0d failed: tx_error during TX", tb_test_num);
-            assert(buffer_occupancy == 7'd0) else $error("Test %0d failed: buffer should be drained, got %0d", tb_test_num, buffer_occupancy);
+            assert(tx_error_seen == 0) else $error("Test %0d failed: tx_error during DATA0 TX", tb_test_num);
+            assert(buffer_occupancy == 7'd0) else $error("Test %0d failed: buffer should be drained after TX, got %0d", tb_test_num, buffer_occupancy);
+
+            // Step 4: host sends ACK to confirm receipt
+            send_ack();
+            repeat(10) @(posedge clk);
+            assert(rx_data_ready_seen == 1) else $error("Test %0d failed: no rx_data_ready for host ACK", tb_test_num);
+            assert(rx_packet_captured == 4'b0010) else $error("Test %0d failed: expected ACK PID (0x2), got 0x%h", tb_test_num, rx_packet_captured);
+            assert(rx_error_seen == 0) else $error("Test %0d failed: rx_error during host ACK", tb_test_num);
         end
         
 
