@@ -353,7 +353,6 @@ endtask
     repeat (40) @(negedge clk);
 
     if (buffer_occupancy == 1)
-
         $display("[%0t] PASS: RX stores received byte in FIFO", $time);
 
     else
@@ -378,7 +377,49 @@ endtask
 
     get_rx_data = 0;
 
+    // AHB <-> Data Buffer <-> TX
 
+    // AHB <-> Data Buffer <-> TX
+
+// Step 1: AHB writes bytes into FIFO
+@(negedge clk); clear = 1;
+@(negedge clk); clear = 0;
+
+@(negedge clk); tx_data = 8'hA1; store_tx_data = 1;
+@(negedge clk); store_tx_data = 0;
+@(negedge clk); tx_data = 8'hB2; store_tx_data = 1;
+@(negedge clk); store_tx_data = 0;
+@(negedge clk); tx_data = 8'hC3; store_tx_data = 1;
+@(negedge clk); store_tx_data = 0;
+
+@(negedge clk);
+if (buffer_occupancy == 3)
+    $display("[%0t] PASS: AHB wrote 3 bytes into FIFO", $time);
+else
+    $display("[%0t] FAIL: FIFO occupancy wrong after AHB write, got %0d", $time, buffer_occupancy);
+
+// Step 2: Host sends IN token, TX responds with DATA0 from FIFO
+@(negedge clk);
+tx_packet = 3'd1;
+send_in_token();
+
+@(posedge tx_transfer_active);
+@(negedge tx_transfer_active);
+tx_packet = 0;
+
+if (!tx_error)
+    $display("[%0t] PASS: TX sent DATA0 from FIFO after IN token", $time);
+else
+    $display("[%0t] FAIL: TX error during DATA0 send", $time);
+
+// Step 3: Host ACKs, FIFO should drain
+send_ack_handshake();
+repeat (32) @(negedge clk);
+
+if (buffer_occupancy == 0)
+    $display("[%0t] PASS: FIFO drained after ACK — full AHB->Buffer->TX path verified", $time);
+else
+    $display("[%0t] FAIL: FIFO not empty after ACK, occupancy = %0d", $time, buffer_occupancy);
 
     $finish;
     end

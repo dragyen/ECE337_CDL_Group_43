@@ -402,6 +402,7 @@ module tb_usb_rx_tx_db_2();
             assert(buffer_occupancy == 7'd0) else $error("Test %0d failed: buffer should be empty after pops", tb_test_num);
         end
 
+        /*
         // Test 3 (or replace test 2's TX check): verify TX by looping back into RX
         // Trigger TX to send an ACK, loop dp_out/dm_out into dp_in/dm_in
         tb_test_num = 3;

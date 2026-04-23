@@ -31,16 +31,10 @@ add wave -noupdate -radix binary /tb_usb_rx_tx_db/DUT/dm_out
 add wave -noupdate -divider {RX Inputs}
 add wave -noupdate -radix decimal /tb_usb_rx_tx_db/DUT/dp_in
 add wave -noupdate -radix decimal /tb_usb_rx_tx_db/DUT/dm_in
-add wave -noupdate /tb_usb_rx_tx_db/DUT/u_usb_rx/rx_data_ready
-add wave -noupdate /tb_usb_rx_tx_db/DUT/u_usb_rx/rx_transfer_active
-add wave -noupdate /tb_usb_rx_tx_db/DUT/u_usb_rx/rx_error
 add wave -noupdate /tb_usb_rx_tx_db/DUT/u_usb_rx/state
 add wave -noupdate /tb_usb_rx_tx_db/DUT/u_usb_rx/next_state
-add wave -noupdate /tb_usb_rx_tx_db/DUT/u_usb_rx/eop_det
-add wave -noupdate /tb_usb_rx_tx_db/DUT/u_usb_rx/crc16_valid
-add wave -noupdate /tb_usb_rx_tx_db/DUT/u_usb_rx/crc5_valid
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {11559687 ps} 0}
+WaveRestoreCursors {{Cursor 1} {39510272 ps} 0}
 quietly wave cursor active 1
 configure wave -namecolwidth 150
 configure wave -valuecolwidth 100
@@ -56,4 +50,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ns
 update
-WaveRestoreZoom {11505218 ps} {11614156 ps}
+WaveRestoreZoom {0 ps} {41548500 ps}

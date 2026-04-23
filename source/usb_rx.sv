@@ -85,7 +85,7 @@ logic next_byte_done, next_token_done, shift_strobe_seen, next_shift_strobe_seen
 logic packet_size; //1 for 16 bit, 0 for 8 bit
 
 
-assign packet_size = (pid == OUT || pid == IN) ? 1 : 0;
+assign packet_size = (pid == OUT || pid == IN);
 
 always_comb begin : counter_comb
     next_byte_done = 0;

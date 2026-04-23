@@ -7,25 +7,36 @@ Report : timing
         -max_paths 1
 Design : data_buffer
 Version: W-2024.09-SP4
-Date   : Sat Apr 18 15:16:59 2026
+Date   : Wed Apr 22 20:26:47 2026
 ****************************************
 
 Operating Conditions: typical   Library: osu05_stdcells
 Wire Load Model Mode: top
 
-  Startpoint: counter_reg[5]
+  Startpoint: read_ptr_reg[4]
               (rising edge-triggered flip-flop)
-  Endpoint: buffer_occupancy[5]
+  Endpoint: tx_packet_data[7]
             (output port)
   Path Group: (none)
   Path Type: max
 
   Point                                    Incr       Path
   -----------------------------------------------------------
-  counter_reg[5]/CLK (DFFSR)               0.00       0.00 r
-  counter_reg[5]/Q (DFFSR)                 0.70       0.70 f
-  buffer_occupancy[5] (out)                0.00       0.70 f
-  data arrival time                                   0.70
+  read_ptr_reg[4]/CLK (DFFSR)              0.00       0.00 r
+  read_ptr_reg[4]/Q (DFFSR)                0.65       0.65 r
+  U2841/Y (INVX1)                          0.36       1.01 f
+  U2840/Y (NAND2X1)                        0.30       1.31 r
+  U2777/Y (NOR2X1)                         0.81       2.12 f
+  U2313/Y (INVX4)                          0.75       2.87 r
+  U2312/Y (INVX2)                          0.99       3.86 f
+  U2334/Y (AOI22X1)                        0.25       4.12 r
+  U2333/Y (NAND2X1)                        0.10       4.22 f
+  U2332/Y (OAI21X1)                        0.14       4.35 r
+  U2318/Y (NAND3X1)                        0.08       4.43 f
+  U2317/Y (MUX2X1)                         0.12       4.55 r
+  U2316/Y (INVX1)                          0.05       4.60 f
+  tx_packet_data[7] (out)                  0.00       4.60 f
+  data arrival time                                   4.60
   -----------------------------------------------------------
   (Path is unconstrained)
 
@@ -36,7 +47,7 @@ Wire Load Model Mode: top
 Report : area
 Design : data_buffer
 Version: W-2024.09-SP4
-Date   : Sat Apr 18 15:16:59 2026
+Date   : Wed Apr 22 20:26:47 2026
 ****************************************
 
 Library(s) Used:
@@ -44,21 +55,21 @@ Library(s) Used:
     osu05_stdcells (File: /home/ecegrid/a/ece337/summer24-refactor/tech/ami05/osu05_stdcells.db)
 
 Number of ports:                           61
-Number of nets:                          2473
-Number of cells:                         2431
-Number of combinational cells:           1864
-Number of sequential cells:               539
+Number of nets:                          2844
+Number of cells:                         2802
+Number of combinational cells:           1739
+Number of sequential cells:               531
 Number of macros/black boxes:               0
-Number of buf/inv:                        589
-Number of references:                      18
+Number of buf/inv:                        595
+Number of references:                      17
 
-Combinational area:             522099.000000
-Buf/Inv area:                    88128.000000
-Noncombinational area:          485136.000000
+Combinational area:             503109.000000
+Buf/Inv area:                    88920.000000
+Noncombinational area:          841104.000000
 Macro/Black Box area:                0.000000
 Net Interconnect area:      undefined  (No wire load specified)
 
-Total cell area:               1007235.000000
+Total cell area:               1344213.000000
 Total area:                 undefined
 1
 Loading db file '/home/ecegrid/a/ece337/summer24-refactor/tech/ami05/osu05_stdcells.db'
@@ -72,7 +83,7 @@ Report : power
         -analysis_effort low
 Design : data_buffer
 Version: W-2024.09-SP4
-Date   : Sat Apr 18 15:16:59 2026
+Date   : Wed Apr 22 20:26:47 2026
 ****************************************
 
 
@@ -99,12 +110,12 @@ Attributes
 i - Including register clock pin internal power
 
 
-  Cell Internal Power  =  52.8451 mW   (59%)
-  Net Switching Power  =  36.0275 mW   (41%)
+  Cell Internal Power  =  64.2637 mW   (64%)
+  Net Switching Power  =  35.7014 mW   (36%)
                          ---------
-Total Dynamic Power    =  88.8727 mW  (100%)
+Total Dynamic Power    =  99.9651 mW  (100%)
 
-Cell Leakage Power     = 284.8127 nW
+Cell Leakage Power     = 420.1273 nW
 
 Information: report_power power group summary does not include estimated clock tree power. (PWR-789)
 
@@ -116,8 +127,8 @@ memory             0.0000            0.0000            0.0000            0.0000 
 black_box          0.0000            0.0000            0.0000            0.0000  (   0.00%)
 clock_network      0.0000            0.0000            0.0000            0.0000  (   0.00%)  i
 register           0.0000            0.0000            0.0000            0.0000  (   0.00%)
-sequential        45.5608        7.4789e-02          138.9421           45.6357  (  51.35%)
-combinational      7.2842           35.9528          145.8706           43.2371  (  48.65%)
+sequential        56.7387            0.1294          283.0113           56.8684  (  56.89%)
+combinational      7.5246           35.5720          137.1160           43.0968  (  43.11%)
 --------------------------------------------------------------------------------------------------
-Total             52.8450 mW        36.0276 mW       284.8127 nW        88.8728 mW
+Total             64.2633 mW        35.7014 mW       420.1273 nW        99.9651 mW
 1
