@@ -582,7 +582,7 @@ int rx_ones_run;
         // Test: Bit stuffing verification on RX
         // Send a DATA0 packet with stuffed bits in the stream. If RX bit-stuffing
         // is working, it will strip the stuffed 0s and decode the original payload.
-       tb_test_num = 4;
+        tb_test_num = 4;
         reset_dut();
         begin
             logic [7:0] popped_byte;
@@ -612,8 +612,9 @@ int rx_ones_run;
             assert(popped_byte == 8'hFF) else $error("Test %0d failed: byte 3 expected 0xFF, got 0x%h", tb_test_num, popped_byte);
 
             assert(buffer_occupancy == 7'd0) else $error("Test %0d failed: buffer should be empty", tb_test_num);
+        end
 
-                    tb_test_num = 5;
+        tb_test_num = 5;
         reset_dut();
         begin
             logic [7:0] payload[];
@@ -663,7 +664,7 @@ int rx_ones_run;
             assert(rx_packet_captured == 4'b0001) else $error("Test %0d failed: after recovery expected OUT PID, got 0x%h", tb_test_num, rx_packet_captured);
             assert(rx_error_seen == 0) else $error("Test %0d failed: rx_error on recovery packet", tb_test_num);
         end
-        end
+        
         $finish;
     end
 
