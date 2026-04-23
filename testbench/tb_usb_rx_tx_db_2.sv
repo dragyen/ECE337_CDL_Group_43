@@ -412,7 +412,7 @@ module tb_usb_rx_tx_db_2();
             assert(buffer_occupancy == 7'd0) else $error("Test %0d failed: buffer should be empty after pops", tb_test_num);
         end
 
-        /*
+    
         // Test 3 (or replace test 2's TX check): verify TX by looping back into RX
         // Trigger TX to send an ACK, loop dp_out/dm_out into dp_in/dm_in
         tb_test_num = 3;
@@ -435,7 +435,6 @@ module tb_usb_rx_tx_db_2();
             assert(rx_error_seen == 0) else $error("Test %0d failed: rx_error during loopback", tb_test_num);
         end
 
-        
         // Test 4: TX sends 4-byte DATA0 that forces bit stuffing to activate
         // Payload: {0xFF, 0xFF, 0x00, 0xAA} - 16+ consecutive 1s trigger bit stuffing
         tb_test_num = 4;
@@ -479,6 +478,7 @@ module tb_usb_rx_tx_db_2();
             assert(tx_error_seen == 0) else $error("Test %0d failed: tx_error during TX", tb_test_num);
             assert(buffer_occupancy == 7'd0) else $error("Test %0d failed: buffer should be drained, got %0d", tb_test_num, buffer_occupancy);
         end
+        
 
         $display("All tests completed");
         $finish;

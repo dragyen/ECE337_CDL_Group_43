@@ -30,7 +30,8 @@ module usb_tx
     logic [15:0] crc16, next_crc16;
     logic nrzi_bit;
     logic loaded, next_loaded;
-
+    logic retrieved, next_retrieved;
+    logic last_bit_shifted, next_last_bit_shifted;
 
     always_ff@(posedge clk, negedge n_rst) begin
         if(!n_rst) begin
@@ -40,6 +41,8 @@ module usb_tx
             stuff_active <= '0;
             crc16 <= 16'hFFFF;
             loaded <= 0;
+            retrieved <= 0;
+            last_bit_shifted <= 0;
         end
         else begin
             currentState <= nextState;
@@ -48,6 +51,7 @@ module usb_tx
             stuff_active <= next_stuff_active;
             crc16 <= next_crc16;
             loaded <= next_loaded;
+            retrieved <= next_retrieved;
         end
     end
     
@@ -100,10 +104,15 @@ module usb_tx
                 if (bit_pulse && !stuff_active)
                     next_bit_counter = bit_counter + 1;
                 if(bit_counter == 7 && bit_pulse) begin
-                    if(pid == PID_ACK || pid == PID_NAK || pid == PID_STALL)
+                    if(pid == PID_ACK || pid == PID_NAK || pid == PID_STALL) begin
                         nextState = EOP;
-                    else if(pid == PID_DATA0 || pid == PID_DATA1)
+                        next_loaded = 0;
+                    end
+                    else if(pid == PID_DATA0 || pid == PID_DATA1) begin
                         nextState = DATA;
+                        next_loaded = 0;
+                        next_retrieved = 0;
+                    end
                     else
                         nextState = ERROR;
                     next_bit_counter = 0;
@@ -115,9 +124,12 @@ module usb_tx
             DATA: begin
                 next_bit_counter = 0;
                 // NO occupancy check here at all
-                if(bit_pulse && !stuff_active)
-                nextState = WAIT_DATA;
+                if(!stuff_active) begin
+                    nextState = WAIT_DATA;
+                    next_loaded = 1;
+                end
 
+                next_retrieved = 1;
             end
             WAIT_DATA: begin
                 next_bit_counter = bit_counter;
@@ -125,10 +137,17 @@ module usb_tx
                     next_bit_counter = bit_counter + 1;
                 if(bit_counter == 7 && !stuff_active && bit_pulse) begin
                     next_bit_counter = 0;
-                    if(buffer_occupancy != 0)
+                    if(buffer_occupancy != 0) begin
                         nextState = DATA;
+                        next_retrieved = 0;
+                        next_loaded = 0;
+                    end
                     else
                         nextState = CRC;
+
+                end
+                else begin
+                    next_loaded = 1;
                 end
             end
             ERROR: begin
@@ -186,10 +205,12 @@ module usb_tx
                 get_tx_packet_data = '0;   
             end
             if(currentState == DATA) begin
-                load_en = (bit_counter == 0);
+                load_en = ~loaded;
                 tx_transfer_active = 1;
                 shift_en = 0;
-                get_tx_packet_data = 1;
+                if (retrieved == 0) begin
+                    get_tx_packet_data = 1;
+                end
             end
             if(currentState == ERROR) begin
                 tx_transfer_active = 0;

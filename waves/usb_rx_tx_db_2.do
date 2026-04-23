@@ -92,17 +92,17 @@ add wave -noupdate -expand -group TX -expand -group CRC /tb_usb_rx_tx_db_2/DUT/u
 add wave -noupdate -expand -group TX -expand -group CRC /tb_usb_rx_tx_db_2/DUT/u_usb_tx/crc16_inv
 add wave -noupdate -expand -group TX /tb_usb_rx_tx_db_2/DUT/u_usb_tx/nrzi_bit
 add wave -noupdate -expand -group TX -color Magenta -radix binary /tb_usb_rx_tx_db_2/DUT/u_usb_tx/pid
-add wave -noupdate -expand -group TX -group {TX SR} -color Cyan /tb_usb_rx_tx_db_2/DUT/clk
-add wave -noupdate -expand -group TX -group {TX SR} /tb_usb_rx_tx_db_2/DUT/u_usb_tx/data_sr/shift_enable
-add wave -noupdate -expand -group TX -group {TX SR} /tb_usb_rx_tx_db_2/DUT/u_usb_tx/data_sr/load_enable
-add wave -noupdate -expand -group TX -group {TX SR} /tb_usb_rx_tx_db_2/DUT/u_usb_tx/data_sr/serial_in
-add wave -noupdate -expand -group TX -group {TX SR} /tb_usb_rx_tx_db_2/DUT/u_usb_tx/data_sr/parallel_in
-add wave -noupdate -expand -group TX -group {TX SR} /tb_usb_rx_tx_db_2/DUT/u_usb_tx/data_sr/serial_out
-add wave -noupdate -expand -group TX -group {TX SR} -radix binary /tb_usb_rx_tx_db_2/DUT/u_usb_tx/data_sr/parallel_out
-add wave -noupdate -expand -group TX -group {TX SR} -radix binary /tb_usb_rx_tx_db_2/DUT/u_usb_tx/data_sr/next_parallel_out
+add wave -noupdate -expand -group TX -expand -group {TX SR} -color Cyan /tb_usb_rx_tx_db_2/DUT/clk
+add wave -noupdate -expand -group TX -expand -group {TX SR} /tb_usb_rx_tx_db_2/DUT/u_usb_tx/data_sr/shift_enable
+add wave -noupdate -expand -group TX -expand -group {TX SR} -color Aquamarine /tb_usb_rx_tx_db_2/DUT/u_usb_tx/data_sr/load_enable
+add wave -noupdate -expand -group TX -expand -group {TX SR} /tb_usb_rx_tx_db_2/DUT/u_usb_tx/data_sr/serial_in
+add wave -noupdate -expand -group TX -expand -group {TX SR} /tb_usb_rx_tx_db_2/DUT/u_usb_tx/data_sr/parallel_in
+add wave -noupdate -expand -group TX -expand -group {TX SR} /tb_usb_rx_tx_db_2/DUT/u_usb_tx/data_sr/serial_out
+add wave -noupdate -expand -group TX -expand -group {TX SR} -radix binary /tb_usb_rx_tx_db_2/DUT/u_usb_tx/data_sr/parallel_out
+add wave -noupdate -expand -group TX -expand -group {TX SR} -radix binary /tb_usb_rx_tx_db_2/DUT/u_usb_tx/data_sr/next_parallel_out
 add wave -noupdate -group {Data Buffer} /tb_usb_rx_tx_db_2/DUT/u_data_buffer/clk
 add wave -noupdate -group {Data Buffer} /tb_usb_rx_tx_db_2/DUT/u_data_buffer/n_rst
-add wave -noupdate -group {Data Buffer} /tb_usb_rx_tx_db_2/DUT/u_data_buffer/tx_data
+add wave -noupdate -group {Data Buffer} -color Pink /tb_usb_rx_tx_db_2/DUT/u_data_buffer/tx_data
 add wave -noupdate -group {Data Buffer} /tb_usb_rx_tx_db_2/DUT/u_data_buffer/rx_packet_data
 add wave -noupdate -group {Data Buffer} /tb_usb_rx_tx_db_2/DUT/u_data_buffer/store_tx_data
 add wave -noupdate -group {Data Buffer} /tb_usb_rx_tx_db_2/DUT/u_data_buffer/store_rx_packet_data
@@ -110,7 +110,7 @@ add wave -noupdate -group {Data Buffer} /tb_usb_rx_tx_db_2/DUT/u_data_buffer/get
 add wave -noupdate -group {Data Buffer} /tb_usb_rx_tx_db_2/DUT/u_data_buffer/get_rx_data
 add wave -noupdate -group {Data Buffer} /tb_usb_rx_tx_db_2/DUT/u_data_buffer/clear
 add wave -noupdate -group {Data Buffer} /tb_usb_rx_tx_db_2/DUT/u_data_buffer/flush
-add wave -noupdate -group {Data Buffer} /tb_usb_rx_tx_db_2/DUT/u_data_buffer/buffer_occupancy
+add wave -noupdate -group {Data Buffer} -color Pink /tb_usb_rx_tx_db_2/DUT/u_data_buffer/buffer_occupancy
 add wave -noupdate -group {Data Buffer} /tb_usb_rx_tx_db_2/DUT/u_data_buffer/tx_packet_data
 add wave -noupdate -group {Data Buffer} /tb_usb_rx_tx_db_2/DUT/u_data_buffer/rx_data
 add wave -noupdate -group {Data Buffer} /tb_usb_rx_tx_db_2/DUT/u_data_buffer/write_ptr
@@ -122,13 +122,13 @@ add wave -noupdate -group {Data Buffer} /tb_usb_rx_tx_db_2/DUT/u_data_buffer/nex
 add wave -noupdate -group {Data Buffer} /tb_usb_rx_tx_db_2/DUT/u_data_buffer/full
 add wave -noupdate -group {Data Buffer} /tb_usb_rx_tx_db_2/DUT/u_data_buffer/empty
 add wave -noupdate -group {Data Buffer} /tb_usb_rx_tx_db_2/DUT/u_data_buffer/write_data
-add wave -noupdate -group {Data Buffer} /tb_usb_rx_tx_db_2/DUT/u_data_buffer/next_write_data
-add wave -noupdate -color {Violet Red} /tb_usb_rx_tx_db_2/tb_test_num
+add wave -noupdate -group {Data Buffer} /tb_usb_rx_tx_db_2/DUT/u_data_buffer/reg_mem
+add wave -noupdate -color Pink /tb_usb_rx_tx_db_2/tb_test_num
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {20091025 ps} 0} {{Test 3} {18992966 ps} 1 Cyan default} {{Test 4} {21199215 ps} 1}
+WaveRestoreCursors {{Cursor 1} {22439984 ps} 0} {{Test 2} {8817285 ps} 1} {{Test 3} {18991092 ps} 1} {{Cursor 4} {21182961 ps} 1}
 quietly wave cursor active 1
-configure wave -namecolwidth 211
-configure wave -valuecolwidth 139
+configure wave -namecolwidth 150
+configure wave -valuecolwidth 100
 configure wave -justifyvalue left
 configure wave -signalnamewidth 1
 configure wave -snapdistance 10
@@ -141,4 +141,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ps
 update
-WaveRestoreZoom {6240168 ps} {28035781 ps}
+WaveRestoreZoom {20952251 ps} {24691932 ps}

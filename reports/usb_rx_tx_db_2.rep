@@ -7,13 +7,13 @@ Report : timing
         -max_paths 1
 Design : usb_rx_tx_db_2
 Version: W-2024.09-SP4
-Date   : Wed Apr 22 16:01:26 2026
+Date   : Wed Apr 22 20:37:46 2026
 ****************************************
 
 Operating Conditions: typical   Library: osu05_stdcells
 Wire Load Model Mode: top
 
-  Startpoint: u_data_buffer/read_ptr_reg[0]
+  Startpoint: u_data_buffer/read_ptr_reg[4]
               (rising edge-triggered flip-flop)
   Endpoint: rx_data[5] (output port)
   Path Group: (none)
@@ -21,21 +21,22 @@ Wire Load Model Mode: top
 
   Point                                                   Incr       Path
   --------------------------------------------------------------------------
-  u_data_buffer/read_ptr_reg[0]/CLK (DFFSR)               0.00       0.00 r
-  u_data_buffer/read_ptr_reg[0]/Q (DFFSR)                 1.12       1.12 f
-  u_data_buffer/U680/Y (INVX2)                            0.26       1.38 r
-  u_data_buffer/U3/Y (AND2X2)                             0.18       1.57 r
-  u_data_buffer/U11/Y (INVX4)                             0.91       2.48 f
-  u_data_buffer/U462/Y (NOR2X1)                           0.18       2.66 r
-  u_data_buffer/U463/Y (NOR2X1)                           0.15       2.81 f
-  u_data_buffer/U464/Y (OAI21X1)                          0.19       3.00 r
-  u_data_buffer/U466/Y (NOR2X1)                           0.21       3.21 f
-  u_data_buffer/U475/Y (AOI22X1)                          0.15       3.36 r
-  u_data_buffer/U493/Y (AOI21X1)                          0.12       3.48 f
-  u_data_buffer/U529/Y (OR2X1)                            0.18       3.67 f
-  u_data_buffer/rx_data[5] (data_buffer)                  0.00       3.67 f
-  rx_data[5] (out)                                        0.00       3.67 f
-  data arrival time                                                  3.67
+  u_data_buffer/read_ptr_reg[4]/CLK (DFFSR)               0.00       0.00 r
+  u_data_buffer/read_ptr_reg[4]/Q (DFFSR)                 0.71       0.71 r
+  u_data_buffer/U1218/Y (INVX1)                           0.36       1.07 f
+  u_data_buffer/U1217/Y (NAND2X1)                         0.30       1.37 r
+  u_data_buffer/U1154/Y (NOR2X1)                          0.81       2.18 f
+  u_data_buffer/U565/Y (INVX4)                            0.75       2.93 r
+  u_data_buffer/U564/Y (INVX2)                            0.99       3.92 f
+  u_data_buffer/U827/Y (AOI22X1)                          0.25       4.18 r
+  u_data_buffer/U826/Y (NAND2X1)                          0.10       4.28 f
+  u_data_buffer/U825/Y (OAI21X1)                          0.14       4.41 r
+  u_data_buffer/U811/Y (NAND3X1)                          0.08       4.49 f
+  u_data_buffer/U810/Y (MUX2X1)                           0.12       4.61 r
+  u_data_buffer/U809/Y (INVX1)                            0.10       4.71 f
+  u_data_buffer/rx_data[5] (data_buffer)                  0.00       4.71 f
+  rx_data[5] (out)                                        0.00       4.71 f
+  data arrival time                                                  4.71
   --------------------------------------------------------------------------
   (Path is unconstrained)
 
@@ -46,7 +47,7 @@ Wire Load Model Mode: top
 Report : area
 Design : usb_rx_tx_db_2
 Version: W-2024.09-SP4
-Date   : Wed Apr 22 16:01:26 2026
+Date   : Wed Apr 22 20:37:46 2026
 ****************************************
 
 Library(s) Used:
@@ -54,21 +55,21 @@ Library(s) Used:
     osu05_stdcells (File: /home/ecegrid/a/ece337/summer24-refactor/tech/ami05/osu05_stdcells.db)
 
 Number of ports:                          265
-Number of nets:                          3604
-Number of cells:                         3400
-Number of combinational cells:           2586
+Number of nets:                          4055
+Number of cells:                         3851
+Number of combinational cells:           2525
 Number of sequential cells:               654
 Number of macros/black boxes:               0
-Number of buf/inv:                        828
+Number of buf/inv:                        898
 Number of references:                       3
 
-Combinational area:             700434.000000
-Buf/Inv area:                   127008.000000
-Noncombinational area:          667296.000000
+Combinational area:             695412.000000
+Buf/Inv area:                   141768.000000
+Noncombinational area:         1035936.000000
 Macro/Black Box area:                0.000000
 Net Interconnect area:      undefined  (No wire load specified)
 
-Total cell area:               1367730.000000
+Total cell area:               1731348.000000
 Total area:                 undefined
 1
 Loading db file '/home/ecegrid/a/ece337/summer24-refactor/tech/ami05/osu05_stdcells.db'
@@ -82,7 +83,7 @@ Report : power
         -analysis_effort low
 Design : usb_rx_tx_db_2
 Version: W-2024.09-SP4
-Date   : Wed Apr 22 16:01:26 2026
+Date   : Wed Apr 22 20:37:46 2026
 ****************************************
 
 
@@ -109,12 +110,12 @@ Attributes
 i - Including register clock pin internal power
 
 
-  Cell Internal Power  = 154.2306 mW   (70%)
-  Net Switching Power  =  65.7083 mW   (30%)
+  Cell Internal Power  =  96.7090 mW   (57%)
+  Net Switching Power  =  72.0720 mW   (43%)
                          ---------
-Total Dynamic Power    = 219.9389 mW  (100%)
+Total Dynamic Power    = 168.7810 mW  (100%)
 
-Cell Leakage Power     = 396.1452 nW
+Cell Leakage Power     = 541.0063 nW
 
 Information: report_power power group summary does not include estimated clock tree power. (PWR-789)
 
@@ -126,8 +127,8 @@ memory             0.0000            0.0000            0.0000            0.0000 
 black_box          0.0000            0.0000            0.0000            0.0000  (   0.00%)
 clock_network      0.0000            0.0000            0.0000            0.0000  (   0.00%)  i
 register           0.0000            0.0000            0.0000            0.0000  (   0.00%)
-sequential       140.5496            0.4844          200.2346          141.0343  (  64.12%)
-combinational     13.6807           65.2239          195.9106           78.9048  (  35.88%)
+sequential        78.6924            0.5242          348.5676           79.2169  (  46.93%)
+combinational     18.0167           71.5478          192.4387           89.5647  (  53.07%)
 --------------------------------------------------------------------------------------------------
-Total            154.2303 mW        65.7083 mW       396.1452 nW       219.9391 mW
+Total             96.7091 mW        72.0721 mW       541.0063 nW       168.7815 mW
 1

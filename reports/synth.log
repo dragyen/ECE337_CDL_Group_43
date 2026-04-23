@@ -31,20 +31,19 @@ Please use '-no_save' simv switch to avoid this.
             Inclusivity and Diversity" (Refer to article 000036315 at
                         https://solvnetplus.synopsys.com)
 Initializing...
-Initializing gui preferences from file  /home/ecegridfs/a/337mg193/.synopsys_dc_gui/preferences.tcl
-Current time:       Sun Apr 19 14:28:10 2026
-Hostname:           ececomp3.ecn.purdue.edu
+Current time:       Wed Apr 22 20:37:41 2026
+Hostname:           ececomp5.ecn.purdue.edu
 CPU Model:          AMD EPYC 7513 32-Core Processor
-CPU Details:        Cores = 128 : Sockets = 2 : Cache Size = 512 KB : Freq = 2.60 GHz
-OS:                 Linux 4.18.0-553.111.1.el8_10.x86_64
-RAM:                502 GB (Free 207 GB)
-Swap:                63 GB (Free  55 GB)
+CPU Details:        Cores = 128 : Sockets = 2 : Cache Size = 512 KB : Freq = 3.64 GHz
+OS:                 Linux 5.15.0-318.199.3.2.el8uek.x86_64
+RAM:                502 GB (Free  70 GB)
+Swap:                63 GB (Free  63 GB)
 Work Filesystem:    /home/ecegridfs/a mounted to ecegridfs.ecn.purdue.edu:/export/home/a
 Tmp Filesystem:     /tmp mounted to tmpfs
-Work Disk:          2968 GB (Free 357 GB)
-Tmp Disk:            19 GB (Free  18 GB)
+Work Disk:          2968 GB (Free 308 GB)
+Tmp Disk:            17 GB (Free  16 GB)
 
-CPU Load: 29%, Ram Free: 207 GB, Swap Free: 55 GB, Work Disk Free: 357 GB, Tmp Disk Free: 18 GB
+CPU Load: 23%, Ram Free: 70 GB, Swap Free: 63 GB, Work Disk Free: 308 GB, Tmp Disk Free: 16 GB
 ############################################
 #
 # Auto-generated project tcl file:
@@ -53,9 +52,9 @@ CPU Load: 29%, Ram Free: 207 GB, Swap Free: 55 GB, Work Disk Free: 357 GB, Tmp D
 #
 ############################################
 sh date
-Sun Apr 19 14:28:11 EDT 2026
-set TOP_MODULE usb_rx_tx_db
-usb_rx_tx_db
+Wed Apr 22 20:37:41 EDT 2026
+set TOP_MODULE usb_rx_tx_db_2
+usb_rx_tx_db_2
 set DC_SCRIPT synth.tcl
 synth.tcl
 set READ_SOURCES u337mg158_ece337_usb_rx_tx_db_2_1.0.0-read-sources
@@ -143,24 +142,16 @@ Inferred memory devices in process in routine 'data_buffer' in file
 ==================================================================================
 |    Register Name    |   Type    | Width | Bus | MB |  Set  | Reset | ST | Line |
 ==================================================================================
-|     reg_mem_reg     | Flip-flop |  512  |  Y  | N  | None  | None  | N  |  60  |
-|    write_ptr_reg    | Flip-flop |   6   |  Y  | N  | None  | Async | N  |  60  |
-|    read_ptr_reg     | Flip-flop |   6   |  Y  | N  | None  | Async | N  |  60  |
-|     counter_reg     | Flip-flop |   7   |  Y  | N  | None  | Async | N  |  60  |
-|    read_data_reg    | Flip-flop |   8   |  Y  | N  | None  | Async | N  |  60  |
+|    write_ptr_reg    | Flip-flop |   6   |  Y  | N  | None  | Async | N  |  71  |
+|    read_ptr_reg     | Flip-flop |   6   |  Y  | N  | None  | Async | N  |  71  |
+|     counter_reg     | Flip-flop |   7   |  Y  | N  | None  | Async | N  |  71  |
+|     reg_mem_reg     | Flip-flop |  512  |  Y  | N  | None  | Async | N  |  71  |
 ==================================================================================
-Statistics for MUX_OPs
-======================================================
-| block name/line  | Inputs | Outputs | # sel inputs |
-======================================================
-|  data_buffer/71  |   64   |    8    |      6       |
-======================================================
 Presto compilation completed successfully. (data_buffer)
 Module: data_buffer, Ports: 47, Input: 24, Output: 23, Inout: 0
-Module: data_buffer, Registers: 539, Async set/reset: 27, Sync set/reset: 0
+Module: data_buffer, Registers: 531, Async set/reset: 531, Sync set/reset: 0
 Information: Module data_buffer report end. (ELAB-965)
 Information: Building the design 'usb_rx'. (HDL-193)
-Warning:  ./src/u337mg158_ece337_usb_rx_1.0.0/source/usb_rx.sv:82: signed to unsigned assignment occurs. (VER-318)
 
 Statistics for case statements in always block in file
 	'./src/u337mg158_ece337_usb_rx_1.0.0/source/usb_rx.sv'
@@ -179,10 +170,10 @@ Inferred memory devices in process in routine 'usb_rx' in file
 | shift_strobe_seen_reg | Flip-flop |   1   |  N  | N  | None  | Async | N  | 122  |
 |       count_reg       | Flip-flop |   4   |  Y  | N  | None  | Async | N  | 122  |
 |     byte_done_reg     | Flip-flop |   1   |  N  | N  | None  | Async | N  | 122  |
-|     pipeline_reg      | Flip-flop |   8   |  Y  | N  | None  | Async | N  | 296  |
-|      delayed_reg      | Flip-flop |   1   |  N  | N  | None  | Async | N  | 296  |
-|       state_reg       | Flip-flop |   3   |  Y  | N  | None  | Async | N  | 296  |
-|        pid_reg        | Flip-flop |   4   |  Y  | N  | None  | Async | N  | 296  |
+|     pipeline_reg      | Flip-flop |   8   |  Y  | N  | None  | Async | N  | 295  |
+|      delayed_reg      | Flip-flop |   1   |  N  | N  | None  | Async | N  | 295  |
+|       state_reg       | Flip-flop |   3   |  Y  | N  | None  | Async | N  | 295  |
+|        pid_reg        | Flip-flop |   4   |  Y  | N  | None  | Async | N  | 295  |
 ====================================================================================
 Presto compilation completed successfully. (usb_rx)
 Module: usb_rx, Ports: 28, Input: 11, Output: 17, Inout: 0
@@ -367,7 +358,7 @@ Presto compilation completed successfully. (edge_det_1_1_0)
 Module: edge_det_1_1_0, Ports: 5, Input: 3, Output: 2, Inout: 0
 Module: edge_det_1_1_0, Registers: 4, Async set/reset: 4, Sync set/reset: 0
 Information: Module edge_det_1_1_0 report end. (ELAB-965)
-CPU Load: 29%, Ram Free: 207 GB, Swap Free: 55 GB, Work Disk Free: 357 GB, Tmp Disk Free: 18 GB
+CPU Load: 23%, Ram Free: 70 GB, Swap Free: 63 GB, Work Disk Free: 308 GB, Tmp Disk Free: 16 GB
 Information: Checking out the license 'DesignWare'. (SEC-104)
 Information: Evaluating DesignWare library utilization. (UISN-27)
 
@@ -386,7 +377,7 @@ Information: Evaluating DesignWare library utilization. (UISN-27)
 | Design Information                                      | Value                                  |
 ====================================================================================================
 | Number of Scenarios                                     | 0                                      |
-| Leaf Cell Count                                         | 1729                                   |
+| Leaf Cell Count                                         | 1716                                   |
 | Number of User Hierarchies                              | 15                                     |
 | Sequential Cell Count                                   | 654                                    |
 | Macro Count                                             | 0                                      |
@@ -395,14 +386,14 @@ Information: Evaluating DesignWare library utilization. (UISN-27)
 | Number of Path Groups                                   | 1                                      |
 | Number of VT Class                                      | 0                                      |
 | Number of Clocks                                        | 0                                      |
-| Number of Dont Touch Cells                              | 367                                    |
+| Number of Dont Touch Cells                              | 325                                    |
 | Number of Dont Touch Nets                               | 0                                      |
 | Number of Size Only Cells                               | 0                                      |
 | Design with Target Library Subset (with clock_path)     | false  (false )                        |
 | Design with UPF Data                                    | false                                  |
 ====================================================================================================
 
-Information: There are 39 potential problems in your design. Please run 'check_design' for more information. (LINT-99)
+Information: There are 38 potential problems in your design. Please run 'check_design' for more information. (LINT-99)
 
 
 
@@ -490,13 +481,6 @@ Information: Design 'usb_rx_tx_db_2' has no optimization constraints set. (OPT-1
   Processing 'data_buffer_DW01_inc_1_DW01_inc_9'
   Processing 'data_buffer_DW01_inc_2_DW01_inc_10'
 
-                                  TOTAL                                      
-   ELAPSED            WORST NEG   SETUP    DESIGN                            
-    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT         
-  --------- --------- --------- --------- --------- -------------------------
-    0:00:03 1245942.0      0.00       0.0    1713.2                          
-    0:00:03 1245942.0      0.00       0.0    1713.2                          
-
   Beginning Mapping Optimizations  (Medium effort)
   -------------------------------
   Structuring 'edge_det_1_1_0'
@@ -525,22 +509,28 @@ Information: Design 'usb_rx_tx_db_2' has no optimization constraints set. (OPT-1
   Mapping 'usb_rx'
   Structuring 'data_buffer'
   Mapping 'data_buffer'
-    0:00:03 1353411.0      0.00       0.0    1693.4                          
-    0:00:03 1353411.0      0.00       0.0    1693.4                          
-    0:00:03 1353411.0      0.00       0.0    1693.4                          
-    0:00:03 1353411.0      0.00       0.0    1693.4                          
-    0:00:03 1353411.0      0.00       0.0    1693.4                          
-    0:00:03 1344267.0      0.00       0.0    1693.4                          
-    0:00:03 1344195.0      0.00       0.0    1693.4                          
-    0:00:03 1344195.0      0.00       0.0    1693.4                          
-    0:00:03 1344195.0      0.00       0.0    1693.4                          
-    0:00:04 1344195.0      0.00       0.0    1693.4                          
-    0:00:04 1344195.0      0.00       0.0    1693.4                          
-    0:00:04 1344627.0      0.00       0.0    1646.9                          
-    0:00:04 1344771.0      0.00       0.0    1641.3                          
-    0:00:04 1344771.0      0.00       0.0    1641.3                          
-    0:00:04 1344771.0      0.00       0.0    1641.3                          
-    0:00:04 1344771.0      0.00       0.0    1641.3                          
+
+                                  TOTAL                                      
+   ELAPSED            WORST NEG   SETUP    DESIGN                            
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT         
+  --------- --------- --------- --------- --------- -------------------------
+    0:00:04 1738404.0      0.00       0.0    1648.6                          
+    0:00:04 1738404.0      0.00       0.0    1648.6                          
+    0:00:04 1738404.0      0.00       0.0    1648.6                          
+    0:00:04 1738404.0      0.00       0.0    1648.6                          
+    0:00:04 1738404.0      0.00       0.0    1648.6                          
+    0:00:04 1725516.0      0.00       0.0    1648.6                          
+    0:00:04 1725444.0      0.00       0.0    1648.6                          
+    0:00:04 1725444.0      0.00       0.0    1648.6                          
+    0:00:04 1725444.0      0.00       0.0    1648.6                          
+    0:00:04 1725444.0      0.00       0.0    1648.6                          
+    0:00:04 1725444.0      0.00       0.0    1648.6                          
+    0:00:04 1726668.0      0.00       0.0    1356.1                          
+    0:00:04 1727532.0      0.00       0.0    1254.8                          
+    0:00:04 1728180.0      0.00       0.0    1246.4                          
+    0:00:04 1728180.0      0.00       0.0    1246.4                          
+    0:00:04 1728180.0      0.00       0.0    1246.4                          
+    0:00:04 1728180.0      0.00       0.0    1246.4                          
 
 
 
@@ -551,11 +541,11 @@ Information: Design 'usb_rx_tx_db_2' has no optimization constraints set. (OPT-1
    ELAPSED            WORST NEG   SETUP    DESIGN                            
     TIME      AREA      SLACK     COST    RULE COST         ENDPOINT         
   --------- --------- --------- --------- --------- -------------------------
-    0:00:04 1344771.0      0.00       0.0    1641.3                          
-    0:00:04 1344771.0      0.00       0.0    1641.3                          
-    0:00:04 1344771.0      0.00       0.0    1641.3                          
-    0:00:04 1344771.0      0.00       0.0    1641.3                          
-    0:00:04 1344771.0      0.00       0.0    1641.3                          
+    0:00:04 1728180.0      0.00       0.0    1246.4                          
+    0:00:04 1728180.0      0.00       0.0    1246.4                          
+    0:00:04 1728180.0      0.00       0.0    1246.4                          
+    0:00:04 1728180.0      0.00       0.0    1246.4                          
+    0:00:04 1728180.0      0.00       0.0    1246.4                          
 
 
   Beginning Design Rule Fixing  (max_capacitance)
@@ -565,8 +555,8 @@ Information: Design 'usb_rx_tx_db_2' has no optimization constraints set. (OPT-1
    ELAPSED            WORST NEG   SETUP    DESIGN                            
     TIME      AREA      SLACK     COST    RULE COST         ENDPOINT         
   --------- --------- --------- --------- --------- -------------------------
-    0:00:04 1344771.0      0.00       0.0    1641.3                          
-    0:00:04 1352691.0      0.00       0.0       0.0                          
+    0:00:04 1728180.0      0.00       0.0    1246.4                          
+    0:00:04 1733076.0      0.00       0.0       0.0                          
 
 
   Beginning Area-Recovery Phase  (cleanup)
@@ -576,20 +566,20 @@ Information: Design 'usb_rx_tx_db_2' has no optimization constraints set. (OPT-1
    ELAPSED            WORST NEG   SETUP    DESIGN                            
     TIME      AREA      SLACK     COST    RULE COST         ENDPOINT         
   --------- --------- --------- --------- --------- -------------------------
-    0:00:04 1352691.0      0.00       0.0       0.0                          
-    0:00:04 1352691.0      0.00       0.0       0.0                          
-    0:00:04 1350819.0      0.00       0.0       0.0                          
-    0:00:04 1350171.0      0.00       0.0       0.0                          
-    0:00:04 1349595.0      0.00       0.0       0.0                          
-    0:00:04 1349451.0      0.00       0.0       0.0                          
-    0:00:04 1349451.0      0.00       0.0       0.0                          
-    0:00:04 1349451.0      0.00       0.0       0.0                          
-    0:00:04 1349451.0      0.00       0.0       0.0                          
-    0:00:04 1349451.0      0.00       0.0       0.0                          
-    0:00:04 1349451.0      0.00       0.0       0.0                          
-    0:00:04 1349451.0      0.00       0.0       0.0                          
-    0:00:04 1349451.0      0.00       0.0       0.0                          
-    0:00:04 1349451.0      0.00       0.0       0.0                          
+    0:00:04 1733076.0      0.00       0.0       0.0                          
+    0:00:04 1733076.0      0.00       0.0       0.0                          
+    0:00:04 1731996.0      0.00       0.0       0.0                          
+    0:00:04 1731852.0      0.00       0.0       0.0                          
+    0:00:04 1731636.0      0.00       0.0       0.0                          
+    0:00:04 1731348.0      0.00       0.0       0.0                          
+    0:00:04 1731348.0      0.00       0.0       0.0                          
+    0:00:04 1731348.0      0.00       0.0       0.0                          
+    0:00:04 1731348.0      0.00       0.0       0.0                          
+    0:00:04 1731348.0      0.00       0.0       0.0                          
+    0:00:04 1731348.0      0.00       0.0       0.0                          
+    0:00:04 1731348.0      0.00       0.0       0.0                          
+    0:00:04 1731348.0      0.00       0.0       0.0                          
+    0:00:04 1731348.0      0.00       0.0       0.0                          
 Loading db file '/home/ecegrid/a/ece337/summer24-refactor/tech/ami05/osu05_stdcells.db'
 
 
@@ -598,7 +588,7 @@ Note: Symbol # after min delay cost means estimated hold TNS across all active s
 
   Optimization Complete
   ---------------------
-CPU Load: 29%, Ram Free: 207 GB, Swap Free: 55 GB, Work Disk Free: 357 GB, Tmp Disk Free: 18 GB
+CPU Load: 21%, Ram Free: 70 GB, Swap Free: 63 GB, Work Disk Free: 308 GB, Tmp Disk Free: 16 GB
 Information: Total number of MV cells in the design.
 ----------------------------------------------------------------------------------------------------
  MV Cells                                           Total Number                                   
@@ -622,7 +612,7 @@ Unmapped MV Cells
 ****************************************
 check_design summary:
 Version:     W-2024.09-SP4
-Date:        Sun Apr 19 14:28:15 2026
+Date:        Wed Apr 22 20:37:46 2026
 ****************************************
 
                    Name                                            Total
@@ -660,13 +650,11 @@ Warning: In design 'usb_tx', a pin on submodule 'data_sr' is connected to logic 
    Pin 'serial_in' is connected to logic 0. 
 Warning: In design 'usb_tx', the same net is connected to more than one pin on submodule 'clk_div'. (LINT-33)
    Net 'rollover_val[2]' is connected to pins 'rollover_val[2]', 'rollover_val[1]'', 'rollover_val[0]'.
-Warning: In design 'usb_rx_tx_db', output port 'rx_error' is connected directly to 'logic 0'. (LINT-52)
-Warning: In design 'usb_rx', output port 'rx_error' is connected directly to 'logic 0'. (LINT-52)
-Writing verilog file '/home/ecegridfs/a/337mg193/ECE337_CDL_Group_43/tmp/build/u337mg158_ece337_usb_rx_tx_db_1.0.0/syn-design_compiler/usb_rx_tx_db.v'.
+Writing verilog file '/home/ecegridfs/a/337mg158/ece337cdl/tmp/build/u337mg158_ece337_usb_rx_tx_db_2_1.0.0/syn-design_compiler/usb_rx_tx_db_2.v'.
 
-Memory usage for this session 154 Mbytes.
-Memory usage for this session including child processes 154 Mbytes.
-CPU usage for this session 7 seconds ( 0.00 hours ).
-Elapsed time for this session 9 seconds ( 0.00 hours ).
+Memory usage for this session 161 Mbytes.
+Memory usage for this session including child processes 161 Mbytes.
+CPU usage for this session 6 seconds ( 0.00 hours ).
+Elapsed time for this session 8 seconds ( 0.00 hours ).
 
 Thank you...
