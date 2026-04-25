@@ -12,10 +12,10 @@ always_comb begin : stuffing_comb
     next_count = count + 1;
     next_valid_bit = 1;
 
-    if (decoded_data == 0) begin
+    if (decoded_data == 0 && count != 5) begin
         next_count = 0;
     end
-    else if (count == 6) begin
+    else if (count == 5) begin
         next_count = 0;
         next_valid_bit = 0;
     end

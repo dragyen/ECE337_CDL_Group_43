@@ -4,30 +4,24 @@ module tb_usb_rx_tx_db_2();
 
     logic clk, n_rst;
 
-    // AHB -> Data Buffer
     logic store_tx_data;
     logic [7:0] tx_data;
     logic get_rx_data;
     logic clear;
 
-    // Data Buffer -> AHB
     logic [7:0] rx_data;
     logic [6:0] buffer_occupancy;
 
-    // AHB -> USB TX
     logic [2:0] tx_packet;
 
-    // USB RX -> AHB
     logic [3:0] rx_packet;
     logic rx_data_ready, rx_transfer_active, rx_error;
 
-    // USB TX -> AHB
     logic tx_transfer_active, tx_error;
 
-    // USB physical interface
     logic dp_in, dm_in, dp_out, dm_out;
 
-        int tx_ones_run;
+    int tx_ones_run;
     int tx_stuff_count;
     logic tx_prev_dp;
     usb_rx_tx_db_2 DUT (.*);
@@ -86,8 +80,8 @@ int rx_ones_run;
     endtask
 
     task send_sync_stuffed();
-        rx_ones_run = 0; // reset stuff tracking at start of packet (sync has no long 1 run)
-        send_byte_lsb(8'b10000000); // sync itself won't trigger stuffing
+        rx_ones_run = 0; // reset stuff tracking at start of packet
+        send_byte_lsb(8'b10000000); 
     endtask
 
     task send_pid_stuffed(input logic [3:0] pid_val);
@@ -116,7 +110,6 @@ int rx_ones_run;
         logic raw_bit;
         capture_tx_bit(raw_bit);
         if (tx_ones_run == 6) begin
-            // this bit should be a stuffed 0, discard and capture the next one
             assert(raw_bit == 0) else $error("Bit stuffing: expected stuffed 0 after 6 ones, got 1");
             tx_stuff_count++;
             tx_ones_run = 0;
@@ -274,7 +267,7 @@ int rx_ones_run;
         end
         if (t >= 1000) $error("trigger_tx: TX never started (tx_transfer_active stayed low)");
 
-        // hold tx_packet throughout the entire transmission (AHB register behavior)
+        // hold tx_packet throughout the entire transmission
         while (tx_transfer_active) @(posedge clk);
 
         // safe to clear only after TX finishes
@@ -310,10 +303,6 @@ int rx_ones_run;
         release rx_data_ready_seen;
         release rx_packet_captured;
     endtask
-
-    //tx
-    // Captures one bit from dp_out/dm_out (synchronized to the TX's bit rate)
-    // Returns the NRZI-decoded bit
     
 
     task capture_tx_bit(output logic decoded_bit);
@@ -395,14 +384,12 @@ int rx_ones_run;
         assert(tx_transfer_active == 0) else $error("Test %0d failed: tx_transfer_active nonzero after reset", tb_test_num);
 
         // Test 1: Full host-to-endpoint transfer with loopback-verified ACK
-        // Flow: OUT token -> DATA0 (64 bytes) -> endpoint sends ACK (loopback to RX) -> SoC pops data
         tb_test_num = 1;
         reset_dut();
         begin
             logic [7:0] popped_byte;
             logic [7:0] expected_payload[];
 
-            // build 64-byte payload (chosen to avoid bit stuffing)
             expected_payload = new[64];
             for (int i = 0; i < 64; i++) begin
                 case (i % 8)
@@ -462,7 +449,6 @@ int rx_ones_run;
         end
 
         // Test 2: Full endpoint-to-host transfer
-        // Flow: SoC preloads buffer -> host sends IN token -> endpoint sends DATA0 -> host sends ACK
         tb_test_num = 2;
         reset_dut();
         begin
@@ -498,11 +484,11 @@ int rx_ones_run;
 
             // Step 3: endpoint sends DATA0 with the buffered payload
             fork
-                trigger_tx(3'd1); // DATA0
+                trigger_tx(3'd1); 
                 begin
                     start_tx_capture();
 
-                    capture_tx_byte(captured_byte); // sync, discard
+                    capture_tx_byte(captured_byte); //sync
                     capture_tx_byte(captured_byte); // PID
                     assert(captured_byte[3:0] == 4'b0011) else $error("Test %0d failed: expected DATA0 PID (0x3), got 0x%h", tb_test_num, captured_byte[3:0]);
 
@@ -528,9 +514,7 @@ int rx_ones_run;
             assert(rx_error_seen == 0) else $error("Test %0d failed: rx_error during host ACK", tb_test_num);
         end
         
-        // Test: Bit stuffing verification on TX
-        // Payload {0xFF, 0xFF, 0x00, 0xAA} produces ~16 consecutive 1 bits in the
-        // decoded stream, forcing the TX to insert stuffed 0s. Capture must un-stuff.
+        // Bit stuffing verification on TX
         tb_test_num = 3;
         reset_dut();
         begin
@@ -569,8 +553,6 @@ int rx_ones_run;
                     assert(captured_crc == 16'h807F) else $error("Test %0d failed: CRC expected 0x807F, got 0x%h", tb_test_num, captured_crc);
                 end
             join
-
-            // Verify TX actually did stuff - we expect at least 2 stuffing events
             assert(tx_stuff_count >= 2) else $error("Test %0d failed: expected bit stuffing but only %0d stuffs detected - is bit stuffing enabled?", tb_test_num, tx_stuff_count);
             $display("Test %0d: detected %0d bit-stuffing events", tb_test_num, tx_stuff_count);
 
@@ -578,10 +560,7 @@ int rx_ones_run;
             assert(buffer_occupancy == 7'd0) else $error("Test %0d failed: buffer should be drained", tb_test_num);
         end
 
-        //
         // Test: Bit stuffing verification on RX
-        // Send a DATA0 packet with stuffed bits in the stream. If RX bit-stuffing
-        // is working, it will strip the stuffed 0s and decode the original payload.
         tb_test_num = 4;
         reset_dut();
         begin
@@ -622,14 +601,14 @@ int rx_ones_run;
             payload = new[65];
             for (int i = 0; i < 65; i++) payload[i] = i[7:0];
 
-            // Host sends OUT token first (normal start)
+            // out token
             send_out_token(7'h00, 4'h0, 5'h02);
             repeat(10) @(posedge clk);
             assert(rx_data_ready_seen == 1) else $error("Test %0d failed: no rx_data_ready for OUT", tb_test_num);
             assert(rx_error_seen == 0) else $error("Test %0d failed: rx_error during OUT token", tb_test_num);
             clear_rx_flags();
 
-            // Host sends oversized DATA0 packet
+            // oversized DATA0 packet
             send_data0(payload, 65, 16'h9537);
             repeat(20) @(posedge clk);
 
@@ -638,13 +617,10 @@ int rx_ones_run;
         end
 
         // Test 6: Error handling for invalid sync byte
-        // Send garbage instead of valid sync pattern. Expect rx_error to assert
-        // and design to return to idle cleanly.
         tb_test_num = 6;
         reset_dut();
         begin
-            // Trigger an edge to wake up the RX, then send bad sync data
-            send_bit(0); // forces edge_det, RX enters SYNC
+            send_bit(0);
             for (int i = 0; i < 7; i++) send_bit(1'b1); // garbage sync content
             send_eop();
             repeat(20) @(posedge clk);
@@ -664,7 +640,7 @@ int rx_ones_run;
             assert(rx_packet_captured == 4'b0001) else $error("Test %0d failed: after recovery expected OUT PID, got 0x%h", tb_test_num, rx_packet_captured);
             assert(rx_error_seen == 0) else $error("Test %0d failed: rx_error on recovery packet", tb_test_num);
         end
-        
+
         $finish;
     end
 

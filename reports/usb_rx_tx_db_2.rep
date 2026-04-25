@@ -7,7 +7,7 @@ Report : timing
         -max_paths 1
 Design : usb_rx_tx_db_2
 Version: W-2024.09-SP4
-Date   : Wed Apr 22 20:37:46 2026
+Date   : Thu Apr 23 13:09:33 2026
 ****************************************
 
 Operating Conditions: typical   Library: osu05_stdcells
@@ -15,7 +15,7 @@ Wire Load Model Mode: top
 
   Startpoint: u_data_buffer/read_ptr_reg[4]
               (rising edge-triggered flip-flop)
-  Endpoint: rx_data[5] (output port)
+  Endpoint: rx_data[7] (output port)
   Path Group: (none)
   Path Type: max
 
@@ -28,15 +28,15 @@ Wire Load Model Mode: top
   u_data_buffer/U1154/Y (NOR2X1)                          0.81       2.18 f
   u_data_buffer/U565/Y (INVX4)                            0.75       2.93 r
   u_data_buffer/U564/Y (INVX2)                            0.99       3.92 f
-  u_data_buffer/U827/Y (AOI22X1)                          0.25       4.18 r
-  u_data_buffer/U826/Y (NAND2X1)                          0.10       4.28 f
-  u_data_buffer/U825/Y (OAI21X1)                          0.14       4.41 r
-  u_data_buffer/U811/Y (NAND3X1)                          0.08       4.49 f
-  u_data_buffer/U810/Y (MUX2X1)                           0.12       4.61 r
-  u_data_buffer/U809/Y (INVX1)                            0.10       4.71 f
-  u_data_buffer/rx_data[5] (data_buffer)                  0.00       4.71 f
-  rx_data[5] (out)                                        0.00       4.71 f
-  data arrival time                                                  4.71
+  u_data_buffer/U711/Y (AOI22X1)                          0.25       4.18 r
+  u_data_buffer/U710/Y (NAND2X1)                          0.10       4.28 f
+  u_data_buffer/U709/Y (OAI21X1)                          0.14       4.41 r
+  u_data_buffer/U695/Y (NAND3X1)                          0.08       4.49 f
+  u_data_buffer/U694/Y (MUX2X1)                           0.12       4.61 r
+  u_data_buffer/U693/Y (INVX1)                            0.12       4.73 f
+  u_data_buffer/rx_data[7] (data_buffer)                  0.00       4.73 f
+  rx_data[7] (out)                                        0.00       4.73 f
+  data arrival time                                                  4.73
   --------------------------------------------------------------------------
   (Path is unconstrained)
 
@@ -47,7 +47,7 @@ Wire Load Model Mode: top
 Report : area
 Design : usb_rx_tx_db_2
 Version: W-2024.09-SP4
-Date   : Wed Apr 22 20:37:46 2026
+Date   : Thu Apr 23 13:09:33 2026
 ****************************************
 
 Library(s) Used:
@@ -55,21 +55,21 @@ Library(s) Used:
     osu05_stdcells (File: /home/ecegrid/a/ece337/summer24-refactor/tech/ami05/osu05_stdcells.db)
 
 Number of ports:                          265
-Number of nets:                          4055
-Number of cells:                         3851
-Number of combinational cells:           2525
-Number of sequential cells:               654
+Number of nets:                          4067
+Number of cells:                         3863
+Number of combinational cells:           2533
+Number of sequential cells:               656
 Number of macros/black boxes:               0
-Number of buf/inv:                        898
+Number of buf/inv:                        903
 Number of references:                       3
 
-Combinational area:             695412.000000
-Buf/Inv area:                   141768.000000
-Noncombinational area:         1035936.000000
+Combinational area:             696348.000000
+Buf/Inv area:                   142488.000000
+Noncombinational area:         1039104.000000
 Macro/Black Box area:                0.000000
 Net Interconnect area:      undefined  (No wire load specified)
 
-Total cell area:               1731348.000000
+Total cell area:               1735452.000000
 Total area:                 undefined
 1
 Loading db file '/home/ecegrid/a/ece337/summer24-refactor/tech/ami05/osu05_stdcells.db'
@@ -83,7 +83,7 @@ Report : power
         -analysis_effort low
 Design : usb_rx_tx_db_2
 Version: W-2024.09-SP4
-Date   : Wed Apr 22 20:37:46 2026
+Date   : Thu Apr 23 13:09:34 2026
 ****************************************
 
 
@@ -110,12 +110,12 @@ Attributes
 i - Including register clock pin internal power
 
 
-  Cell Internal Power  =  96.7090 mW   (57%)
-  Net Switching Power  =  72.0720 mW   (43%)
+  Cell Internal Power  =  98.1333 mW   (57%)
+  Net Switching Power  =  72.7869 mW   (43%)
                          ---------
-Total Dynamic Power    = 168.7810 mW  (100%)
+Total Dynamic Power    = 170.9202 mW  (100%)
 
-Cell Leakage Power     = 541.0063 nW
+Cell Leakage Power     = 542.3109 nW
 
 Information: report_power power group summary does not include estimated clock tree power. (PWR-789)
 
@@ -127,8 +127,8 @@ memory             0.0000            0.0000            0.0000            0.0000 
 black_box          0.0000            0.0000            0.0000            0.0000  (   0.00%)
 clock_network      0.0000            0.0000            0.0000            0.0000  (   0.00%)  i
 register           0.0000            0.0000            0.0000            0.0000  (   0.00%)
-sequential        78.6924            0.5242          348.5676           79.2169  (  46.93%)
-combinational     18.0167           71.5478          192.4387           89.5647  (  53.07%)
+sequential        79.7329            0.6974          349.6336           80.4305  (  47.06%)
+combinational     18.4004           72.0896          192.6774           90.4902  (  52.94%)
 --------------------------------------------------------------------------------------------------
-Total             96.7091 mW        72.0721 mW       541.0063 nW       168.7815 mW
+Total             98.1333 mW        72.7870 mW       542.3109 nW       170.9207 mW
 1
