@@ -122,7 +122,6 @@ module usb_tx
             end
             DATA: begin
                 next_bit_counter = 0;
-                // NO occupancy check here at all
                 if(!stuff_active) begin
                     nextState = WAIT_DATA;
                     next_loaded = 1;
