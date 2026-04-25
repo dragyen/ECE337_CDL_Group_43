@@ -16,13 +16,9 @@ logic feedback;
 
 assign valid_en = crc_en & valid_bit;
 assign crc_valid = (crc_reg == 5'b01100);
-// CRC-5 checker for polynomial x^5 + x^2 + 1
-// Preset = all 1's
-// Residual = 5'b01100
 always_comb begin : crc5_comb
     next_crc = crc_reg;
 
-    // Fold serial input into feedback path
     feedback = crc_reg[4] ^ serial_in;
 
     if (crc_clear) begin

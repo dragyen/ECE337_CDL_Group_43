@@ -59,11 +59,7 @@ module tb_rx_bit_timer;
     end
     endtask
 
-    // Checks one full 8-cycle bit state:
-    // count 0,1,2,3 => no strobe
-    // count 4       => strobe
-    // count 5,6,7   => no strobe
-    task automatic do_8bit_test(
+    // Checks one full 8-cycle bit state
         input logic [1:0] expected_state,
         input string label
     );
@@ -93,9 +89,6 @@ module tb_rx_bit_timer;
     endtask
 
     // Checks one full 9-cycle bit state:
-    // count 0,1,2,3 => no strobe
-    // count 4       => strobe
-    // count 5,6,7,8 => no strobe
     task automatic do_9bit_test(
         input logic [1:0] expected_state,
         input string label
@@ -130,10 +123,8 @@ module tb_rx_bit_timer;
     begin
         $display("\n--- Edge resync test (near middle of bit) ---");
 
-        // We assume we're starting in BIT8_1 count 0
         check_state_count(DUT.BIT8_1, 4'd0, "Resync test starts in BIT8_1 count 0");
 
-        // Move into the bit near the middle
         tick(); // count 1
         check_state_count(DUT.BIT8_1, 4'd1, "Resync pre-edge count 1");
         check_strobe(1'b0, "No strobe before edge at count 1");
@@ -147,11 +138,9 @@ module tb_rx_bit_timer;
         tick();
         edge_det = 1'b0;
 
-        // After edge_det, timer should restart at BIT8_1 count 0
         check_state_count(DUT.BIT8_1, 4'd0, "Timer reset to BIT8_1 count 0 after edge");
         check_strobe(1'b0, "No strobe on resync cycle");
 
-        // Then the timer should count up again and strobe again at 4
         tick();
         check_state_count(DUT.BIT8_1, 4'd1, "Post-resync count 1");
         check_strobe(1'b0, "No strobe at post-resync count 1");
@@ -168,7 +157,6 @@ module tb_rx_bit_timer;
         check_state_count(DUT.BIT8_1, 4'd4, "Post-resync count 4");
         check_strobe(1'b1, "Strobe at count 4 after resync");
 
-        // finish out the bit cleanly
         tick();
         check_state_count(DUT.BIT8_1, 4'd5, "Post-resync count 5");
         check_strobe(1'b0, "No strobe at post-resync count 5");

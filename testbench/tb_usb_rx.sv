@@ -191,8 +191,8 @@ module tb_usb_rx();
         tb_test_num = 7;
         reset_dut();
         // toggle the line so edge_det fires, then send wrong sync data
-        send_bit(0);            // forces a transition, edge_det fires
-        for (int i = 0; i < 7; i++) send_bit(1'b1); // rest is wrong sync
+        send_bit(0);            
+        for (int i = 0; i < 7; i++) send_bit(1'b1);
         send_eop();
         repeat(10) @(posedge clk);
         assert(rx_error_seen == 1) else $error("Test %0d failed: bad sync should trigger rx_error", tb_test_num);
@@ -223,7 +223,6 @@ module tb_usb_rx();
         test_data = new[2];
         test_data[0] = 8'hCA; test_data[1] = 8'hFE;
         send_data0(test_data, 2, 16'h6F29);
-        // just verify no error - store pulse checking is better in waveform viewer
         repeat(10) @(posedge clk);
         assert(rx_error == 0) else $error("Test %0d failed: DATA0 2-byte store check caused rx_error", tb_test_num);
 
@@ -237,7 +236,6 @@ module tb_usb_rx();
         assert(rx_error == 0) else $error("Test %0d failed: back-to-back tokens caused rx_error", tb_test_num);
 
         // Test 12: mismatched address should NOT raise rx_error visibly to SoC
-        // (per manual, SoC core should not be able to discern a mismatch occurred)
         tb_test_num = 12;
         reset_dut();
         send_out_token(7'h7F, 4'hF, 5'h08); // wrong addr and endp

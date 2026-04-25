@@ -10,10 +10,8 @@ module crc_checker_16bit (
     output logic crc16_valid
 );
 
-    // The 16-bit shift register (parallel_out in the diagram)
     logic [15:0] crc, next_crc;
 
-    // en = crc16_en & valid_bit, as shown in diagram
     logic en;
     assign en = crc16_en & valid_bit;
 
@@ -46,7 +44,6 @@ module crc_checker_16bit (
         end
     end
 
-    //x^16 + x^15 + x^2 + 1
     always_ff @(posedge clk, negedge n_rst) begin
         if (!n_rst) begin
             crc <= 16'hFFFF;    
