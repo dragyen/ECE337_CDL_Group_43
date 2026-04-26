@@ -402,7 +402,4 @@ module usb_tx
 
 
 
-
-
 endmodule
-
